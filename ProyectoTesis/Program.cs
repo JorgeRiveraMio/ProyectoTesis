@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProyectoTesis.Data;
+using System.Diagnostics.Eventing.Reader;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,9 +8,25 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 #region conexion base de datos
-builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var envCustom = builder.Configuration["Environment"];
 
+string connectionString;
+
+if( envCustom=="J")
+{
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnectionJorge");
+}else if (envCustom == "M")
+{ 
+
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnectionJorge");
+}
+else
+{
+    throw new Exception("No se ha definido un Environment válido (usa 'J' o 'M').");
+}
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString));
 #endregion
 
 var app = builder.Build();
