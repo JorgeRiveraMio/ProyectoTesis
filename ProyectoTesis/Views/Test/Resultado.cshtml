@@ -1,0 +1,82 @@
+@model ProyectoTesis.Models.TBM_RESULTADO
+@{
+    ViewData["Title"] = "Resultado del Test";
+}
+
+<div class="text-center mb-12">
+    <div class="flex justify-center mb-6">
+        <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-32 w-32 border-4 border-white shadow-lg" 
+             style='background-image: url("https://i.pravatar.cc/150?img=32");'>
+        </div>
+    </div>
+    <h2 class="text-4xl font-bold tracking-tight text-gray-900">Tu Perfil Vocacional</h2>
+    <p class="mt-2 text-lg text-gray-600">
+        Basado en tus respuestas, este es tu perfil vocacional detallado.
+    </p>
+</div>
+
+<div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+    <h3 class="text-2xl font-bold text-gray-900 mb-6">Resultados del Test</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="flex flex-col gap-6">
+
+            <!-- Ejemplo de barra -->
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-baseline">
+                    <span class="text-lg font-semibold text-gray-800">@Model.NOM_PERFIL_TX</span>
+                    <span class="text-lg font-bold text-[var(--primary-color)]">70%</span> <!-- aquí deberías calcular el % real -->
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div class="bg-[var(--primary-color)] h-3 rounded-full" style="width: 70%"></div>
+                </div>
+            </div>
+
+            <!-- Aquí agregarías más áreas (Investigativo, Social, etc.) -->
+        </div>
+
+        <div class="bg-[var(--primary-color-light)] p-6 rounded-xl flex flex-col justify-center items-center text-center">
+            <span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">
+                psychology
+            </span>
+            <h4 class="text-xl font-bold text-gray-900">Tu tipo dominante: @Model.NOM_PERFIL_TX</h4>
+            <p class="text-gray-700 mt-2">
+                @Model.DES_RECOMENDACION_TX
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="mt-12">
+    <h3 class="text-2xl font-bold text-gray-900 mb-6">Áreas de Interés Secundarias</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Aquí deberías iterar dinámicamente tus subresultados -->
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 text-center">
+            <p class="text-gray-600 font-semibold mb-2">Investigativo</p>
+            <p class="text-4xl font-bold text-gray-800">50%</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 text-center">
+            <p class="text-gray-600 font-semibold mb-2">Social</p>
+            <p class="text-4xl font-bold text-gray-800">65%</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 text-center">
+            <p class="text-gray-600 font-semibold mb-2">Emprendedor</p>
+            <p class="text-4xl font-bold text-gray-800">40%</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 text-center">
+            <p class="text-gray-600 font-semibold mb-2">Convencional</p>
+            <p class="text-4xl font-bold text-gray-800">30%</p>
+        </div>
+    </div>
+</div>
+
+<!-- Formulario de envío -->
+<form asp-action="EnviarResultado" method="post" class="mt-10 flex flex-col items-center gap-4">
+    <input type="hidden" name="resultadoId" value="@Model.IDD_RESULTADO" />
+    <label class="text-lg font-medium">¿Quieres recibirlo en tu correo?</label>
+    <input type="email" name="correo" required class="border rounded-lg px-4 py-2 w-80"/>
+    <button type="submit" class="bg-[var(--primary-color)] text-white font-bold py-2 px-6 rounded-lg hover:opacity-90 transition-opacity">
+        Enviar
+    </button>
+</form>

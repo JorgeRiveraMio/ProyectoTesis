@@ -1,44 +1,96 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProyectoTesis.Configurations;
+using ProyectoTesis.Models; // Aquí estarán tus clases de entidades
 
 namespace ProyectoTesis.Data
 {
-    // Clase que representa el "puente" entre tu aplicación y la base de datos
-    // Aquí defines cómo se van a mapear tus entidades (clases) a tablas o vistas de la base de datos
     public class ApplicationDbContext : DbContext
     {
-        // Constructor del contexto
-        // Recibe las opciones de configuración (cadena de conexión, proveedor de base de datos, etc.)
-        // Estas opciones se pasan desde el Program.cs o Startup.cs
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        // Aquí defines los DbSet que representan tus tablas en la BD
-        // Ejemplo:
-        // public DbSet<Usuario> Usuarios { get; set; }
-        // public DbSet<Producto> Productos { get; set; }
+        // DbSet = Representa una tabla de la BD
+        public DbSet<TBT_MODULO> TBT_MODULOS { get; set; }
+        public DbSet<TBT_PREGUNTA> TBT_PREGUNTAS { get; set; }
+        public DbSet<TBM_SESION> TBM_SESIONES { get; set; }
+        public DbSet<TBM_INTENTO> TBM_INTENTOS { get; set; }
+        public DbSet<TBM_RESULTADO> TBM_RESULTADOS { get; set; }
+        public DbSet<TBD_RESPUESTA> TBD_RESPUESTAS { get; set; }
+        public DbSet<TBD_ENVIO> TBD_ENVIOS { get; set; }
+        public DbSet<TBL_EVENTO> TBL_EVENTOS { get; set; }
 
-        // Método usado para configurar el mapeo entre tus clases (entidades) y la base de datos
-        // Sirve para personalizar:
-        //   - Nombres de tablas
-        //   - Claves primarias y foráneas
-        //   - Propiedades ignoradas
-        //   - Configurar vistas
-        //   - Relaciones (1 a 1, 1 a muchos, muchos a muchos)
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Muy importante: llamar primero al base.OnModelCreating
-            // Esto asegura que se apliquen configuraciones predeterminadas de EF Core
             base.OnModelCreating(modelBuilder);
 
-            // Ejemplo: cambiar el nombre de una tabla
-            // modelBuilder.Entity<Usuario>().ToTable("TB_USUARIOS");
+            // 🔹 Mapear nombres de tablas
+            modelBuilder.Entity<TBT_MODULO>().ToTable("TBT_MODULOS");
+            modelBuilder.Entity<TBT_PREGUNTA>().ToTable("TBT_PREGUNTAS");
+            modelBuilder.Entity<TBM_SESION>().ToTable("TBM_SESIONES");
+            modelBuilder.Entity<TBM_INTENTO>().ToTable("TBM_INTENTOS");
+            modelBuilder.Entity<TBM_RESULTADO>().ToTable("TBM_RESULTADOS");
+            modelBuilder.Entity<TBD_RESPUESTA>().ToTable("TBD_RESPUESTAS");
+            modelBuilder.Entity<TBD_ENVIO>().ToTable("TBD_ENVIOS");
+            modelBuilder.Entity<TBL_EVENTO>().ToTable("TBL_EVENTOS");
 
-            // Ejemplo: definir clave compuesta
-            // modelBuilder.Entity<Pedido>().HasKey(p => new { p.PedidoId, p.ProductoId });
+            // 🔹 PK explícitas
+            modelBuilder.Entity<TBT_MODULO>().HasKey(m => m.IDD_MODULO);
+            modelBuilder.Entity<TBT_PREGUNTA>().HasKey(p => p.IDD_PREGUNTA);
+            modelBuilder.Entity<TBM_SESION>().HasKey(s => s.IDD_SESION);
+            modelBuilder.Entity<TBM_INTENTO>().HasKey(i => i.IDD_INTENTO);
+            modelBuilder.Entity<TBM_RESULTADO>().HasKey(r => r.IDD_RESULTADO);
+            modelBuilder.Entity<TBD_RESPUESTA>().HasKey(r => r.IDD_REPOR);
+            modelBuilder.Entity<TBD_ENVIO>().HasKey(e => e.IDD_ENVIO);
+            modelBuilder.Entity<TBL_EVENTO>().HasKey(e => e.IDD_EVENTO);
 
-            // Ejemplo: ignorar una propiedad que no quieres guardar en la BD
-            // modelBuilder.Entity<Usuario>().Ignore(u => u.PropiedadTemporal);
+            // 🔹 Relación 1:1 Sesion - Resultado
+            modelBuilder.Entity<TBM_SESION>()
+                .HasOne(s => s.RESULTADO)
+                .WithOne(r => r.SESION)
+                .HasForeignKey<TBM_RESULTADO>(r => r.IDD_SESION);
+
+            // 🔹 Relación 1:N Sesion - Intentos
+            modelBuilder.Entity<TBM_SESION>()
+                .HasMany(s => s.INTENTOS)
+                .WithOne(i => i.SESION)
+                .HasForeignKey(i => i.IDD_SESION);
+
+            // 🔹 Relación 1:N Sesion - Eventos
+            modelBuilder.Entity<TBM_SESION>()
+                .HasMany(s => s.EVENTOS)
+                .WithOne(e => e.SESION)
+                .HasForeignKey(e => e.IDD_SESION);
+
+            // 🔹 Relación 1:N Resultado - Envíos
+            modelBuilder.Entity<TBM_RESULTADO>()
+                .HasMany(r => r.ENVIOS)
+                .WithOne(e => e.RESULTADO)
+                .HasForeignKey(e => e.IDD_RESULTADO);
+
+            // 🔹 Relación 1:N Intento - Respuestas (con cascada)
+            modelBuilder.Entity<TBM_INTENTO>()
+                .HasMany(i => i.RESPUESTAS)
+                .WithOne(r => r.INTENTO)
+                .HasForeignKey(r => r.IDD_INTENTO)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // 🔹 Relación 1:N Pregunta - Respuestas (sin cascada para evitar ciclos)
+            modelBuilder.Entity<TBT_PREGUNTA>()
+                .HasMany(p => p.RESPUESTAS)
+                .WithOne(r => r.PREGUNTA)
+                .HasForeignKey(r => r.IDD_PREGUNTA)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // 🔹 Relación Pregunta - Módulo (explicita para evitar MODULOIDD_MODULO)
+            modelBuilder.Entity<TBT_PREGUNTA>()
+                .HasOne(p => p.MODULO)
+                .WithMany(m => m.PREGUNTAS)
+                .HasForeignKey(p => p.IDD_MODULO)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.ApplyConfiguration(new TBT_MODULOConfiguration());
+            modelBuilder.ApplyConfiguration(new TBT_PREGUNTAConfiguration());
+
+
         }
-
-
     }
 }

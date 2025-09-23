@@ -1,50 +1,78 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ProyectoTesis</title>
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ProyectoTesis.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        @if (ViewData["ShowNav"] as bool? != false)
-        {
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ProyectoTesis</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-      }
-    </header>
-    <div class="container">
 
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Fonts + Material Icons -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?display=swap&family=Public+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <style type="text/tailwindcss">
+        :root {
+            --primary-color: #13a4ec;
+            --secondary-color: #f0f3f4;
+            --text-primary: #111618;
+            --text-secondary: #617c89;
+        }
+        .custom-radio:checked {
+            background-image: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27white%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3ccircle cx=%278%27 cy=%278%27 r=%273%27/%3e%3c/svg%3e');
+            background-color: #13a4ec;
+            border-color: #13a4ec;
+        }
+    </style>
+</head>
+<body class="bg-slate-50" style='font-family: "Public Sans", "Noto Sans", sans-serif;'>
+
+    <!-- Navbar estilo prototipo -->
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f3f4] px-10 py-4 shadow-sm bg-white">
+        <div class="flex items-center gap-3 text-slate-800">
+            <div class="size-8 text-[#13a4ec]">
+                <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+                </svg>
+            </div>
+            <h1 class="text-xl font-bold leading-tight tracking-[-0.015em]">Orientación Vocacional</h1>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-8">
+            <a class="text-slate-600 hover:text-[#13a4ec] text-sm font-medium transition-colors" asp-controller="Home" asp-action="Index">Inicio</a>
+            <a class="text-[#13a4ec] text-sm font-bold transition-colors" asp-controller="Test" asp-action="Iniciar">Test</a>
+            <a class="text-slate-600 hover:text-[#13a4ec] text-sm font-medium transition-colors" href="#">Carreras</a>
+            <a class="text-slate-600 hover:text-[#13a4ec] text-sm font-medium transition-colors" href="#">Recursos</a>
+            <a class="text-slate-600 hover:text-[#13a4ec] text-sm font-medium transition-colors" href="#">Contacto</a>
+        </nav>
+
+        <div class="flex items-center gap-4">
+            <button class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">
+                <span class="material-symbols-outlined">help</span>
+            </button>
+            <button>
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+                     style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDdXWgegZ_RHDDIKaCcWk-qMSlOYQdTC3_6ZPcvyFurbZ1pvNyOdRCaRNEwhlEQ8cBGSuOGC4vMPDMMfD6YwWv-wkcxZbDzxA9qYmUnEk2gyymVTejHvJvmU4gdQqCz6sd1OAo7IbIC4DWh92RLxDwaL0k1iN7fU4FGFVSCkd8jazQmxfaijceurpdf-iPJPveXlpPPPmvk93v-MKTA0BDRvqNb59Qug572Uk6HnglUoziKNoMND54DtAjE_xpXZ-QWPlqhWCmbEbw");'>
+                </div>
+            </button>
+        </div>
+    </header>
+
+    <!-- Contenido -->
+    <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    @* <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - ProyectoTesis - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer> *@
+    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

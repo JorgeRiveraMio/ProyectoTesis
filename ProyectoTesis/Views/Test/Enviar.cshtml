@@ -1,0 +1,8 @@
+@model ProyectoTesis.Models.TBM_RESULTADO
+
+<h3>Enviar resultado a tu correo</h3>
+<form asp-action="EnviarResultado" method="post">
+    <input type="hidden" name="resultadoId" value="@Model.IDD_RESULTADO" />
+    <input type="email" name="correo" placeholder="Ingresa tu correo" required />
+    <button type="submit">Enviar</button>
+</form>

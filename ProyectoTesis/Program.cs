@@ -18,11 +18,11 @@ if( envCustom=="J")
 }else if (envCustom == "M")
 { 
 
-    connectionString = builder.Configuration.GetConnectionString("DefaultConnectionJorge");
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnectionMarco");
 }
 else
 {
-    throw new Exception("No se ha definido un Environment válido (usa 'J' o 'M').");
+    throw new Exception("No se ha definido un Environment vï¿½lido (usa 'J' o 'M').");
 }
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -31,12 +31,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 
 #region Sesion
-// Agregar servicios de sesión
-builder.Services.AddDistributedMemoryCache(); // almacén en memoria
+// Agregar servicios de sesiï¿½n
+builder.Services.AddDistributedMemoryCache(); // almacï¿½n en memoria
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = ".VocacionalApp.Session"; // nombre de la cookie
-    options.IdleTimeout = TimeSpan.FromHours(1);    // cuánto dura la sesión
+    options.IdleTimeout = TimeSpan.FromHours(1);    // cuï¿½nto dura la sesiï¿½n
     options.Cookie.HttpOnly = true;                 // solo accesible desde servidor
     options.Cookie.IsEssential = true;              // no bloqueado por GDPR
 });
@@ -46,22 +46,22 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-app.UseSession(); // <- muy importante, habilita el middleware
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage(); // ðŸ”¹ Esto muestra los detalles completos del error
+}
+else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
+app.UseSession(); 
 app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
