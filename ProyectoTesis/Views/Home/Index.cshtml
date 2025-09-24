@@ -3,28 +3,114 @@
     ViewData["Title"] = "Inicio";
 }
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <title>Página inicial</title>
+
+    <!-- Google Fonts -->
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect" />
+    <link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Poppins:wght@400;500;600;700&amp;family=Public+Sans:wght@400;500;700;900" onload="this.rel='stylesheet'" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <style type="text/tailwindcss">
+        :root {
+            --primary-color: #13a4ec;
+            --secondary-color: #f0f9ff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+        }
+        body {
+            font-family: 'Poppins', 'Public Sans', sans-serif;
+        }
+        .blob-1 {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: #cffafe;
+            border-radius: 50%;
+            top: -100px;
+            left: -100px;
+            filter: blur(100px);
+            z-index: -1;
+            animation: float 10s ease-in-out infinite alternate;
+        }
+        .blob-2 {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: #f0f9ff;
+            border-radius: 50%;
+            bottom: -150px;
+            right: -150px;
+            filter: blur(100px);
+            z-index: -1;
+            animation: float 12s ease-in-out infinite alternate-reverse;
+        }
+        @@keyframes float {
+            from { transform: translateY(0px); }
+            to { transform: translateY(30px); }
+        }
+    </style>
 </head>
-<body class="min-vh-100 d-flex align-items-center justify-content-center text-center overflow-hidden" style=" width: 100%;">
-    <div class="d-flex flex-column justify-content-center  align-items-center text-center" style="max-width:520px;  height:100%;">
+<body class="bg-gray-50">
+    <!-- Fondos difusos fuera del contenedor -->
+    <div class="blob-1"></div>
+    <div class="blob-2"></div>
 
-        <h1 class="fw-bold mb-4">
-            Descubre tu vocación,
-            define tu futuro.
-        </h1>
-        <p class="mb-4">
-            Este test está diseñado para ayudarte a explorar tus intereses y
-            habilidades, guiándote hacia la carrera profesional que mejor
-            se adapta a ti. ¡Es hora de empezar a construir tu camino!
-        </p>
-        <form asp-controller="Test" asp-action="Iniciar" method="get">
-            <button type="submit" class="btn btn-primary">Iniciar test</button>
-        </form>
+    <!-- Contenido principal -->
+    <div class="relative flex size-full min-h-screen flex-col overflow-hidden">
+        <div class="relative flex flex-1 flex-col items-center justify-center p-4">
+            <div class="w-full max-w-2xl text-center animate-fadeIn">
+                <div class="flex flex-col items-center justify-center space-y-4 mb-8">
+                    <div class="bg-white p-4 rounded-full shadow-md animate-bounce-slow">
+                        <span class="material-symbols-outlined text-5xl text-[var(--primary-color)]">
+                            explore
+                        </span>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-[var(--text-primary)]">
+                        Descubre tu vocación, define tu futuro.
+                    </h1>
+                </div>
 
+                <p class="text-lg text-[var(--text-secondary)] mb-10 max-w-xl mx-auto">
+                    Este test está diseñado para ayudarte a explorar tus intereses y habilidades, 
+                    guiándote hacia la carrera profesional que mejor se adapta a ti. 
+                    ¡Es hora de empezar a construir tu camino!
+                </p>
+
+                <form asp-controller="Test" asp-action="Iniciar" method="get">
+                    <button type="submit"
+                            class="flex min-w-[84px] max-w-[480px] items-center justify-center h-14 px-8 mx-auto
+                                   rounded-full bg-[var(--primary-color)] text-white text-lg font-semibold 
+                                   hover:bg-sky-500 transition-all duration-300 shadow-lg shadow-sky-200/80 hover:scale-105">
+                        <span class="truncate">Comenzar test</span>
+                        <span class="material-symbols-outlined ml-2">arrow_forward</span>
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
-  
+
+    <!-- Animaciones extras -->
+    <style>
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        @@keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-bounce-slow {
+            animation: bounce 3s infinite;
+        }
+    </style>
 </body>
 </html>

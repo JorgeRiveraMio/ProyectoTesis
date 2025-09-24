@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoTesis.Data;
 
@@ -11,9 +12,11 @@ using ProyectoTesis.Data;
 namespace ProyectoTesis.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250924163547_AddCategoriaToPregunta")]
+    partial class AddCategoriaToPregunta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -284,169 +287,66 @@ namespace ProyectoTesis.Migrations
                         new
                         {
                             IDD_PREGUNTA = 7,
-                            COD_CATEGORIA = "E",
-                            DES_PREGUNTA_TX = "En un grupo nuevo, prefiero: (A) Conocer y hablar con varias personas / (B) Observar primero y hablar solo con algunas.",
-                            IDD_MODULO = (byte)2
+                            COD_CATEGORIA = "R",
+                            DES_PREGUNTA_TX = "Me gustaría trabajar en el servicio técnico de una empresa.",
+                            IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 8,
                             COD_CATEGORIA = "I",
-                            DES_PREGUNTA_TX = "Cuando paso tiempo solo: (A) Me aburro fácilmente / (B) Me siento recargado.",
-                            IDD_MODULO = (byte)2
+                            DES_PREGUNTA_TX = "Me gustaría trabajar en un centro de investigación o en un laboratorio.",
+                            IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 9,
-                            COD_CATEGORIA = "E",
-                            DES_PREGUNTA_TX = "En reuniones, suelo: (A) Hablar mucho y de manera espontánea / (B) Hablar solo cuando tengo algo importante.",
-                            IDD_MODULO = (byte)2
+                            COD_CATEGORIA = "A",
+                            DES_PREGUNTA_TX = "En el futuro me gustaría escribir poemas, guiones de películas o de juegos de video.",
+                            IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 10,
-                            COD_CATEGORIA = "I",
-                            DES_PREGUNTA_TX = "Prefiero actividades: (A) Con mucha interacción social / (B) Tranquilas y personales.",
-                            IDD_MODULO = (byte)2
+                            COD_CATEGORIA = "S",
+                            DES_PREGUNTA_TX = "Me gusta participar en organizaciones como la Cruz Roja o jóvenes exploradores.",
+                            IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 11,
-                            COD_CATEGORIA = "E",
-                            DES_PREGUNTA_TX = "Mis amigos me describen como: (A) Energético y sociable / (B) Reservado y reflexivo.",
-                            IDD_MODULO = (byte)2
+                            COD_CATEGORIA = "C",
+                            DES_PREGUNTA_TX = "Me gusta organizar mi trabajo día a día y para la semana.",
+                            IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 12,
-                            COD_CATEGORIA = "I",
-                            DES_PREGUNTA_TX = "Cuando aprendo algo nuevo: (A) Me gusta discutirlo con otros / (B) Prefiero analizarlo solo.",
+                            DES_PREGUNTA_TX = "En un grupo nuevo, prefiero: (A) Conocer y hablar con varias personas / (B) Observar primero y hablar solo con algunas.",
                             IDD_MODULO = (byte)2
                         },
                         new
                         {
                             IDD_PREGUNTA = 13,
-                            COD_CATEGORIA = "E",
-                            DES_PREGUNTA_TX = "Para relajarme: (A) Salgo con amigos / (B) Me quedo en casa leyendo o viendo algo.",
+                            DES_PREGUNTA_TX = "Cuando paso tiempo solo: (A) Me aburro fácilmente / (B) Me siento recargado.",
                             IDD_MODULO = (byte)2
                         },
                         new
                         {
                             IDD_PREGUNTA = 14,
-                            COD_CATEGORIA = "I",
-                            DES_PREGUNTA_TX = "En un viaje disfruto más: (A) Conocer mucha gente nueva / (B) Explorar a mi ritmo y en calma.",
+                            DES_PREGUNTA_TX = "En reuniones, suelo: (A) Hablar mucho y de manera espontánea / (B) Hablar solo cuando tengo algo importante.",
                             IDD_MODULO = (byte)2
                         },
                         new
                         {
                             IDD_PREGUNTA = 15,
-                            COD_CATEGORIA = "E",
-                            DES_PREGUNTA_TX = "Al resolver un problema: (A) Pienso en voz alta con otros / (B) Reflexiono internamente.",
+                            DES_PREGUNTA_TX = "Prefiero actividades: (A) Con mucha interacción social / (B) Tranquilas y personales.",
                             IDD_MODULO = (byte)2
                         },
                         new
                         {
                             IDD_PREGUNTA = 16,
-                            COD_CATEGORIA = "I",
-                            DES_PREGUNTA_TX = "Cuando me hacen una pregunta: (A) Contesto de inmediato / (B) Pienso antes de responder.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 17,
-                            COD_CATEGORIA = "S",
-                            DES_PREGUNTA_TX = "Prefiero fijarme en: (A) Los hechos concretos / (B) Las posibilidades futuras.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 18,
-                            COD_CATEGORIA = "N",
-                            DES_PREGUNTA_TX = "Cuando aprendo algo nuevo: (A) Necesito ejemplos prácticos / (B) Prefiero ideas y teorías generales.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 19,
-                            COD_CATEGORIA = "S",
-                            DES_PREGUNTA_TX = "Mi forma de trabajar es más: (A) Detallada y paso a paso / (B) Creativa y con saltos de ideas.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 20,
-                            COD_CATEGORIA = "N",
-                            DES_PREGUNTA_TX = "Al recordar algo tiendo a: (A) Enfocarme en los detalles / (B) Enfocarme en la idea principal.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 21,
-                            COD_CATEGORIA = "S",
-                            DES_PREGUNTA_TX = "En una conversación me gusta más: (A) Hablar de lo que está ocurriendo ahora / (B) Imaginar lo que podría ocurrir después.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 22,
-                            COD_CATEGORIA = "N",
-                            DES_PREGUNTA_TX = "Cuando sigo instrucciones: (A) Prefiero que sean claras y específicas / (B) Prefiero margen para interpretarlas.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 23,
-                            COD_CATEGORIA = "S",
-                            DES_PREGUNTA_TX = "Mis amigos dicen que soy: (A) Práctico y realista / (B) Soñador e imaginativo.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 24,
-                            COD_CATEGORIA = "N",
-                            DES_PREGUNTA_TX = "En un proyecto: (A) Me concentro en los pasos inmediatos / (B) Me concentro en el resultado final.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 25,
-                            COD_CATEGORIA = "S",
-                            DES_PREGUNTA_TX = "En clase me interesa más: (A) La aplicación práctica del tema / (B) La teoría y las conexiones.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 26,
-                            COD_CATEGORIA = "N",
-                            DES_PREGUNTA_TX = "En una historia: (A) Me fijo en los hechos / (B) Me fijo en el significado.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 27,
-                            COD_CATEGORIA = "T",
-                            DES_PREGUNTA_TX = "Al decidir: (A) Me baso en la lógica / (B) Me baso en lo que siento correcto.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 28,
-                            COD_CATEGORIA = "F",
-                            DES_PREGUNTA_TX = "Si un amigo comete un error: (A) Le digo directamente cómo mejorarlo / (B) Cuido sus sentimientos al corregirlo.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 29,
-                            COD_CATEGORIA = "J",
-                            DES_PREGUNTA_TX = "Prefiero: (A) Tener un plan definido / (B) Mantenerme flexible.",
-                            IDD_MODULO = (byte)2
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 30,
-                            COD_CATEGORIA = "P",
-                            DES_PREGUNTA_TX = "Antes de un viaje: (A) Organizo horarios y actividades / (B) Veo qué surge sobre la marcha.",
+                            DES_PREGUNTA_TX = "Para mí es más importante: (A) Terminar lo que empiezo / (B) Explorar nuevas cosas aunque no termine todas.",
                             IDD_MODULO = (byte)2
                         });
                 });

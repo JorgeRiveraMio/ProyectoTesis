@@ -10,28 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b18e9273-c25d-4e87-91d4-a1f1afea588b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ProyectoTesis/Configurations/TBT_MODULOConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProyectoTesis/Configurations/TBT_PREGUNTAConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProyectoTesis/Models/TBD_ENVIO.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProyectoTesis/Models/TBD_RESPUESTA.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProyectoTesis/Models/TBL_EVENTO.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProyectoTesis/Models/TBM_INTENTO.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProyectoTesis/Models/TBM_RESULTADO.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProyectoTesis/Models/TBM_SESION.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProyectoTesis/Models/TBT_MODULO.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProyectoTesis/Models/TBT_PREGUNTA.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProyectoTesis/Views/Test/Enviar.cshtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProyectoTesis/Views/Test/Preguntas.cshtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProyectoTesis/Views/Test/Resultado.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ProyectoTesis/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProyectoTesis/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProyectoTesis/Configurations/TBT_PREGUNTAConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ProyectoTesis/Configurations/TBT_PREGUNTAConfiguration.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProyectoTesis/Controllers/TestController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ProyectoTesis/Controllers/TestController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProyectoTesis/Data/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ProyectoTesis/Data/ApplicationDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProyectoTesis/Models/ErrorViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ProyectoTesis/Models/ErrorViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProyectoTesis/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ProyectoTesis/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProyectoTesis/ProyectoTesis.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ProyectoTesis/ProyectoTesis.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProyectoTesis/Views/Home/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/ProyectoTesis/Views/Home/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProyectoTesis/Views/Shared/Error.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/ProyectoTesis/Views/Shared/Error.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProyectoTesis/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/ProyectoTesis/Views/Shared/_Layout.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProyectoTesis/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/ProyectoTesis/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProyectoTesis/Migrations/ApplicationDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ProyectoTesis/Migrations/ApplicationDbContextModelSnapshot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProyectoTesis/Models/TBT_PREGUNTA.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ProyectoTesis/Models/TBT_PREGUNTA.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,26 +67,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.Proyecto Tesis.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Project.Unnamed.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;MJF&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.maddyhome.idea.vim.ui.VimEmulationConfigurable&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.Proyecto Tesis.executor": "Run",
+    ".NET Project.Unnamed.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "MJF",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Proyecto Tesis" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/ProyectoTesis/bin/Debug/net8.0/ProyectoTesis.exe" />
@@ -182,7 +165,8 @@
       <workItem from="1758500722395" duration="1857000" />
       <workItem from="1758554936709" duration="12920000" />
       <workItem from="1758579556677" duration="3302000" />
-      <workItem from="1758647296657" duration="5714000" />
+      <workItem from="1758647296657" duration="6528000" />
+      <workItem from="1758730628657" duration="3963000" />
     </task>
     <servers />
   </component>

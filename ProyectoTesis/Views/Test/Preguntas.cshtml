@@ -3,6 +3,7 @@
     ViewData["Title"] = "Preguntas del Test";
     var totalPreguntas = ViewBag.TotalPreguntas;
     var numeroActual = ViewBag.NumeroActual;
+    var moduloId = ViewBag.ModuloId; // lo traemos para saber si es RIASEC (1) o MBTI (2)
 }
 
 <div class="flex flex-1 justify-center py-10 bg-slate-50" style='font-family: "Public Sans", "Noto Sans", sans-serif;'>
@@ -16,8 +17,7 @@
                     <p class="text-slate-500 text-sm">Pregunta @numeroActual de @totalPreguntas</p>
                 </div>
                 <div class="w-full bg-slate-200 rounded-full h-2.5">
-                    <div class="bg-[#13a4ec] h-2.5 rounded-full" style="width:@((numeroActual * 100) / totalPreguntas)%;">
-                    </div>
+                    <div class="bg-[#13a4ec] h-2.5 rounded-full" style="width:@((numeroActual * 100) / totalPreguntas)%;"></div>
                 </div>
             </div>
 
@@ -31,18 +31,43 @@
 
                 <h2 class="text-slate-900 text-lg font-semibold">@Model.DES_PREGUNTA_TX</h2>
 
-                <div class="grid grid-cols-5 gap-4">
-                    @for (int val = 1; val <= 5; val++)
-                    {
+                <!-- Opciones según módulo -->
+                @if (moduloId == 1)
+                {
+                    <!-- Escala 1 a 5 para RIASEC -->
+                    <div class="grid grid-cols-5 gap-4">
+                        @for (int val = 1; val <= 5; val++)
+                        {
+                            <label class="flex flex-col items-center gap-2 rounded-lg border border-solid border-slate-200 p-4 hover:bg-slate-50 cursor-pointer transition-colors has-[:checked]:border-[#13a4ec] has-[:checked]:bg-blue-50">
+                                <input class="custom-radio h-5 w-5 appearance-none rounded-full border-2 border-slate-300 transition-all"
+                                       type="radio"
+                                       name="VAL_RESPUESTA_TX"
+                                       value="@val" required />
+                                <span class="text-slate-700 text-sm font-medium">@val</span>
+                            </label>
+                        }
+                    </div>
+                }
+                else if (moduloId == 2)
+                {
+                    <!-- Solo A / B para MBTI -->
+                    <div class="grid grid-cols-2 gap-4">
                         <label class="flex flex-col items-center gap-2 rounded-lg border border-solid border-slate-200 p-4 hover:bg-slate-50 cursor-pointer transition-colors has-[:checked]:border-[#13a4ec] has-[:checked]:bg-blue-50">
                             <input class="custom-radio h-5 w-5 appearance-none rounded-full border-2 border-slate-300 transition-all"
                                    type="radio"
                                    name="VAL_RESPUESTA_TX"
-                                   value="@val" required />
-                            <span class="text-slate-700 text-sm font-medium">@val</span>
+                                   value="1" required />
+                            <span class="text-slate-700 text-sm font-medium">A</span>
                         </label>
-                    }
-                </div>
+                        <label class="flex flex-col items-center gap-2 rounded-lg border border-solid border-slate-200 p-4 hover:bg-slate-50 cursor-pointer transition-colors has-[:checked]:border-[#13a4ec] has-[:checked]:bg-blue-50">
+                            <input class="custom-radio h-5 w-5 appearance-none rounded-full border-2 border-slate-300 transition-all"
+                                   type="radio"
+                                   name="VAL_RESPUESTA_TX"
+                                   value="0" required />
+                            <span class="text-slate-700 text-sm font-medium">B</span>
+                        </label>
+                    </div>
+                }
 
                 <!-- Navegación -->
                 <div class="flex justify-between mt-6">
