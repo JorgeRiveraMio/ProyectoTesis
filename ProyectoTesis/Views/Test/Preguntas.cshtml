@@ -3,8 +3,31 @@
     ViewData["Title"] = "Preguntas del Test";
     var totalPreguntas = ViewBag.TotalPreguntas;
     var numeroActual = ViewBag.NumeroActual;
-    var moduloId = ViewBag.ModuloId; // lo traemos para saber si es RIASEC (1) o MBTI (2)
+    var moduloId = ViewBag.ModuloId;
+
+    var progresoActual = (numeroActual * 100) / totalPreguntas;
+    var progresoAnterior = ((numeroActual - 1) * 100) / totalPreguntas;
 }
+
+<style>
+    .liquid-bar {
+        background: linear-gradient(
+            270deg,
+            #38bdf8,
+            #0ea5e9,
+            #0284c7
+        );
+        background-size: 600% 600%;
+        animation: waveAnimation 4s ease infinite;
+        transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); 
+    }
+
+    @@keyframes waveAnimation {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+</style>
 
 <div class="flex flex-1 justify-center py-10 bg-slate-50" style='font-family: "Public Sans", "Noto Sans", sans-serif;'>
     <div class="layout-content-container flex flex-col w-full max-w-2xl">
@@ -16,8 +39,11 @@
                     <p class="text-slate-800 text-sm font-medium">Progreso del Test</p>
                     <p class="text-slate-500 text-sm">Pregunta @numeroActual de @totalPreguntas</p>
                 </div>
-                <div class="w-full bg-slate-200 rounded-full h-2.5">
-                    <div class="bg-[#13a4ec] h-2.5 rounded-full" style="width:@((numeroActual * 100) / totalPreguntas)%;"></div>
+                <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                    <div id="progress-bar"
+                         class="liquid-bar h-2.5 rounded-full"
+                         style="width:@progresoAnterior%">
+                    </div>
                 </div>
             </div>
 
@@ -31,10 +57,8 @@
 
                 <h2 class="text-slate-900 text-lg font-semibold">@Model.DES_PREGUNTA_TX</h2>
 
-                <!-- Opciones según módulo -->
                 @if (moduloId == 1)
                 {
-                    <!-- Escala 1 a 5 para RIASEC -->
                     <div class="grid grid-cols-5 gap-4">
                         @for (int val = 1; val <= 5; val++)
                         {
@@ -50,7 +74,6 @@
                 }
                 else if (moduloId == 2)
                 {
-                    <!-- Solo A / B para MBTI -->
                     <div class="grid grid-cols-2 gap-4">
                         <label class="flex flex-col items-center gap-2 rounded-lg border border-solid border-slate-200 p-4 hover:bg-slate-50 cursor-pointer transition-colors has-[:checked]:border-[#13a4ec] has-[:checked]:bg-blue-50">
                             <input class="custom-radio h-5 w-5 appearance-none rounded-full border-2 border-slate-300 transition-all"
@@ -69,7 +92,6 @@
                     </div>
                 }
 
-                <!-- Navegación -->
                 <div class="flex justify-between mt-6">
                     @if (numeroActual > 1)
                     {
@@ -92,3 +114,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const bar = document.getElementById("progress-bar");
+        if (bar) {
+            setTimeout(() => {
+                bar.style.width = "@progresoActual%";
+            }, 100);
+        }
+    });
+</script>
