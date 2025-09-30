@@ -10,8 +10,9 @@ namespace ProyectoTesis.Configurations
         {
             builder.HasData(
                 new TBT_MODULO { IDD_MODULO = 1, COD_MODULO_TX = "RIASEC", NOM_MODULO_TX = "Test RIASEC" },
-                new TBT_MODULO { IDD_MODULO = 2, COD_MODULO_TX = "MBTI", NOM_MODULO_TX = "Test MBTI" }
+                new TBT_MODULO { IDD_MODULO = 2, COD_MODULO_TX = "OCEAN", NOM_MODULO_TX = "Test Big Five (OCEAN)" }
             );
+
         }
     }
 }

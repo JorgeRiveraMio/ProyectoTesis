@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using ProyectoTesis.Data;
 using QuestPDF.Infrastructure; 
 using System.Diagnostics.Eventing.Reader;
+using ProyectoTesis.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,8 @@ QuestPDF.Settings.License = LicenseType.Community;
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ProyectoTesis.Services.PdfService>();
 builder.Services.AddScoped<ProyectoTesis.Services.EmailService>();
+builder.Services.AddHttpClient<PythonApiService>();
+
 
 #region conexion base de datos
 var envCustom = builder.Configuration["Environment"];

@@ -8,7 +8,6 @@ namespace ProyectoTesis.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        // DbSet = Representa una tabla de la BD
         public DbSet<TBT_MODULO> TBT_MODULOS { get; set; }
         public DbSet<TBT_PREGUNTA> TBT_PREGUNTAS { get; set; }
         public DbSet<TBM_SESION> TBM_SESIONES { get; set; }
@@ -22,7 +21,7 @@ namespace ProyectoTesis.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // 🔹 Mapear nombres de tablas
+            // Mapear nombres de tablas
             modelBuilder.Entity<TBT_MODULO>().ToTable("TBT_MODULOS");
             modelBuilder.Entity<TBT_PREGUNTA>().ToTable("TBT_PREGUNTAS");
             modelBuilder.Entity<TBM_SESION>().ToTable("TBM_SESIONES");
@@ -32,7 +31,7 @@ namespace ProyectoTesis.Data
             modelBuilder.Entity<TBD_ENVIO>().ToTable("TBD_ENVIOS");
             modelBuilder.Entity<TBL_EVENTO>().ToTable("TBL_EVENTOS");
 
-            // 🔹 PK explícitas
+            // PK explícitas
             modelBuilder.Entity<TBT_MODULO>().HasKey(m => m.IDD_MODULO);
             modelBuilder.Entity<TBT_PREGUNTA>().HasKey(p => p.IDD_PREGUNTA);
             modelBuilder.Entity<TBM_SESION>().HasKey(s => s.IDD_SESION);
@@ -42,45 +41,38 @@ namespace ProyectoTesis.Data
             modelBuilder.Entity<TBD_ENVIO>().HasKey(e => e.IDD_ENVIO);
             modelBuilder.Entity<TBL_EVENTO>().HasKey(e => e.IDD_EVENTO);
 
-            // 🔹 Relación 1:1 Sesion - Resultado
             modelBuilder.Entity<TBM_SESION>()
                 .HasOne(s => s.RESULTADO)
                 .WithOne(r => r.SESION)
                 .HasForeignKey<TBM_RESULTADO>(r => r.IDD_SESION);
 
-            // 🔹 Relación 1:N Sesion - Intentos
             modelBuilder.Entity<TBM_SESION>()
                 .HasMany(s => s.INTENTOS)
                 .WithOne(i => i.SESION)
                 .HasForeignKey(i => i.IDD_SESION);
 
-            // 🔹 Relación 1:N Sesion - Eventos
             modelBuilder.Entity<TBM_SESION>()
                 .HasMany(s => s.EVENTOS)
                 .WithOne(e => e.SESION)
                 .HasForeignKey(e => e.IDD_SESION);
 
-            // 🔹 Relación 1:N Resultado - Envíos
             modelBuilder.Entity<TBM_RESULTADO>()
                 .HasMany(r => r.ENVIOS)
                 .WithOne(e => e.RESULTADO)
                 .HasForeignKey(e => e.IDD_RESULTADO);
 
-            // 🔹 Relación 1:N Intento - Respuestas (con cascada)
             modelBuilder.Entity<TBM_INTENTO>()
                 .HasMany(i => i.RESPUESTAS)
                 .WithOne(r => r.INTENTO)
                 .HasForeignKey(r => r.IDD_INTENTO)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // 🔹 Relación 1:N Pregunta - Respuestas (sin cascada para evitar ciclos)
             modelBuilder.Entity<TBT_PREGUNTA>()
                 .HasMany(p => p.RESPUESTAS)
                 .WithOne(r => r.PREGUNTA)
                 .HasForeignKey(r => r.IDD_PREGUNTA)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // 🔹 Relación Pregunta - Módulo (explicita para evitar MODULOIDD_MODULO)
             modelBuilder.Entity<TBT_PREGUNTA>()
                 .HasOne(p => p.MODULO)
                 .WithMany(m => m.PREGUNTAS)
@@ -89,7 +81,6 @@ namespace ProyectoTesis.Data
 
             modelBuilder.ApplyConfiguration(new TBT_MODULOConfiguration());
             modelBuilder.ApplyConfiguration(new TBT_PREGUNTAConfiguration());
-
 
         }
     }

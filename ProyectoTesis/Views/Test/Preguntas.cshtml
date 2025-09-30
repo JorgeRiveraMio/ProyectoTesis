@@ -1,4 +1,4 @@
-@model ProyectoTesis.Models.TBT_PREGUNTA
+@model ProyectoTesis.Models.TBT_PREGUNTA 
 @{
     ViewData["Title"] = "Preguntas del Test";
     var totalPreguntas = ViewBag.TotalPreguntas;
@@ -57,40 +57,19 @@
 
                 <h2 class="text-slate-900 text-lg font-semibold">@Model.DES_PREGUNTA_TX</h2>
 
-                @if (moduloId == 1)
-                {
-                    <div class="grid grid-cols-5 gap-4">
-                        @for (int val = 1; val <= 5; val++)
-                        {
-                            <label class="flex flex-col items-center gap-2 rounded-lg border border-solid border-slate-200 p-4 hover:bg-slate-50 cursor-pointer transition-colors has-[:checked]:border-[#13a4ec] has-[:checked]:bg-blue-50">
-                                <input class="custom-radio h-5 w-5 appearance-none rounded-full border-2 border-slate-300 transition-all"
-                                       type="radio"
-                                       name="VAL_RESPUESTA_TX"
-                                       value="@val" required />
-                                <span class="text-slate-700 text-sm font-medium">@val</span>
-                            </label>
-                        }
-                    </div>
-                }
-                else if (moduloId == 2)
-                {
-                    <div class="grid grid-cols-2 gap-4">
+                <!-- Escala Likert 1–5 (para RIASEC y OCEAN) -->
+                <div class="grid grid-cols-5 gap-4">
+                    @for (int val = 1; val <= 5; val++)
+                    {
                         <label class="flex flex-col items-center gap-2 rounded-lg border border-solid border-slate-200 p-4 hover:bg-slate-50 cursor-pointer transition-colors has-[:checked]:border-[#13a4ec] has-[:checked]:bg-blue-50">
                             <input class="custom-radio h-5 w-5 appearance-none rounded-full border-2 border-slate-300 transition-all"
                                    type="radio"
                                    name="VAL_RESPUESTA_TX"
-                                   value="1" required />
-                            <span class="text-slate-700 text-sm font-medium">A</span>
+                                   value="@val" required />
+                            <span class="text-slate-700 text-sm font-medium">@val</span>
                         </label>
-                        <label class="flex flex-col items-center gap-2 rounded-lg border border-solid border-slate-200 p-4 hover:bg-slate-50 cursor-pointer transition-colors has-[:checked]:border-[#13a4ec] has-[:checked]:bg-blue-50">
-                            <input class="custom-radio h-5 w-5 appearance-none rounded-full border-2 border-slate-300 transition-all"
-                                   type="radio"
-                                   name="VAL_RESPUESTA_TX"
-                                   value="0" required />
-                            <span class="text-slate-700 text-sm font-medium">B</span>
-                        </label>
-                    </div>
-                }
+                    }
+                </div>
 
                 <div class="flex justify-between mt-6">
                     @if (numeroActual > 1)

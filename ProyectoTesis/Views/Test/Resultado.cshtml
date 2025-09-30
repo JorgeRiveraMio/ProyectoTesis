@@ -11,12 +11,21 @@
         { "E", "Emprendedor" },
         { "C", "Convencional" }
     };
+
+    var nombresOcean = new Dictionary<string, string>
+    {
+        { "O", "Apertura a la Experiencia" },
+        { "C", "Responsabilidad (Conciencia)" },
+        { "E", "Extraversión" },
+        { "A", "Amabilidad" },
+        { "N", "Neuroticismo (Estabilidad emocional inversa)" }
+    };
 }
 
 <div class="text-center mb-12">
     <h2 class="text-4xl font-bold tracking-tight text-gray-900">Tu Perfil Vocacional</h2>
     <p class="mt-2 text-lg text-gray-600">
-        Basado en tus respuestas, este es tu perfil vocacional combinando <b>RIASEC</b> y <b>MBTI</b>.
+        Basado en tus respuestas, este es tu perfil combinando <b>RIASEC</b> y <b>Big Five (OCEAN)</b>.
     </p>
 </div>
 
@@ -28,9 +37,9 @@
         <!-- Bloque RIASEC -->
         <div class="flex flex-col gap-6">
             <h4 class="text-xl font-semibold text-gray-800 mb-2">RIASEC</h4>
-            @foreach (var cat in Model.Puntajes)
+            @foreach (var cat in Model.PuntajesRiasec)
             {
-                var porcentaje = Model.Total > 0 ? (cat.Value * 100 / Model.Total) : 0;
+                var porcentaje = Model.TotalRiasec > 0 ? (cat.Value * 100 / Model.TotalRiasec) : 0;
                 var nombre = nombresCategorias.ContainsKey(cat.Key) ? nombresCategorias[cat.Key] : cat.Key;
 
                 <div class="flex flex-col gap-2">
@@ -45,14 +54,29 @@
             }
         </div>
 
-        <!-- Bloque MBTI -->
-        <div class="bg-blue-50 p-6 rounded-xl shadow-md flex flex-col items-center justify-center text-center">
-            <span class="material-symbols-outlined text-5xl text-blue-600 mb-4">psychology</span>
-            <h4 class="text-3xl font-extrabold text-gray-900">@Model.PerfilMbti</h4>
-            <p class="text-gray-700 mt-3 text-base leading-relaxed">@Model.DescripcionMbti</p>
-            <span class="text-sm text-gray-500 italic mt-2">
-                (Ejemplo: ESTJ = Líder, práctico, orientado a resultados)
-            </span>
+        <!-- Bloque OCEAN -->
+        <div class="bg-blue-50 p-6 rounded-xl shadow-md">
+            <h4 class="text-xl font-semibold text-gray-800 mb-4 text-center">Big Five (OCEAN)</h4>
+            <div class="flex flex-col gap-4">
+                @foreach (var dim in Model.PuntajesOcean)
+                {
+                    var nombre = nombresOcean.ContainsKey(dim.Key) ? nombresOcean[dim.Key] : dim.Key;
+                    var valor = Math.Round(dim.Value, 1);
+
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-baseline">
+                            <span class="text-lg font-semibold text-gray-800">@nombre</span>
+                            <span class="text-lg font-bold text-green-600">@valor</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-green-500 h-3 rounded-full" style="width:@(valor * 20)%"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <p class="mt-4 text-center text-gray-700 text-sm italic">
+                @Model.PerfilOceanResumen
+            </p>
         </div>
     </div>
 

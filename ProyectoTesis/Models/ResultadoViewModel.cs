@@ -5,32 +5,37 @@ namespace ProyectoTesis.Models.ViewModels
 {
     public class CarreraSugerida
     {
-        public string Nombre { get; set; }
-        public string Descripcion { get; set; }
-        public string Icono { get; set; } // material-symbols-outlined
+        public string Nombre { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
+        public string Icono { get; set; } = "school"; // valor por defecto
         public List<string> Universidades { get; set; } = new();
     }
 
     public class ResultadoViewModel
     {
         public Guid IDD_RESULTADO { get; set; }
-        public string NOM_PERFIL_TX { get; set; }
-        public string DES_RECOMENDACION_TX { get; set; }
 
-        // RIASEC
-        public Dictionary<string, int> Puntajes { get; set; } = new();
-        public int Total { get; set; }
-        public string PerfilRiasec { get; set; }
+        public string NOM_PERFIL_TX { get; set; } = string.Empty;
+        public string DES_RECOMENDACION_TX { get; set; } = string.Empty;
 
-        // MBTI
-        public string PerfilMbti { get; set; }
-        public string DescripcionMbti { get; set; }
+        // --- RIASEC ---
+        public Dictionary<string, int> PuntajesRiasec { get; set; } = new();  
+        public int TotalRiasec { get; set; }
+        public string PerfilRiasec { get; set; } = string.Empty;
 
-        // Integración
-        public string PerfilCombinado => $"{PerfilRiasec} + {PerfilMbti}";
+        // --- OCEAN (Big Five) ---
+        public Dictionary<string, double> PuntajesOcean { get; set; } = new();
+        public string PerfilOceanResumen { get; set; } = string.Empty;
 
-        // 🔹 Carreras sugeridas
+        // --- Integración ---
+        public string PerfilCombinado =>
+            !string.IsNullOrEmpty(PerfilRiasec) && !string.IsNullOrEmpty(PerfilOceanResumen)
+                ? $"{PerfilRiasec} + {PerfilOceanResumen}"
+                : !string.IsNullOrEmpty(PerfilRiasec) ? PerfilRiasec
+                : !string.IsNullOrEmpty(PerfilOceanResumen) ? PerfilOceanResumen
+                : "Perfil no calculado";
+
+        // --- Carreras sugeridas ---
         public List<CarreraSugerida> Carreras { get; set; } = new();
     }
-
 }
