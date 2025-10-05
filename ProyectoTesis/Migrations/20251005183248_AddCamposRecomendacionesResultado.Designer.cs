@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoTesis.Data;
 
@@ -11,9 +12,11 @@ using ProyectoTesis.Data;
 namespace ProyectoTesis.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251005183248_AddCamposRecomendacionesResultado")]
+    partial class AddCamposRecomendacionesResultado
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,40 +172,6 @@ namespace ProyectoTesis.Migrations
                         .IsUnique();
 
                     b.ToTable("TBM_RESULTADOS", (string)null);
-                });
-
-            modelBuilder.Entity("ProyectoTesis.Models.TBM_SATISFACCION", b =>
-                {
-                    b.Property<int>("IDD_SATISFACCION")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IDD_SATISFACCION"));
-
-                    b.Property<int>("CLARIDAD_RESULTADOS")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FACILIDAD_USO")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FEC_REGISTRO")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("IDD_SESION")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("SATISFACCION_GLOBAL")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UTILIDAD_RECOMENDACIONES")
-                        .HasColumnType("int");
-
-                    b.HasKey("IDD_SATISFACCION");
-
-                    b.HasIndex("IDD_SESION")
-                        .IsUnique();
-
-                    b.ToTable("TBM_SATISFACCIONES", (string)null);
                 });
 
             modelBuilder.Entity("ProyectoTesis.Models.TBM_SESION", b =>
@@ -623,17 +592,6 @@ namespace ProyectoTesis.Migrations
                     b.Navigation("SESION");
                 });
 
-            modelBuilder.Entity("ProyectoTesis.Models.TBM_SATISFACCION", b =>
-                {
-                    b.HasOne("ProyectoTesis.Models.TBM_SESION", "SESION")
-                        .WithOne("SATISFACCION")
-                        .HasForeignKey("ProyectoTesis.Models.TBM_SATISFACCION", "IDD_SESION")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SESION");
-                });
-
             modelBuilder.Entity("ProyectoTesis.Models.TBT_PREGUNTA", b =>
                 {
                     b.HasOne("ProyectoTesis.Models.TBT_MODULO", "MODULO")
@@ -661,9 +619,8 @@ namespace ProyectoTesis.Migrations
 
                     b.Navigation("INTENTOS");
 
-                    b.Navigation("RESULTADO");
-
-                    b.Navigation("SATISFACCION");
+                    b.Navigation("RESULTADO")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ProyectoTesis.Models.TBT_MODULO", b =>

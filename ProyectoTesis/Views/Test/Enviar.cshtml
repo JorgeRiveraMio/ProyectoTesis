@@ -1,76 +1,89 @@
 @model ProyectoTesis.Models.TBM_RESULTADO
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
 @{
-    ViewData["Title"] = "Enviar resultados por correo";
+    ViewData["Title"] = "Enviar resultados y evaluación";
+    var sesionId = HttpContextAccessor.HttpContext?.Session.GetString("SesionId");
 }
 
-<div class="relative flex size-full min-h-screen flex-col overflow-x-hidden bg-gray-50" style='font-family: "Public Sans", sans-serif;'>
+<div class="relative flex min-h-screen flex-col bg-gray-50" style='font-family: "Public Sans", sans-serif;'>
 
-    <!-- Contenedor principal -->
     <main class="flex flex-1 justify-center py-10">
         <div class="w-full max-w-lg px-4">
             <div class="bg-white rounded-lg shadow-md p-8 text-center">
 
-                <!-- Título -->
+                <!-- Encabezado -->
                 <h2 class="text-gray-800 text-2xl font-bold leading-tight mb-6">
-                    ¿Qué tan útil fue esta recomendación?
+                    Evalúa tu experiencia y recibe tu resultado
                 </h2>
 
-                <!-- Calificación con estrellas -->
-                <div class="mb-8">
-                    <p class="text-gray-500 text-sm mb-4">Califica con estrellas:</p>
-                    <div class="flex justify-center gap-2">
-                        @for (int i = 0; i < 5; i++)
-                        {
-                            <button type="button"
-                                    class="p-2 rounded-full hover:bg-yellow-100 text-gray-400 hover:text-yellow-400 transition-colors group">
-                                <span class="material-symbols-outlined !text-4xl">star</span>
-                            </button>
-                        }
-                    </div>
-                </div>
+                <form asp-action="EnviarYGuardarSatisfaccion" method="post" class="space-y-6">
 
-                <!-- Calificación con caritas -->
-                <div class="mb-8">
-                    <p class="text-gray-500 text-sm mb-4">O califica con una carita:</p>
-                    <div class="flex justify-center gap-4">
-                        <button type="button" class="p-2 rounded-full hover:bg-red-100 text-red-400 transition-colors">
-                            <span class="material-symbols-outlined !text-5xl">sentiment_very_dissatisfied</span>
-                        </button>
-                        <button type="button" class="p-2 rounded-full hover:bg-orange-100 text-orange-400 transition-colors">
-                            <span class="material-symbols-outlined !text-5xl">sentiment_dissatisfied</span>
-                        </button>
-                        <button type="button" class="p-2 rounded-full hover:bg-yellow-100 text-yellow-400 transition-colors">
-                            <span class="material-symbols-outlined !text-5xl">sentiment_neutral</span>
-                        </button>
-                        <button type="button" class="p-2 rounded-full hover:bg-lime-100 text-lime-500 transition-colors">
-                            <span class="material-symbols-outlined !text-5xl">sentiment_satisfied</span>
-                        </button>
-                        <button type="button" class="p-2 rounded-full hover:bg-green-100 text-green-500 transition-colors">
-                            <span class="material-symbols-outlined !text-5xl">sentiment_very_satisfied</span>
-                        </button>
-                    </div>
-                </div>
+                    <input type="hidden" name="resultadoId" value="@Model.IDD_RESULTADO" />
+                    <input type="hidden" name="sesionId" value="@sesionId" />
 
-                <!-- Formulario de envío -->
-                <div class="border-t border-gray-200 pt-6">
-                    <form asp-action="EnviarResultado" method="post" class="space-y-4">
-                        <input type="hidden" name="resultadoId" value="@Model.IDD_RESULTADO" />
-
+                    <!-- Campo: Correo -->
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-1">Correo electrónico</label>
                         <input type="email"
                                name="correo"
-                               placeholder="Ingresa tu correo"
+                               placeholder="ejemplo@correo.com"
                                required
                                class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 transition p-3" />
+                    </div>
 
-                        <button type="submit"
-                                class="w-full flex items-center justify-center gap-2 cursor-pointer rounded-lg h-12 px-6 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold leading-normal transition-colors">
-                            <span class="material-symbols-outlined">email</span>
-                            <span class="truncate">Guardar resultados con email</span>
-                        </button>
-                    </form>
-                </div>
+                    <!-- Campos de satisfacción con estrellas -->
+                    @foreach (var campo in new[] {
+                        new { Name = "facilidadUso", Label = "Facilidad de uso" },
+                        new { Name = "claridadResultados", Label = "Claridad de resultados" },
+                        new { Name = "utilidadRecomendaciones", Label = "Utilidad de las recomendaciones" },
+                        new { Name = "satisfaccionGlobal", Label = "Satisfacción global" }
+                    })
+                    {
+                        <div class="text-left">
+                            <label class="block text-gray-700 font-semibold mb-2">@campo.Label</label>
+                            <div class="flex justify-center gap-1 star-group" data-input="@campo.Name">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <button type="button"
+                                            class="star-btn p-1 text-gray-300 hover:text-yellow-400 transition"
+                                            data-value="@i">
+                                        <span class="material-symbols-outlined !text-4xl">star</span>
+                                    </button>
+                                }
+                            </div>
+                            <input type="hidden" name="@campo.Name" id="@campo.Name" value="0" />
+                        </div>
+                    }
 
+                    <!-- Botón de envío -->
+                    <button type="submit"
+                            class="w-full flex items-center justify-center gap-2 cursor-pointer rounded-lg h-12 px-6 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold leading-normal transition-colors mt-6">
+                        <span class="material-symbols-outlined">email</span>
+                        <span>Enviar resultados y evaluación</span>
+                    </button>
+                </form>
             </div>
         </div>
     </main>
 </div>
+
+@section Scripts {
+    <script>
+        // --- Control de estrellas (para todos los grupos)
+        document.querySelectorAll('.star-group').forEach(group => {
+            const inputName = group.getAttribute('data-input');
+            const stars = group.querySelectorAll('.star-btn');
+
+            stars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    document.getElementById(inputName).value = index + 1;
+                    stars.forEach((s, i) =>
+                        s.classList.toggle('text-yellow-400', i <= index)
+                    );
+                });
+            });
+        });
+    </script>
+}

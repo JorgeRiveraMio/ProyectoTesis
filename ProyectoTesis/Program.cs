@@ -4,7 +4,6 @@ using QuestPDF.Infrastructure;
 using System.Diagnostics.Eventing.Reader;
 using ProyectoTesis.Services;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 QuestPDF.Settings.License = LicenseType.Community;
@@ -15,10 +14,8 @@ builder.Services.AddScoped<ProyectoTesis.Services.PdfService>();
 builder.Services.AddScoped<ProyectoTesis.Services.EmailService>();
 builder.Services.AddHttpClient<PythonApiService>();
 
-
-#region conexion base de datos
+#region conexión base de datos
 var envCustom = builder.Configuration["Environment"];
-
 string connectionString;
 
 if (envCustom == "J")
@@ -38,7 +35,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 #endregion
 
-#region Sesion
+#region Sesión
 // Agregar servicios de sesión
 builder.Services.AddDistributedMemoryCache(); // almacén en memoria
 builder.Services.AddSession(options =>
@@ -48,13 +45,16 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;                 // solo accesible desde servidor
     options.Cookie.IsEssential = true;              // no bloqueado por GDPR
 });
+
+// AGREGA ESTA LÍNEA
+builder.Services.AddHttpContextAccessor(); // habilita IHttpContextAccessor en controladores y vistas
 #endregion
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage(); // 🔹 Muestra detalles del error en desarrollo
+    app.UseDeveloperExceptionPage(); // Muestra detalles del error en desarrollo
 }
 else
 {

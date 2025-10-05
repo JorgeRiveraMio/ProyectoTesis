@@ -37,7 +37,8 @@ namespace ProyectoTesis.Controllers
             var sesion = new TBM_SESION
             {
                 NOM_ESTAD_SES = "activa",
-                FEC_CREADO = DateTime.UtcNow
+                FEC_CREADO = DateTime.UtcNow,
+                FEC_INICIO = DateTime.UtcNow 
             };
 
             _context.TBM_SESIONES.Add(sesion);
@@ -47,6 +48,7 @@ namespace ProyectoTesis.Controllers
 
             return RedirectToAction("MostrarPregunta", new { moduloId, numero = 1 });
         }
+
 
         // 2) Mostrar pregunta
         public async Task<IActionResult> MostrarPregunta(byte moduloId, int numero)
@@ -137,10 +139,12 @@ namespace ProyectoTesis.Controllers
         public async Task<IActionResult> ResultadoCombinado()
         {
             var sesionIdStr = HttpContext.Session.GetString("SesionId");
-            if (string.IsNullOrEmpty(sesionIdStr)) return RedirectToAction("Iniciar");
+            if (string.IsNullOrEmpty(sesionIdStr)) 
+                return RedirectToAction("Iniciar");
+
             var sesionId = Guid.Parse(sesionIdStr);
 
-            // --- RIASEC ---
+            // ---  Bloque RIASEC ---
             var intentoRiasec = await _context.TBM_INTENTOS
                 .FirstOrDefaultAsync(i => i.IDD_SESION == sesionId && i.IDD_MODULO == 1);
             var respuestasRiasec = await _context.TBD_RESPUESTAS
@@ -163,7 +167,7 @@ namespace ProyectoTesis.Controllers
                 { "C", riasecVector[5] }
             };
 
-            // --- OCEAN ---
+            // ---  Bloque OCEAN ---
             var intentoOcean = await _context.TBM_INTENTOS
                 .FirstOrDefaultAsync(i => i.IDD_SESION == sesionId && i.IDD_MODULO == 2);
             var respuestasOcean = await _context.TBD_RESPUESTAS
@@ -172,22 +176,30 @@ namespace ProyectoTesis.Controllers
 
             int[] oceanVector = CalcularVectorOcean(respuestasOcean);
 
-            // --- Llamar a API Python ---
+            // ---  Llamar a API Python ---
             dynamic resultadoApi = await _pythonApiService.ObtenerRecomendacionesAsync(riasecVector, oceanVector);
 
+            //  Capturar lista de recomendaciones generadas por la IA
+            var recomendaciones = ((IEnumerable<dynamic>)resultadoApi["recomendaciones"])
+                .Select(r => r[0].ToString())
+                .ToList();
+
+            // ---  Crear registro del resultado (validación HE2) ---
             var resultado = new TBM_RESULTADO
             {
                 IDD_RESULTADO = Guid.NewGuid(),
                 IDD_SESION = sesionId,
                 FEC_CREADO = DateTime.UtcNow,
                 NOM_PERFIL_TX = resultadoApi["riasec"].ToString(),
-                DES_RECOMENDACION_TX = "Generadas por modelo ML"
+                DES_RECOMENDACION_TX = "Generadas por modelo ML",
+                NUM_RECOMENDACIONES = recomendaciones.Count, // ✅ HE2: número de sugerencias
+                LISTA_RECOMENDACIONES_JSON = System.Text.Json.JsonSerializer.Serialize(recomendaciones)
             };
 
             _context.TBM_RESULTADOS.Add(resultado);
             await _context.SaveChangesAsync();
 
-            // 🔹 Construir resumen OCEAN legible
+            // ---  Construir resumen OCEAN legible ---
             var oceanValores = new Dictionary<string, double>
             {
                 { "O", Convert.ToDouble(resultadoApi["ocean_vector"][0]) },
@@ -200,6 +212,7 @@ namespace ProyectoTesis.Controllers
             string perfilOceanResumen = string.Join(", ",
                 oceanValores.Select(kv => $"{MapOceanNombre(kv.Key)}: {MapNivelOcean(kv.Value)} ({kv.Value:F1})"));
 
+            // ---  Construir ViewModel ---
             var vm = new ResultadoViewModel
             {
                 IDD_RESULTADO = resultado.IDD_RESULTADO,
@@ -208,20 +221,29 @@ namespace ProyectoTesis.Controllers
                 TotalRiasec = categoriasRiasec.Values.Sum(),
                 PuntajesOcean = oceanValores,
                 PerfilOceanResumen = perfilOceanResumen,
-                Carreras = ((IEnumerable<dynamic>)resultadoApi["recomendaciones"])
-                    .Select(r => new CarreraSugerida
-                    {
-                        Nombre = r[0].ToString(),
-                        Descripcion = "Sugerida automáticamente por el modelo",
-                        Icono = "school",
-                        Universidades = new List<string> { "Consulta diversas opciones académicas" }
-                    }).ToList()
+                Carreras = recomendaciones.Select(r => new CarreraSugerida
+                {
+                    Nombre = r,
+                    Descripcion = "Sugerida automáticamente por el modelo",
+                    Icono = "school",
+                    Universidades = new List<string> { "Consulta diversas opciones académicas" }
+                }).ToList()
             };
 
+            // ---  Finalizar sesión (validación HE1) ---
+            var sesion = await _context.TBM_SESIONES.FindAsync(sesionId);
+            if (sesion != null)
+            {
+                sesion.FEC_FIN = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+
+            // ---  Retornar vista ---
             return View("Resultado", vm);
         }
 
-        // --- 🔹 Helpers ---
+
+        // ---  Helpers ---
         private int[] CalcularVectorRiasec(IEnumerable<dynamic> respuestas)
         {
             var categorias = new Dictionary<string, int>
@@ -325,23 +347,46 @@ namespace ProyectoTesis.Controllers
             return View(resultado); 
         }
 
-        // POST: /Test/EnviarResultado
         [HttpPost]
-        public async Task<IActionResult> EnviarResultado(Guid resultadoId, string correo)
+        public async Task<IActionResult> EnviarYGuardarSatisfaccion(
+            Guid resultadoId,
+            Guid sesionId,
+            string correo,
+            int facilidadUso,
+            int claridadResultados,
+            int utilidadRecomendaciones,
+            int satisfaccionGlobal)
         {
+            // 1. Validar sesión y resultado
+            var sesion = await _context.TBM_SESIONES.FindAsync(sesionId);
             var resultado = await _context.TBM_RESULTADOS.FindAsync(resultadoId);
-            if (resultado == null)
+
+            if (sesion == null || resultado == null)
             {
-                TempData["Mensaje"] = "No se encontró el resultado para enviar.";
+                TempData["Mensaje"] = "No se encontró la sesión o el resultado.";
                 return RedirectToAction("ResultadoCombinado");
             }
 
+            // 2. Guardar satisfacción
+            var satisfaccion = new TBM_SATISFACCION
+            {
+                IDD_SESION = sesionId,
+                FACILIDAD_USO = facilidadUso,
+                CLARIDAD_RESULTADOS = claridadResultados,
+                UTILIDAD_RECOMENDACIONES = utilidadRecomendaciones,
+                SATISFACCION_GLOBAL = satisfaccionGlobal,
+                FEC_REGISTRO = DateTime.UtcNow
+            };
+            _context.TBM_SATISFACCIONES.Add(satisfaccion);
+            await _context.SaveChangesAsync();
+
+            // 3. Generar PDF y enviar correo
             var vm = new ResultadoViewModel
             {
                 IDD_RESULTADO = resultado.IDD_RESULTADO,
                 NOM_PERFIL_TX = resultado.NOM_PERFIL_TX,
                 DES_RECOMENDACION_TX = resultado.DES_RECOMENDACION_TX,
-                PerfilRiasec = resultado.NOM_PERFIL_TX, 
+                PerfilRiasec = resultado.NOM_PERFIL_TX,
                 Carreras = new List<CarreraSugerida>
                 {
                     new CarreraSugerida { Nombre = "Ingeniería de Sistemas", Descripcion = "Diseño y gestión de software" },
@@ -354,12 +399,15 @@ namespace ProyectoTesis.Controllers
             await _emailService.EnviarCorreoConPdfAsync(
                 correo,
                 "Tus resultados vocacionales",
-                "Adjunto encontrarás tu reporte de orientación vocacional.",
+                "Gracias por tu evaluación. Adjunto encontrarás tu reporte vocacional.",
                 pdfBytes
             );
 
-            TempData["Mensaje"] = $"Resultados enviados correctamente a {correo}";
+            TempData["Mensaje"] = $"✅ Evaluación guardada y resultados enviados correctamente a {correo}.";
             return RedirectToAction("Recomendaciones", new { resultadoId });
-        }       
+        }
+
+
+    
     }
 }
