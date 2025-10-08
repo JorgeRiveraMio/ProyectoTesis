@@ -139,14 +139,15 @@ namespace ProyectoTesis.Controllers
         public async Task<IActionResult> ResultadoCombinado()
         {
             var sesionIdStr = HttpContext.Session.GetString("SesionId");
-            if (string.IsNullOrEmpty(sesionIdStr)) 
+            if (string.IsNullOrEmpty(sesionIdStr))
                 return RedirectToAction("Iniciar");
 
             var sesionId = Guid.Parse(sesionIdStr);
 
-            // ---  Bloque RIASEC ---
+            // --- Bloque RIASEC ---
             var intentoRiasec = await _context.TBM_INTENTOS
                 .FirstOrDefaultAsync(i => i.IDD_SESION == sesionId && i.IDD_MODULO == 1);
+
             var respuestasRiasec = await _context.TBD_RESPUESTAS
                 .Where(r => r.IDD_INTENTO == intentoRiasec.IDD_INTENTO)
                 .Join(_context.TBT_PREGUNTAS,
@@ -167,70 +168,121 @@ namespace ProyectoTesis.Controllers
                 { "C", riasecVector[5] }
             };
 
-            // ---  Bloque OCEAN ---
+            // --- Bloque OCEAN ---
             var intentoOcean = await _context.TBM_INTENTOS
                 .FirstOrDefaultAsync(i => i.IDD_SESION == sesionId && i.IDD_MODULO == 2);
+
             var respuestasOcean = await _context.TBD_RESPUESTAS
                 .Where(r => r.IDD_INTENTO == intentoOcean.IDD_INTENTO)
                 .ToListAsync();
 
             int[] oceanVector = CalcularVectorOcean(respuestasOcean);
 
-            // ---  Llamar a API Python ---
+            // --- Llamar a API Python ---
             dynamic resultadoApi = await _pythonApiService.ObtenerRecomendacionesAsync(riasecVector, oceanVector);
 
-            //  Capturar lista de recomendaciones generadas por la IA
-            var recomendaciones = ((IEnumerable<dynamic>)resultadoApi["recomendaciones"])
-                .Select(r => r[0].ToString())
-                .ToList();
+            // Log de verificación (UTF-8 correcto)
+            Console.WriteLine("=== JSON devuelto por API Python ===");
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(resultadoApi, Newtonsoft.Json.Formatting.Indented));
 
-            // ---  Crear registro del resultado (validación HE2) ---
+            // --- Capturar lista de recomendaciones ---
+            var recomendaciones = new List<dynamic>();
+
+            try
+            {
+                var recArray = resultadoApi["recomendaciones"] as Newtonsoft.Json.Linq.JArray;
+                if (recArray != null)
+                {
+                    foreach (var r in recArray)
+                    {
+                        string carrera = r["carrera"]?.ToString() ?? "";
+                        double score = r["score"]?.ToObject<double>() ?? 0.0;
+                        var universidades = r["universidades"] != null
+                            ? r["universidades"].Select(u => u.ToString()).ToList()
+                            : new List<string>();
+
+                        recomendaciones.Add(new
+                        {
+                            Carrera = carrera,
+                            Universidades = universidades,
+                            Score = score
+                        });
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("⚠️ No se encontró el array de recomendaciones en el JSON.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error procesando recomendaciones: {ex.Message}");
+            }
+
+            // --- Crear registro del resultado ---
             var resultado = new TBM_RESULTADO
             {
                 IDD_RESULTADO = Guid.NewGuid(),
                 IDD_SESION = sesionId,
                 FEC_CREADO = DateTime.UtcNow,
-                NOM_PERFIL_TX = resultadoApi["riasec"].ToString(),
+                NOM_PERFIL_TX = resultadoApi["riasec"]?.ToString() ?? "N/A",
                 DES_RECOMENDACION_TX = "Generadas por modelo ML",
-                NUM_RECOMENDACIONES = recomendaciones.Count, // ✅ HE2: número de sugerencias
+                NUM_RECOMENDACIONES = recomendaciones.Count,
                 LISTA_RECOMENDACIONES_JSON = System.Text.Json.JsonSerializer.Serialize(recomendaciones)
             };
 
             _context.TBM_RESULTADOS.Add(resultado);
             await _context.SaveChangesAsync();
 
-            // ---  Construir resumen OCEAN legible ---
-            var oceanValores = new Dictionary<string, double>
+            // --- Construir resumen OCEAN ---
+            var oceanValores = new Dictionary<string, double>();
+            try
             {
-                { "O", Convert.ToDouble(resultadoApi["ocean_vector"][0]) },
-                { "C", Convert.ToDouble(resultadoApi["ocean_vector"][1]) },
-                { "E", Convert.ToDouble(resultadoApi["ocean_vector"][2]) },
-                { "A", Convert.ToDouble(resultadoApi["ocean_vector"][3]) },
-                { "N", Convert.ToDouble(resultadoApi["ocean_vector"][4]) }
-            };
+                var oceanVectorObj = resultadoApi["ocean_vector"];
+                if (oceanVectorObj is Newtonsoft.Json.Linq.JArray jArray)
+                {
+                    double[] vector = jArray.Select(v => (double)v).ToArray();
+                    oceanValores = new Dictionary<string, double>
+                    {
+                        { "O", vector.ElementAtOrDefault(0) },
+                        { "C", vector.ElementAtOrDefault(1) },
+                        { "E", vector.ElementAtOrDefault(2) },
+                        { "A", vector.ElementAtOrDefault(3) },
+                        { "N", vector.ElementAtOrDefault(4) }
+                    };
+                }
+                else
+                {
+                    Console.WriteLine("⚠️ ocean_vector no tiene formato JArray válido.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error leyendo ocean_vector: {ex.Message}");
+            }
 
             string perfilOceanResumen = string.Join(", ",
                 oceanValores.Select(kv => $"{MapOceanNombre(kv.Key)}: {MapNivelOcean(kv.Value)} ({kv.Value:F1})"));
 
-            // ---  Construir ViewModel ---
+            // --- Construir ViewModel ---
             var vm = new ResultadoViewModel
             {
                 IDD_RESULTADO = resultado.IDD_RESULTADO,
-                PerfilRiasec = resultadoApi["riasec"].ToString(),
+                PerfilRiasec = resultadoApi["riasec"]?.ToString() ?? "N/A",
                 PuntajesRiasec = categoriasRiasec,
                 TotalRiasec = categoriasRiasec.Values.Sum(),
                 PuntajesOcean = oceanValores,
                 PerfilOceanResumen = perfilOceanResumen,
                 Carreras = recomendaciones.Select(r => new CarreraSugerida
                 {
-                    Nombre = r,
-                    Descripcion = "Sugerida automáticamente por el modelo",
+                    Nombre = r.Carrera,
+                    Descripcion = $"Sugerida automáticamente (afinidad: {r.Score:F2}%)",
                     Icono = "school",
-                    Universidades = new List<string> { "Consulta diversas opciones académicas" }
+                    Universidades = r.Universidades
                 }).ToList()
             };
 
-            // ---  Finalizar sesión (validación HE1) ---
+            // --- Finalizar sesión ---
             var sesion = await _context.TBM_SESIONES.FindAsync(sesionId);
             if (sesion != null)
             {
@@ -238,9 +290,10 @@ namespace ProyectoTesis.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            // ---  Retornar vista ---
+            // --- Retornar vista ---
             return View("Resultado", vm);
         }
+
 
 
         // ---  Helpers ---
@@ -310,8 +363,41 @@ namespace ProyectoTesis.Controllers
             var resultado = await _context.TBM_RESULTADOS.FindAsync(resultadoId);
             if (resultado == null)
             {
-                TempData["Mensaje"] = "❌ No se encontró el resultado.";
+                TempData["Mensaje"] = "No se encontró el resultado.";
                 return RedirectToAction("ResultadoCombinado");
+            }
+
+            List<CarreraSugerida> carreras = new();
+
+            try
+            {
+                if (!string.IsNullOrEmpty(resultado.LISTA_RECOMENDACIONES_JSON))
+                {
+                    using var doc = System.Text.Json.JsonDocument.Parse(resultado.LISTA_RECOMENDACIONES_JSON);
+                    foreach (var elem in doc.RootElement.EnumerateArray())
+                    {
+                        string nombre = elem.TryGetProperty("Carrera", out var nom) ? nom.GetString() ?? "" : "";
+                        string desc = elem.TryGetProperty("Score", out var sc)
+                            ? $"Sugerida automáticamente (afinidad: {sc.GetDouble():F2}%)"
+                            : "Sugerida automáticamente";
+
+                        List<string> universidades = new();
+                        if (elem.TryGetProperty("Universidades", out var unis) && unis.ValueKind == System.Text.Json.JsonValueKind.Array)
+                            universidades = unis.EnumerateArray().Select(u => u.GetString() ?? "").ToList();
+
+                        carreras.Add(new CarreraSugerida
+                        {
+                            Nombre = nombre,
+                            Descripcion = desc,
+                            Icono = "school",
+                            Universidades = universidades.Count > 0 ? universidades : new List<string> { "Consulta diversas opciones académicas" }
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al deserializar carreras: {ex.Message}");
             }
 
             var vm = new ResultadoViewModel
@@ -319,20 +405,17 @@ namespace ProyectoTesis.Controllers
                 IDD_RESULTADO = resultado.IDD_RESULTADO,
                 NOM_PERFIL_TX = resultado.NOM_PERFIL_TX,
                 DES_RECOMENDACION_TX = resultado.DES_RECOMENDACION_TX,
-
-                PerfilRiasec = resultado.NOM_PERFIL_TX, 
-                PerfilOceanResumen = "",               
-
-                Carreras = new List<CarreraSugerida>
-                {
-                    new CarreraSugerida { Nombre = "Ingeniería de Sistemas", Descripcion = "Diseño y gestión de software" },
-                    new CarreraSugerida { Nombre = "Psicología", Descripcion = "Estudio del comportamiento humano" },
-                    new CarreraSugerida { Nombre = "Administración", Descripcion = "Gestión de recursos y empresas" }
-                }
+                PerfilRiasec = resultado.NOM_PERFIL_TX,
+                Carreras = carreras
             };
+
+            if (!carreras.Any())
+                TempData["Mensaje"] = "No se encontraron recomendaciones válidas en el registro.";
 
             return View(vm);
         }
+
+
 
         // GET: /Test/Enviar/{resultadoId}
         public async Task<IActionResult> Enviar(Guid resultadoId)

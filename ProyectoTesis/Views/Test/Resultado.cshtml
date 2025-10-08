@@ -83,9 +83,7 @@
     <!-- Perfil Combinado -->
     <div class="mt-10 bg-indigo-50 border border-indigo-200 rounded-xl p-6 text-center">
         <h4 class="text-2xl font-bold text-indigo-800">Perfil Combinado</h4>
-        <p class="mt-3 text-lg font-semibold text-gray-900">
-            @Model.PerfilCombinado
-        </p>
+        <p class="mt-3 text-lg font-semibold text-gray-900">@Model.PerfilRiasec</p>
         <p class="mt-2 text-gray-700">@Model.DES_RECOMENDACION_TX</p>
     </div>
 </div>
@@ -98,3 +96,128 @@
         Ver Carreras Recomendadas
     </a>
 </div>
+
+<!-- ==========================
+     GRÁFICOS COMPLEMENTARIOS
+     ========================== -->
+<div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 justify-center items-center">
+    <!-- RIASEC -->
+    <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <h4 class="text-xl font-bold text-indigo-700 mb-3 text-center">Gráfico RIASEC</h4>
+        <canvas id="riasecRadarChart" width="380" height="380"></canvas>
+    </div>
+
+    <!-- OCEAN -->
+    <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <h4 class="text-xl font-bold text-green-700 mb-3 text-center">Gráfico OCEAN (Big Five)</h4>
+        <canvas id="oceanRadarChart" width="380" height="380"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.__chartsRendered__) return;
+    window.__chartsRendered__ = true;
+
+    const safe = v => (isNaN(v) || v == null) ? 0 : v;
+
+    // =========================
+    // RIASEC Chart
+    // =========================
+    const ctxR = document.getElementById('riasecRadarChart').getContext('2d');
+    const riasecLabels = ['Realista', 'Investigador', 'Artístico', 'Social', 'Emprendedor', 'Convencional'];
+    const riasecRaw = [
+        safe(@Model.PuntajesRiasec["R"]),
+        safe(@Model.PuntajesRiasec["I"]),
+        safe(@Model.PuntajesRiasec["A"]),
+        safe(@Model.PuntajesRiasec["S"]),
+        safe(@Model.PuntajesRiasec["E"]),
+        safe(@Model.PuntajesRiasec["C"])
+    ];
+    const maxRiasec = Math.max(...riasecRaw);
+    const riasecNorm = riasecRaw.map(v => maxRiasec > 0 ? (v / maxRiasec) * 5 : 0);
+
+    new Chart(ctxR, {
+        type: 'radar',
+        data: {
+            labels: riasecLabels,
+            datasets: [{
+                label: 'RIASEC',
+                data: riasecNorm,
+                backgroundColor: 'rgba(79, 70, 229, 0.25)',
+                borderColor: 'rgba(79, 70, 229, 0.9)',
+                pointBackgroundColor: 'rgba(79, 70, 229, 1)',
+                borderWidth: 2,
+                pointRadius: 4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Perfil Vocacional según RIASEC', font: { size: 14 } }
+            },
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 5,
+                    ticks: { stepSize: 1, color: '#555' },
+                    grid: { color: 'rgba(0,0,0,0.1)' },
+                    pointLabels: { color: '#333', font: { size: 12 } }
+                }
+            }
+        }
+    });
+
+    // =========================
+    // OCEAN Chart
+    // =========================
+    const ctxO = document.getElementById('oceanRadarChart').getContext('2d');
+    const oceanLabels = ['Apertura', 'Responsabilidad', 'Extraversión', 'Amabilidad', 'Neuroticismo'];
+    const oceanVals = [
+        safe(@Math.Round(Model.PuntajesOcean["O"], 1)),
+        safe(@Math.Round(Model.PuntajesOcean["C"], 1)),
+        safe(@Math.Round(Model.PuntajesOcean["E"], 1)),
+        safe(@Math.Round(Model.PuntajesOcean["A"], 1)),
+        safe(@Math.Round(Model.PuntajesOcean["N"], 1))
+    ];
+
+    new Chart(ctxO, {
+        type: 'radar',
+        data: {
+            labels: oceanLabels,
+            datasets: [{
+                label: 'OCEAN',
+                data: oceanVals,
+                backgroundColor: 'rgba(34, 197, 94, 0.25)',
+                borderColor: 'rgba(22, 163, 74, 0.9)',
+                pointBackgroundColor: 'rgba(22, 163, 74, 1)',
+                borderWidth: 2,
+                pointRadius: 4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Perfil de Personalidad Big Five (OCEAN)', font: { size: 14 } }
+            },
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 5,
+                    ticks: { stepSize: 1, color: '#555' },
+                    grid: { color: 'rgba(0,0,0,0.1)' },
+                    pointLabels: { color: '#333', font: { size: 12 } }
+                }
+            }
+        }
+    });
+});
+</script>
