@@ -12,7 +12,7 @@ using ProyectoTesis.Data;
 namespace ProyectoTesis.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251008224711_InitialCreate")]
+    [Migration("20251008225330_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
