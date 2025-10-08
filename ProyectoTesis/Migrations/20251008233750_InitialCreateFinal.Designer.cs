@@ -12,8 +12,8 @@ using ProyectoTesis.Data;
 namespace ProyectoTesis.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251008230419_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251008233750_InitialCreateFinal")]
+    partial class InitialCreateFinal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
