@@ -12,8 +12,8 @@ using ProyectoTesis.Data;
 namespace ProyectoTesis.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250922170905_SeedPreguntas")]
-    partial class SeedPreguntas
+    [Migration("20251008224711_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,14 +127,11 @@ namespace ProyectoTesis.Migrations
                     b.Property<Guid>("IDD_SESION")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<byte>("MODULOIDD_MODULO")
-                        .HasColumnType("tinyint");
-
                     b.HasKey("IDD_INTENTO");
 
-                    b.HasIndex("IDD_SESION");
+                    b.HasIndex("IDD_MODULO");
 
-                    b.HasIndex("MODULOIDD_MODULO");
+                    b.HasIndex("IDD_SESION");
 
                     b.ToTable("TBM_INTENTOS", (string)null);
                 });
@@ -158,9 +155,16 @@ namespace ProyectoTesis.Migrations
                     b.Property<Guid>("IDD_SESION")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("LISTA_RECOMENDACIONES_JSON")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NOM_PERFIL_TX")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NUM_RECOMENDACIONES")
+                        .HasColumnType("int");
 
                     b.HasKey("IDD_RESULTADO");
 
@@ -170,6 +174,40 @@ namespace ProyectoTesis.Migrations
                     b.ToTable("TBM_RESULTADOS", (string)null);
                 });
 
+            modelBuilder.Entity("ProyectoTesis.Models.TBM_SATISFACCION", b =>
+                {
+                    b.Property<int>("IDD_SATISFACCION")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IDD_SATISFACCION"));
+
+                    b.Property<int>("CLARIDAD_RESULTADOS")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FACILIDAD_USO")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FEC_REGISTRO")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("IDD_SESION")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SATISFACCION_GLOBAL")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UTILIDAD_RECOMENDACIONES")
+                        .HasColumnType("int");
+
+                    b.HasKey("IDD_SATISFACCION");
+
+                    b.HasIndex("IDD_SESION")
+                        .IsUnique();
+
+                    b.ToTable("TBM_SATISFACCIONES", (string)null);
+                });
+
             modelBuilder.Entity("ProyectoTesis.Models.TBM_SESION", b =>
                 {
                     b.Property<Guid>("IDD_SESION")
@@ -177,6 +215,12 @@ namespace ProyectoTesis.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("FEC_CREADO")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FEC_FIN")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FEC_INICIO")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NOM_ESTAD_SES")
@@ -215,8 +259,8 @@ namespace ProyectoTesis.Migrations
                         new
                         {
                             IDD_MODULO = (byte)2,
-                            COD_MODULO_TX = "MBTI",
-                            NOM_MODULO_TX = "Test MBTI"
+                            COD_MODULO_TX = "OCEAN",
+                            NOM_MODULO_TX = "Test Big Five (OCEAN)"
                         });
                 });
 
@@ -227,6 +271,9 @@ namespace ProyectoTesis.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IDD_PREGUNTA"));
+
+                    b.Property<string>("COD_CATEGORIA")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DES_PREGUNTA_TX")
                         .IsRequired()
@@ -245,97 +292,267 @@ namespace ProyectoTesis.Migrations
                         new
                         {
                             IDD_PREGUNTA = 1,
+                            COD_CATEGORIA = "R",
                             DES_PREGUNTA_TX = "Me gusta realizar pequeñas reparaciones de equipos electrodomésticos.",
                             IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 2,
-                            DES_PREGUNTA_TX = "El trabajo científico me parece muy interesante.",
-                            IDD_MODULO = (byte)1
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 3,
-                            DES_PREGUNTA_TX = "Sé tocar un instrumento musical o me gustaría aprender.",
-                            IDD_MODULO = (byte)1
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 4,
-                            DES_PREGUNTA_TX = "Me gustaría cuidar personas con enfermedades mentales.",
-                            IDD_MODULO = (byte)1
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 5,
-                            DES_PREGUNTA_TX = "Me siento bien y me las arreglo cuando tengo que organizar el trabajo de mis compañeros y compañeras, fijarles tareas y comprobar si han sido realizadas.",
-                            IDD_MODULO = (byte)1
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 6,
-                            DES_PREGUNTA_TX = "Me gusta llevar mis cuadernos de manera ordenada y limpia.",
-                            IDD_MODULO = (byte)1
-                        },
-                        new
-                        {
-                            IDD_PREGUNTA = 7,
+                            COD_CATEGORIA = "R",
                             DES_PREGUNTA_TX = "Me gustaría trabajar en el servicio técnico de una empresa.",
                             IDD_MODULO = (byte)1
                         },
                         new
                         {
+                            IDD_PREGUNTA = 3,
+                            COD_CATEGORIA = "R",
+                            DES_PREGUNTA_TX = "Me interesa conocer el diseño y funcionamiento de los equipos técnicos.",
+                            IDD_MODULO = (byte)1
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 4,
+                            COD_CATEGORIA = "I",
+                            DES_PREGUNTA_TX = "El trabajo científico me parece muy interesante.",
+                            IDD_MODULO = (byte)1
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 5,
+                            COD_CATEGORIA = "I",
+                            DES_PREGUNTA_TX = "Me interesan los descubrimientos científicos y las nuevas invenciones.",
+                            IDD_MODULO = (byte)1
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 6,
+                            COD_CATEGORIA = "I",
+                            DES_PREGUNTA_TX = "Me gustaría realizar estudios y descubrir la vacuna contra una enfermedad grave.",
+                            IDD_MODULO = (byte)1
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 7,
+                            COD_CATEGORIA = "A",
+                            DES_PREGUNTA_TX = "Sé tocar un instrumento musical o me gustaría aprender.",
+                            IDD_MODULO = (byte)1
+                        },
+                        new
+                        {
                             IDD_PREGUNTA = 8,
-                            DES_PREGUNTA_TX = "Me gustaría trabajar en un centro de investigación o en un laboratorio.",
+                            COD_CATEGORIA = "A",
+                            DES_PREGUNTA_TX = "Me gusta ver exposiciones de esculturas, pintura o fotografía.",
                             IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 9,
-                            DES_PREGUNTA_TX = "En el futuro me gustaría escribir poemas, guiones de películas o de juegos de video.",
+                            COD_CATEGORIA = "A",
+                            DES_PREGUNTA_TX = "Me gustaría expresarme mediante una actividad creativa como la pintura, el dibujo o la música.",
                             IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 10,
-                            DES_PREGUNTA_TX = "Me gusta mucho participar en organizaciones no gubernamentales como la Cruz Roja o una organización de jóvenes exploradores.",
+                            COD_CATEGORIA = "S",
+                            DES_PREGUNTA_TX = "Me gustaría cuidar personas con enfermedades mentales.",
                             IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 11,
-                            DES_PREGUNTA_TX = "Me gusta organizar mi trabajo día a día y para la semana.",
+                            COD_CATEGORIA = "S",
+                            DES_PREGUNTA_TX = "Me sentiría bien ayudando a las demás personas a comprenderse.",
                             IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 12,
-                            DES_PREGUNTA_TX = "En un grupo nuevo, prefiero: (A) Conocer y hablar con varias personas / (B) Observar primero y hablar solo con algunas.",
-                            IDD_MODULO = (byte)2
+                            COD_CATEGORIA = "S",
+                            DES_PREGUNTA_TX = "En mi futuro trabajo me gustaría ayudar a personas con discapacidades.",
+                            IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 13,
-                            DES_PREGUNTA_TX = "Cuando paso tiempo solo: (A) Me aburro fácilmente / (B) Me siento recargado.",
-                            IDD_MODULO = (byte)2
+                            COD_CATEGORIA = "E",
+                            DES_PREGUNTA_TX = "Me las arreglo bien cuando tengo que organizar el trabajo de mis compañeros.",
+                            IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 14,
-                            DES_PREGUNTA_TX = "En reuniones, suelo: (A) Hablar mucho y de manera espontánea / (B) Hablar solo cuando tengo algo importante.",
-                            IDD_MODULO = (byte)2
+                            COD_CATEGORIA = "E",
+                            DES_PREGUNTA_TX = "Me gusta tomar la palabra en diferentes discusiones y convencer a la gente.",
+                            IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 15,
-                            DES_PREGUNTA_TX = "Prefiero actividades: (A) Con mucha interacción social / (B) Tranquilas y personales.",
-                            IDD_MODULO = (byte)2
+                            COD_CATEGORIA = "E",
+                            DES_PREGUNTA_TX = "Me gustaría desempeñar la presidencia de mi clase.",
+                            IDD_MODULO = (byte)1
                         },
                         new
                         {
                             IDD_PREGUNTA = 16,
-                            DES_PREGUNTA_TX = "Para mí es más importante: (A) Terminar lo que empiezo / (B) Explorar nuevas cosas aunque no termine todas.",
+                            COD_CATEGORIA = "C",
+                            DES_PREGUNTA_TX = "Me gusta llevar mis cuadernos de manera ordenada y limpia.",
+                            IDD_MODULO = (byte)1
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 17,
+                            COD_CATEGORIA = "C",
+                            DES_PREGUNTA_TX = "Me gusta respetar y cumplir las fechas límites.",
+                            IDD_MODULO = (byte)1
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 18,
+                            COD_CATEGORIA = "C",
+                            DES_PREGUNTA_TX = "Me gusta organizar mi trabajo día a día y para la semana.",
+                            IDD_MODULO = (byte)1
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 19,
+                            COD_CATEGORIA = "E",
+                            DES_PREGUNTA_TX = "Me considero el alma de la fiesta.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 20,
+                            COD_CATEGORIA = "E",
+                            DES_PREGUNTA_TX = "Prefiero no hablar mucho.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 21,
+                            COD_CATEGORIA = "E",
+                            DES_PREGUNTA_TX = "Me gusta iniciar conversaciones.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 22,
+                            COD_CATEGORIA = "E",
+                            DES_PREGUNTA_TX = "Suelo ser callado(a) cuando estoy con desconocidos.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 23,
+                            COD_CATEGORIA = "A",
+                            DES_PREGUNTA_TX = "Me intereso genuinamente por las personas.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 24,
+                            COD_CATEGORIA = "A",
+                            DES_PREGUNTA_TX = "A veces insulto o trato mal a la gente.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 25,
+                            COD_CATEGORIA = "A",
+                            DES_PREGUNTA_TX = "Tengo un corazón sensible.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 26,
+                            COD_CATEGORIA = "A",
+                            DES_PREGUNTA_TX = "No suelo interesarme mucho por los demás.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 27,
+                            COD_CATEGORIA = "C",
+                            DES_PREGUNTA_TX = "Siempre estoy preparado(a).",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 28,
+                            COD_CATEGORIA = "C",
+                            DES_PREGUNTA_TX = "Suelo dejar mis pertenencias tiradas o desordenadas.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 29,
+                            COD_CATEGORIA = "C",
+                            DES_PREGUNTA_TX = "Hago mis tareas de inmediato.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 30,
+                            COD_CATEGORIA = "C",
+                            DES_PREGUNTA_TX = "A veces evito o descuido mis obligaciones.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 31,
+                            COD_CATEGORIA = "N",
+                            DES_PREGUNTA_TX = "Normalmente me siento relajado(a).",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 32,
+                            COD_CATEGORIA = "N",
+                            DES_PREGUNTA_TX = "Me preocupo demasiado por las cosas.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 33,
+                            COD_CATEGORIA = "N",
+                            DES_PREGUNTA_TX = "Rara vez me siento triste o deprimido(a).",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 34,
+                            COD_CATEGORIA = "N",
+                            DES_PREGUNTA_TX = "Me altero o me enojo con facilidad.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 35,
+                            COD_CATEGORIA = "O",
+                            DES_PREGUNTA_TX = "Tengo un vocabulario rico y variado.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 36,
+                            COD_CATEGORIA = "O",
+                            DES_PREGUNTA_TX = "Me cuesta comprender ideas abstractas.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 37,
+                            COD_CATEGORIA = "O",
+                            DES_PREGUNTA_TX = "Suelo tener ideas excelentes o creativas.",
+                            IDD_MODULO = (byte)2
+                        },
+                        new
+                        {
+                            IDD_PREGUNTA = 38,
+                            COD_CATEGORIA = "O",
+                            DES_PREGUNTA_TX = "No tengo mucha imaginación.",
                             IDD_MODULO = (byte)2
                         });
                 });
@@ -381,15 +598,15 @@ namespace ProyectoTesis.Migrations
 
             modelBuilder.Entity("ProyectoTesis.Models.TBM_INTENTO", b =>
                 {
-                    b.HasOne("ProyectoTesis.Models.TBM_SESION", "SESION")
+                    b.HasOne("ProyectoTesis.Models.TBT_MODULO", "MODULO")
                         .WithMany("INTENTOS")
-                        .HasForeignKey("IDD_SESION")
+                        .HasForeignKey("IDD_MODULO")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProyectoTesis.Models.TBT_MODULO", "MODULO")
+                    b.HasOne("ProyectoTesis.Models.TBM_SESION", "SESION")
                         .WithMany("INTENTOS")
-                        .HasForeignKey("MODULOIDD_MODULO")
+                        .HasForeignKey("IDD_SESION")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -403,6 +620,17 @@ namespace ProyectoTesis.Migrations
                     b.HasOne("ProyectoTesis.Models.TBM_SESION", "SESION")
                         .WithOne("RESULTADO")
                         .HasForeignKey("ProyectoTesis.Models.TBM_RESULTADO", "IDD_SESION")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SESION");
+                });
+
+            modelBuilder.Entity("ProyectoTesis.Models.TBM_SATISFACCION", b =>
+                {
+                    b.HasOne("ProyectoTesis.Models.TBM_SESION", "SESION")
+                        .WithOne("SATISFACCION")
+                        .HasForeignKey("ProyectoTesis.Models.TBM_SATISFACCION", "IDD_SESION")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -436,8 +664,9 @@ namespace ProyectoTesis.Migrations
 
                     b.Navigation("INTENTOS");
 
-                    b.Navigation("RESULTADO")
-                        .IsRequired();
+                    b.Navigation("RESULTADO");
+
+                    b.Navigation("SATISFACCION");
                 });
 
             modelBuilder.Entity("ProyectoTesis.Models.TBT_MODULO", b =>
