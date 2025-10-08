@@ -23,8 +23,12 @@ var railwayConnection = Environment.GetEnvironmentVariable("DATABASE_URL");
 
 if (!string.IsNullOrEmpty(railwayConnection))
 {
-    // Modo producción (Render + Railway)
-    connectionString = railwayConnection;
+    // Convertir formato URL -> formato Npgsql
+    var uri = new Uri(railwayConnection);
+    var userInfo = uri.UserInfo.Split(':');
+
+    connectionString =
+        $"Host={uri.Host};Port={uri.Port};Database={uri.LocalPath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true;";
 
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(connectionString));
