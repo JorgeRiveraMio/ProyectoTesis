@@ -60,7 +60,8 @@
             <div class="flex flex-col gap-4">
                 @foreach (var dim in Model.PuntajesOcean)
                 {
-                    var nombre = nombresOcean.ContainsKey(dim.Key) ? nombresOcean[dim.Key] : dim.Key;
+                    var key = dim.Trait;
+                    var nombre = nombresOcean.ContainsKey(key) ? nombresOcean[key] : key;
                     var valor = Math.Round(dim.Value, 1);
 
                     <div class="flex flex-col gap-2">
@@ -179,11 +180,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const ctxO = document.getElementById('oceanRadarChart').getContext('2d');
     const oceanLabels = ['Apertura', 'Responsabilidad', 'Extraversión', 'Amabilidad', 'Neuroticismo'];
     const oceanVals = [
-        safe(@Math.Round(Model.PuntajesOcean["O"], 1)),
-        safe(@Math.Round(Model.PuntajesOcean["C"], 1)),
-        safe(@Math.Round(Model.PuntajesOcean["E"], 1)),
-        safe(@Math.Round(Model.PuntajesOcean["A"], 1)),
-        safe(@Math.Round(Model.PuntajesOcean["N"], 1))
+        safe(@(Model.PuntajesOcean.FirstOrDefault(x => x.Trait == "O")?.Value ?? 0)),
+        safe(@(Model.PuntajesOcean.FirstOrDefault(x => x.Trait == "C")?.Value ?? 0)),
+        safe(@(Model.PuntajesOcean.FirstOrDefault(x => x.Trait == "E")?.Value ?? 0)),
+        safe(@(Model.PuntajesOcean.FirstOrDefault(x => x.Trait == "A")?.Value ?? 0)),
+        safe(@(Model.PuntajesOcean.FirstOrDefault(x => x.Trait == "N")?.Value ?? 0))
     ];
 
     new Chart(ctxO, {
