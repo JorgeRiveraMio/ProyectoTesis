@@ -178,16 +178,14 @@ namespace ProyectoTesis.Controllers
 
             int[] oceanVector = CalcularVectorOcean(respuestasOcean);
 
-            // --- Llamar a API Python ---
+            // --- Llamar API Python ---
             dynamic resultadoApi = await _pythonApiService.ObtenerRecomendacionesAsync(riasecVector, oceanVector);
 
-            // Log de verificación (UTF-8 correcto)
             Console.WriteLine("=== JSON devuelto por API Python ===");
             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(resultadoApi, Newtonsoft.Json.Formatting.Indented));
 
-            // --- Capturar lista de recomendaciones ---
+            // --- Recomendaciones ---
             var recomendaciones = new List<dynamic>();
-
             try
             {
                 var recArray = resultadoApi["recomendaciones"] as Newtonsoft.Json.Linq.JArray;
@@ -219,7 +217,7 @@ namespace ProyectoTesis.Controllers
                 Console.WriteLine($"❌ Error procesando recomendaciones: {ex.Message}");
             }
 
-            // --- Crear registro del resultado ---
+            // --- Guardar resultado base ---
             var resultado = new TBM_RESULTADO
             {
                 IDD_RESULTADO = Guid.NewGuid(),
@@ -234,22 +232,20 @@ namespace ProyectoTesis.Controllers
             _context.TBM_RESULTADOS.Add(resultado);
             await _context.SaveChangesAsync();
 
-            // --- Construir resumen OCEAN ---
-            var oceanValores = new Dictionary<string, double>();
+            // --- Leer ocean_vector corregido ---
+            var oceanList = new List<OceanTrait>();
             try
             {
                 var oceanVectorObj = resultadoApi["ocean_vector"];
                 if (oceanVectorObj is Newtonsoft.Json.Linq.JArray jArray)
                 {
-                    double[] vector = jArray.Select(v => (double)v).ToArray();
-                    oceanValores = new Dictionary<string, double>
+                    foreach (var item in jArray)
                     {
-                        { "O", vector.ElementAtOrDefault(0) },
-                        { "C", vector.ElementAtOrDefault(1) },
-                        { "E", vector.ElementAtOrDefault(2) },
-                        { "A", vector.ElementAtOrDefault(3) },
-                        { "N", vector.ElementAtOrDefault(4) }
-                    };
+                        string trait = item["trait"]?.ToString() ?? "";
+                        double value = item["value"]?.ToObject<double>() ?? 0.0;
+                        if (!string.IsNullOrEmpty(trait))
+                            oceanList.Add(new OceanTrait { Trait = trait, Value = value });
+                    }
                 }
                 else
                 {
@@ -261,17 +257,18 @@ namespace ProyectoTesis.Controllers
                 Console.WriteLine($"❌ Error leyendo ocean_vector: {ex.Message}");
             }
 
+            // --- Perfil OCEAN resumen ---
             string perfilOceanResumen = string.Join(", ",
-                oceanValores.Select(kv => $"{MapOceanNombre(kv.Key)}: {MapNivelOcean(kv.Value)} ({kv.Value:F1})"));
+                oceanList.Select(o => $"{MapOceanNombre(o.Trait)}: {MapNivelOcean(o.Value)} ({o.Value:F1})"));
 
-            // --- Construir ViewModel ---
+            // --- ViewModel final ---
             var vm = new ResultadoViewModel
             {
                 IDD_RESULTADO = resultado.IDD_RESULTADO,
                 PerfilRiasec = resultadoApi["riasec"]?.ToString() ?? "N/A",
                 PuntajesRiasec = categoriasRiasec,
                 TotalRiasec = categoriasRiasec.Values.Sum(),
-                PuntajesOcean = oceanValores,
+                PuntajesOcean = oceanList,
                 PerfilOceanResumen = perfilOceanResumen,
                 Carreras = recomendaciones.Select(r => new CarreraSugerida
                 {
@@ -290,9 +287,9 @@ namespace ProyectoTesis.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            // --- Retornar vista ---
             return View("Resultado", vm);
         }
+
 
 
 
@@ -406,7 +403,8 @@ namespace ProyectoTesis.Controllers
                 NOM_PERFIL_TX = resultado.NOM_PERFIL_TX,
                 DES_RECOMENDACION_TX = resultado.DES_RECOMENDACION_TX,
                 PerfilRiasec = resultado.NOM_PERFIL_TX,
-                Carreras = carreras
+                Carreras = carreras,
+                PuntajesOcean = new List<OceanTrait>() // <- para evitar nulos
             };
 
             if (!carreras.Any())
@@ -414,6 +412,7 @@ namespace ProyectoTesis.Controllers
 
             return View(vm);
         }
+
 
 
 
