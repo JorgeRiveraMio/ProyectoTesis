@@ -3,6 +3,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using ProyectoTesis.Models.ViewModels;
 using Microsoft.Extensions.Configuration;
 
 namespace ProyectoTesis.Services
@@ -18,44 +20,50 @@ namespace ProyectoTesis.Services
             _config = config;
         }
 
-        public async Task<dynamic> ObtenerRecomendacionesAsync(int[] riasec, int[] ocean)
+        public async Task<ResultadoViewModel?> ObtenerRecomendacionesAsync(int[] riasec, int[] ocean)
         {
-            //Determinar entorno y URL base
             string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
             string baseUrl;
 
             if (env.Equals("Development", StringComparison.OrdinalIgnoreCase))
-            {
-                // Modo local
                 baseUrl = "http://127.0.0.1:8000";
-            }
             else
-            {
-                // Modo producción (Render)
                 baseUrl = _config["PythonApi:BaseUrl"] ?? "https://proyecto-ml-3.onrender.com";
-            }
 
             string endpoint = $"{baseUrl}/predict";
 
-            //Preparar JSON
             var payload = new { riasec, ocean };
             var json = JsonConvert.SerializeObject(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            //Cabeceras
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
                 new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-            //Enviar solicitud
             var response = await _httpClient.PostAsync(endpoint, content);
             response.EnsureSuccessStatusCode();
 
-            //Leer respuesta UTF-8 segura
-            var responseBytes = await response.Content.ReadAsByteArrayAsync();
-            var resultJson = Encoding.UTF8.GetString(responseBytes);
+            var resultJson = await response.Content.ReadAsStringAsync();
+            dynamic apiResponse = JsonConvert.DeserializeObject(resultJson);
 
-            return JsonConvert.DeserializeObject<dynamic>(resultJson);
+            // ==========================
+            // Mapear campos del JSON
+            // ==========================
+            var result = apiResponse.result;
+
+            var model = new ResultadoViewModel
+            {
+                PerfilRiasec = result.riasec,
+                Subperfil = result.subperfil,
+                PuntajesOcean = JsonConvert.DeserializeObject<List<OceanTrait>>(
+                    Convert.ToString(result.ocean_vector)
+                ),
+                Carreras = JsonConvert.DeserializeObject<List<CarreraSugerida>>(
+                    Convert.ToString(result.recomendaciones)
+                )
+            };
+
+            return model;
         }
     }
 }

@@ -148,6 +148,12 @@ namespace ProyectoTesis.Controllers
             var intentoRiasec = await _context.TBM_INTENTOS
                 .FirstOrDefaultAsync(i => i.IDD_SESION == sesionId && i.IDD_MODULO == 1);
 
+            if (intentoRiasec == null)
+            {
+                TempData["Mensaje"] = "No se encontraron respuestas del test RIASEC.";
+                return RedirectToAction("Iniciar");
+            }
+
             var respuestasRiasec = await _context.TBD_RESPUESTAS
                 .Where(r => r.IDD_INTENTO == intentoRiasec.IDD_INTENTO)
                 .Join(_context.TBT_PREGUNTAS,
@@ -172,50 +178,31 @@ namespace ProyectoTesis.Controllers
             var intentoOcean = await _context.TBM_INTENTOS
                 .FirstOrDefaultAsync(i => i.IDD_SESION == sesionId && i.IDD_MODULO == 2);
 
+            if (intentoOcean == null)
+            {
+                TempData["Mensaje"] = "No se encontraron respuestas del test OCEAN.";
+                return RedirectToAction("Iniciar");
+            }
+
             var respuestasOcean = await _context.TBD_RESPUESTAS
                 .Where(r => r.IDD_INTENTO == intentoOcean.IDD_INTENTO)
                 .ToListAsync();
 
             int[] oceanVector = CalcularVectorOcean(respuestasOcean);
 
-            // --- Llamar API Python ---
-            dynamic resultadoApi = await _pythonApiService.ObtenerRecomendacionesAsync(riasecVector, oceanVector);
+            // ===============================
+            // Llamada a la API Python
+            // ===============================
+            var resultadoApi = await _pythonApiService.ObtenerRecomendacionesAsync(riasecVector, oceanVector);
+
+            if (resultadoApi == null)
+            {
+                TempData["Mensaje"] = "❌ Error: no se recibieron datos del modelo ML.";
+                return RedirectToAction("Iniciar");
+            }
 
             Console.WriteLine("=== JSON devuelto por API Python ===");
             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(resultadoApi, Newtonsoft.Json.Formatting.Indented));
-
-            // --- Recomendaciones ---
-            var recomendaciones = new List<dynamic>();
-            try
-            {
-                var recArray = resultadoApi["recomendaciones"] as Newtonsoft.Json.Linq.JArray;
-                if (recArray != null)
-                {
-                    foreach (var r in recArray)
-                    {
-                        string carrera = r["carrera"]?.ToString() ?? "";
-                        double score = r["score"]?.ToObject<double>() ?? 0.0;
-                        var universidades = r["universidades"] != null
-                            ? r["universidades"].Select(u => u.ToString()).ToList()
-                            : new List<string>();
-
-                        recomendaciones.Add(new
-                        {
-                            Carrera = carrera,
-                            Universidades = universidades,
-                            Score = score
-                        });
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("⚠️ No se encontró el array de recomendaciones en el JSON.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Error procesando recomendaciones: {ex.Message}");
-            }
 
             // --- Guardar resultado base ---
             var resultado = new TBM_RESULTADO
@@ -223,61 +210,26 @@ namespace ProyectoTesis.Controllers
                 IDD_RESULTADO = Guid.NewGuid(),
                 IDD_SESION = sesionId,
                 FEC_CREADO = DateTime.UtcNow,
-                NOM_PERFIL_TX = resultadoApi["riasec"]?.ToString() ?? "N/A",
+                NOM_PERFIL_TX = resultadoApi.PerfilRiasec ?? "N/A",
                 DES_RECOMENDACION_TX = "Generadas por modelo ML",
-                NUM_RECOMENDACIONES = recomendaciones.Count,
-                LISTA_RECOMENDACIONES_JSON = System.Text.Json.JsonSerializer.Serialize(recomendaciones)
+                NUM_RECOMENDACIONES = resultadoApi.Carreras.Count,
+                LISTA_RECOMENDACIONES_JSON = System.Text.Json.JsonSerializer.Serialize(resultadoApi.Carreras)
             };
 
             _context.TBM_RESULTADOS.Add(resultado);
             await _context.SaveChangesAsync();
 
-            // --- Leer ocean_vector corregido ---
-            var oceanList = new List<OceanTrait>();
-            try
-            {
-                var oceanVectorObj = resultadoApi["ocean_vector"];
-                if (oceanVectorObj is Newtonsoft.Json.Linq.JArray jArray)
-                {
-                    foreach (var item in jArray)
-                    {
-                        string trait = item["trait"]?.ToString() ?? "";
-                        double value = item["value"]?.ToObject<double>() ?? 0.0;
-                        if (!string.IsNullOrEmpty(trait))
-                            oceanList.Add(new OceanTrait { Trait = trait, Value = value });
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("⚠️ ocean_vector no tiene formato JArray válido.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Error leyendo ocean_vector: {ex.Message}");
-            }
-
-            // --- Perfil OCEAN resumen ---
+            // --- Procesar OCEAN resumen ---
             string perfilOceanResumen = string.Join(", ",
-                oceanList.Select(o => $"{MapOceanNombre(o.Trait)}: {MapNivelOcean(o.Value)} ({o.Value:F1})"));
+                resultadoApi.PuntajesOcean.Select(o =>
+                    $"{MapOceanNombre(o.Trait)}: {MapNivelOcean(o.Value)} ({o.Value:F1})"
+                ));
 
             // --- ViewModel final ---
-            var vm = new ResultadoViewModel
-            {
-                IDD_RESULTADO = resultado.IDD_RESULTADO,
-                PerfilRiasec = resultadoApi["riasec"]?.ToString() ?? "N/A",
-                PuntajesRiasec = categoriasRiasec,
-                TotalRiasec = categoriasRiasec.Values.Sum(),
-                PuntajesOcean = oceanList,
-                PerfilOceanResumen = perfilOceanResumen,
-                Carreras = recomendaciones.Select(r => new CarreraSugerida
-                {
-                    Nombre = r.Carrera,
-                    Descripcion = $"Sugerida automáticamente (afinidad: {r.Score:F2}%)",
-                    Icono = "school",
-                    Universidades = r.Universidades
-                }).ToList()
-            };
+            resultadoApi.IDD_RESULTADO = resultado.IDD_RESULTADO;
+            resultadoApi.PuntajesRiasec = categoriasRiasec;
+            resultadoApi.TotalRiasec = categoriasRiasec.Values.Sum();
+            resultadoApi.PerfilOceanResumen = perfilOceanResumen;
 
             // --- Finalizar sesión ---
             var sesion = await _context.TBM_SESIONES.FindAsync(sesionId);
@@ -287,8 +239,9 @@ namespace ProyectoTesis.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return View("Resultado", vm);
+            return View("Resultado", resultadoApi);
         }
+
 
 
 
