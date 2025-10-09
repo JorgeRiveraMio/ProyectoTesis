@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProyectoTesis.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreateFinal : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,11 +18,11 @@ namespace ProyectoTesis.Migrations
                 name: "TBM_SESIONES",
                 columns: table => new
                 {
-                    IDD_SESION = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    NOM_ESTAD_SES = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FEC_CREADO = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FEC_INICIO = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    FEC_FIN = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    IDD_SESION = table.Column<Guid>(type: "uuid", nullable: false),
+                    NOM_ESTAD_SES = table.Column<string>(type: "text", nullable: false),
+                    FEC_CREADO = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FEC_INICIO = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    FEC_FIN = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -32,9 +33,9 @@ namespace ProyectoTesis.Migrations
                 name: "TBT_MODULOS",
                 columns: table => new
                 {
-                    IDD_MODULO = table.Column<byte>(type: "tinyint", nullable: false),
-                    COD_MODULO_TX = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NOM_MODULO_TX = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    IDD_MODULO = table.Column<byte>(type: "smallint", nullable: false),
+                    COD_MODULO_TX = table.Column<string>(type: "text", nullable: false),
+                    NOM_MODULO_TX = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,11 +47,11 @@ namespace ProyectoTesis.Migrations
                 columns: table => new
                 {
                     IDD_EVENTO = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IDD_SESION = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    TIP_EVENTO_TX = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DES_DATOS_TX = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FEC_CREADO = table.Column<DateTime>(type: "datetime2", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IDD_SESION = table.Column<Guid>(type: "uuid", nullable: true),
+                    TIP_EVENTO_TX = table.Column<string>(type: "text", nullable: false),
+                    DES_DATOS_TX = table.Column<string>(type: "text", nullable: false),
+                    FEC_CREADO = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,14 +67,14 @@ namespace ProyectoTesis.Migrations
                 name: "TBM_RESULTADOS",
                 columns: table => new
                 {
-                    IDD_RESULTADO = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IDD_SESION = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IDD_PUBLICO = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FEC_CREADO = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    NOM_PERFIL_TX = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DES_RECOMENDACION_TX = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NUM_RECOMENDACIONES = table.Column<int>(type: "int", nullable: false),
-                    LISTA_RECOMENDACIONES_JSON = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    IDD_RESULTADO = table.Column<Guid>(type: "uuid", nullable: false),
+                    IDD_SESION = table.Column<Guid>(type: "uuid", nullable: false),
+                    IDD_PUBLICO = table.Column<Guid>(type: "uuid", nullable: false),
+                    FEC_CREADO = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    NOM_PERFIL_TX = table.Column<string>(type: "text", nullable: false),
+                    DES_RECOMENDACION_TX = table.Column<string>(type: "text", nullable: false),
+                    NUM_RECOMENDACIONES = table.Column<int>(type: "integer", nullable: false),
+                    LISTA_RECOMENDACIONES_JSON = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -90,14 +91,14 @@ namespace ProyectoTesis.Migrations
                 name: "TBM_SATISFACCIONES",
                 columns: table => new
                 {
-                    IDD_SATISFACCION = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IDD_SESION = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FACILIDAD_USO = table.Column<int>(type: "int", nullable: false),
-                    CLARIDAD_RESULTADOS = table.Column<int>(type: "int", nullable: false),
-                    UTILIDAD_RECOMENDACIONES = table.Column<int>(type: "int", nullable: false),
-                    SATISFACCION_GLOBAL = table.Column<int>(type: "int", nullable: false),
-                    FEC_REGISTRO = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    IDD_SATISFACCION = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IDD_SESION = table.Column<Guid>(type: "uuid", nullable: false),
+                    FACILIDAD_USO = table.Column<int>(type: "integer", nullable: false),
+                    CLARIDAD_RESULTADOS = table.Column<int>(type: "integer", nullable: false),
+                    UTILIDAD_RECOMENDACIONES = table.Column<int>(type: "integer", nullable: false),
+                    SATISFACCION_GLOBAL = table.Column<int>(type: "integer", nullable: false),
+                    FEC_REGISTRO = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -114,11 +115,11 @@ namespace ProyectoTesis.Migrations
                 name: "TBM_INTENTOS",
                 columns: table => new
                 {
-                    IDD_INTENTO = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IDD_SESION = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IDD_MODULO = table.Column<byte>(type: "tinyint", nullable: false),
-                    FEC_INICIADO = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FEC_COMPLETADO = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    IDD_INTENTO = table.Column<Guid>(type: "uuid", nullable: false),
+                    IDD_SESION = table.Column<Guid>(type: "uuid", nullable: false),
+                    IDD_MODULO = table.Column<byte>(type: "smallint", nullable: false),
+                    FEC_INICIADO = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FEC_COMPLETADO = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -141,11 +142,11 @@ namespace ProyectoTesis.Migrations
                 name: "TBT_PREGUNTAS",
                 columns: table => new
                 {
-                    IDD_PREGUNTA = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IDD_MODULO = table.Column<byte>(type: "tinyint", nullable: false),
-                    DES_PREGUNTA_TX = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    COD_CATEGORIA = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    IDD_PREGUNTA = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IDD_MODULO = table.Column<byte>(type: "smallint", nullable: false),
+                    DES_PREGUNTA_TX = table.Column<string>(type: "text", nullable: false),
+                    COD_CATEGORIA = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -162,11 +163,11 @@ namespace ProyectoTesis.Migrations
                 name: "TBD_ENVIOS",
                 columns: table => new
                 {
-                    IDD_ENVIO = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IDD_RESULTADO = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DES_CORREO_TX = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FEC_ENVIADO = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    IDD_ENVIO = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IDD_RESULTADO = table.Column<Guid>(type: "uuid", nullable: false),
+                    DES_CORREO_TX = table.Column<string>(type: "text", nullable: false),
+                    FEC_ENVIADO = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -183,12 +184,12 @@ namespace ProyectoTesis.Migrations
                 name: "TBD_RESPUESTAS",
                 columns: table => new
                 {
-                    IDD_REPOR = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IDD_INTENTO = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IDD_PREGUNTA = table.Column<int>(type: "int", nullable: false),
-                    VAL_RESPUESTA_TX = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FEC_GUARDADO = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    IDD_REPOR = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IDD_INTENTO = table.Column<Guid>(type: "uuid", nullable: false),
+                    IDD_PREGUNTA = table.Column<int>(type: "integer", nullable: false),
+                    VAL_RESPUESTA_TX = table.Column<string>(type: "text", nullable: false),
+                    FEC_GUARDADO = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

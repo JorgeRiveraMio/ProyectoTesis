@@ -2,9 +2,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProyectoTesis.Data;
 
 #nullable disable
@@ -12,8 +12,8 @@ using ProyectoTesis.Data;
 namespace ProyectoTesis.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251008233750_InitialCreateFinal")]
-    partial class InitialCreateFinal
+    [Migration("20251009002546_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,27 +21,27 @@ namespace ProyectoTesis.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.9")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("ProyectoTesis.Models.TBD_ENVIO", b =>
                 {
                     b.Property<int>("IDD_ENVIO")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IDD_ENVIO"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IDD_ENVIO"));
 
                     b.Property<string>("DES_CORREO_TX")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("FEC_ENVIADO")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("IDD_RESULTADO")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("IDD_ENVIO");
 
@@ -54,22 +54,22 @@ namespace ProyectoTesis.Migrations
                 {
                     b.Property<int>("IDD_REPOR")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IDD_REPOR"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IDD_REPOR"));
 
                     b.Property<DateTime>("FEC_GUARDADO")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("IDD_INTENTO")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("IDD_PREGUNTA")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("VAL_RESPUESTA_TX")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("IDD_REPOR");
 
@@ -86,21 +86,21 @@ namespace ProyectoTesis.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("IDD_EVENTO"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("IDD_EVENTO"));
 
                     b.Property<string>("DES_DATOS_TX")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("FEC_CREADO")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("IDD_SESION")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("TIP_EVENTO_TX")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("IDD_EVENTO");
 
@@ -113,19 +113,19 @@ namespace ProyectoTesis.Migrations
                 {
                     b.Property<Guid>("IDD_INTENTO")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("FEC_COMPLETADO")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("FEC_INICIADO")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<byte>("IDD_MODULO")
-                        .HasColumnType("tinyint");
+                        .HasColumnType("smallint");
 
                     b.Property<Guid>("IDD_SESION")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("IDD_INTENTO");
 
@@ -140,31 +140,31 @@ namespace ProyectoTesis.Migrations
                 {
                     b.Property<Guid>("IDD_RESULTADO")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("DES_RECOMENDACION_TX")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("FEC_CREADO")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("IDD_PUBLICO")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("IDD_SESION")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("LISTA_RECOMENDACIONES_JSON")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("NOM_PERFIL_TX")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<int>("NUM_RECOMENDACIONES")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("IDD_RESULTADO");
 
@@ -178,27 +178,27 @@ namespace ProyectoTesis.Migrations
                 {
                     b.Property<int>("IDD_SATISFACCION")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IDD_SATISFACCION"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IDD_SATISFACCION"));
 
                     b.Property<int>("CLARIDAD_RESULTADOS")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("FACILIDAD_USO")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("FEC_REGISTRO")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("IDD_SESION")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("SATISFACCION_GLOBAL")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("UTILIDAD_RECOMENDACIONES")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("IDD_SATISFACCION");
 
@@ -212,20 +212,20 @@ namespace ProyectoTesis.Migrations
                 {
                     b.Property<Guid>("IDD_SESION")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("FEC_CREADO")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("FEC_FIN")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("FEC_INICIO")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NOM_ESTAD_SES")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("IDD_SESION");
 
@@ -235,15 +235,15 @@ namespace ProyectoTesis.Migrations
             modelBuilder.Entity("ProyectoTesis.Models.TBT_MODULO", b =>
                 {
                     b.Property<byte>("IDD_MODULO")
-                        .HasColumnType("tinyint");
+                        .HasColumnType("smallint");
 
                     b.Property<string>("COD_MODULO_TX")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("NOM_MODULO_TX")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("IDD_MODULO");
 
@@ -268,19 +268,19 @@ namespace ProyectoTesis.Migrations
                 {
                     b.Property<int>("IDD_PREGUNTA")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IDD_PREGUNTA"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IDD_PREGUNTA"));
 
                     b.Property<string>("COD_CATEGORIA")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("DES_PREGUNTA_TX")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<byte>("IDD_MODULO")
-                        .HasColumnType("tinyint");
+                        .HasColumnType("smallint");
 
                     b.HasKey("IDD_PREGUNTA");
 
