@@ -23,12 +23,9 @@ namespace ProyectoTesis.Services
         public async Task<ResultadoViewModel?> ObtenerRecomendacionesAsync(int[] riasec, int[] ocean)
         {
             string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-            string baseUrl;
-
-            if (env.Equals("Development", StringComparison.OrdinalIgnoreCase))
-                baseUrl = "http://127.0.0.1:8000";
-            else
-                baseUrl = _config["PythonApi:BaseUrl"] ?? "https://proyecto-ml-3.onrender.com";
+            string baseUrl = env.Equals("Development", StringComparison.OrdinalIgnoreCase)
+                ? "http://127.0.0.1:8000"
+                : _config["PythonApi:BaseUrl"] ?? "https://proyecto-ml-3.onrender.com";
 
             string endpoint = $"{baseUrl}/predict";
 
@@ -46,21 +43,46 @@ namespace ProyectoTesis.Services
             var resultJson = await response.Content.ReadAsStringAsync();
             dynamic apiResponse = JsonConvert.DeserializeObject(resultJson);
 
-            // ==========================
-            // Mapear campos del JSON
-            // ==========================
             var result = apiResponse.result;
+
+            var oceanVectorJson = Convert.ToString(result.ocean_vector);
+            var oceanVector = JsonConvert.DeserializeObject<List<OceanTrait>>(oceanVectorJson);
+
+            var recomendacionesJson = Convert.ToString(result.recomendaciones);
+            var recomendacionesParsed = JsonConvert.DeserializeObject<List<dynamic>>(recomendacionesJson);
+
+            var carreras = new List<CarreraSugerida>();
+            if (recomendacionesParsed != null)
+            {
+                foreach (var rec in recomendacionesParsed)
+                {
+                    string nombre = rec.carrera != null ? (string)rec.carrera : "";
+                    double score = rec.score != null ? (double)rec.score : 0;
+
+                    List<string> universidades = new();
+                    if (rec.universidades != null)
+                    {
+                        universidades = ((Newtonsoft.Json.Linq.JArray)rec.universidades)
+                            .ToObject<List<string>>() ?? new List<string>();
+                    }
+
+                    carreras.Add(new CarreraSugerida
+                    {
+                        Nombre = nombre,
+                        Descripcion = $"Sugerida automáticamente (afinidad: {score:F2})",
+                        Universidades = universidades,
+                        Icono = "school",
+                        Score = score
+                    });
+                }
+            }
 
             var model = new ResultadoViewModel
             {
                 PerfilRiasec = result.riasec,
                 Subperfil = result.subperfil,
-                PuntajesOcean = JsonConvert.DeserializeObject<List<OceanTrait>>(
-                    Convert.ToString(result.ocean_vector)
-                ),
-                Carreras = JsonConvert.DeserializeObject<List<CarreraSugerida>>(
-                    Convert.ToString(result.recomendaciones)
-                )
+                PuntajesOcean = oceanVector,
+                Carreras = carreras
             };
 
             return model;

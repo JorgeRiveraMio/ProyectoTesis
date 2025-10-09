@@ -190,111 +190,48 @@ namespace ProyectoTesis.Controllers
 
             int[] oceanVector = CalcularVectorOcean(respuestasOcean);
 
-            // --- Llamada a la API Python ---
-            dynamic apiResponse = await _pythonApiService.ObtenerRecomendacionesAsync(riasecVector, oceanVector);
+            // ===============================
+            // Llamada a la API Python
+            // ===============================
+            var resultadoApi = await _pythonApiService.ObtenerRecomendacionesAsync(riasecVector, oceanVector);
 
-            if (apiResponse == null || apiResponse["status"]?.ToString() != "ok")
+            if (resultadoApi == null)
             {
-                TempData["Mensaje"] = "Error: respuesta inválida del modelo ML.";
+                TempData["Mensaje"] = "❌ Error: no se recibieron datos del modelo ML.";
                 return RedirectToAction("Iniciar");
             }
 
-            // Extraer nodo interno "result"
-            dynamic resultadoApi = apiResponse["result"];
-
-            Console.WriteLine("=== Nodo 'result' extraído ===");
+            Console.WriteLine("=== JSON devuelto por API Python ===");
             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(resultadoApi, Newtonsoft.Json.Formatting.Indented));
 
-            // Procesar recomendaciones
-            var recomendaciones = new List<CarreraSugerida>();
-
-            try
-            {
-                var recArray = resultadoApi["recomendaciones"] as Newtonsoft.Json.Linq.JArray;
-                if (recArray != null)
-                {
-                    foreach (var r in recArray)
-                    {
-                        string carrera = r["carrera"]?.ToString() ?? "";
-                        double score = r["score"]?.ToObject<double>() ?? 0.0;
-
-                        var universidades = r["universidades"] != null
-                            ? r["universidades"].Select(u => u.ToString()).ToList()
-                            : new List<string>();
-
-                        recomendaciones.Add(new CarreraSugerida
-                        {
-                            Nombre = carrera,
-                            Descripcion = $"Sugerida automáticamente (afinidad: {score:F2}%)",
-                            Icono = "school",
-                            Universidades = universidades,
-                            Score = score
-                        });
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("No se encontró el array de recomendaciones en el JSON.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error procesando recomendaciones: {ex.Message}");
-            }
-
-            // Guardar resultado base en BD
+            // --- Guardar resultado base ---
             var resultado = new TBM_RESULTADO
             {
                 IDD_RESULTADO = Guid.NewGuid(),
                 IDD_SESION = sesionId,
                 FEC_CREADO = DateTime.UtcNow,
-                NOM_PERFIL_TX = resultadoApi["riasec"]?.ToString() ?? "N/A",
+                NOM_PERFIL_TX = resultadoApi.PerfilRiasec ?? "N/A",
                 DES_RECOMENDACION_TX = "Generadas por modelo ML",
-                NUM_RECOMENDACIONES = recomendaciones.Count,
-                LISTA_RECOMENDACIONES_JSON = System.Text.Json.JsonSerializer.Serialize(recomendaciones)
+                NUM_RECOMENDACIONES = resultadoApi.Carreras.Count,
+                LISTA_RECOMENDACIONES_JSON = System.Text.Json.JsonSerializer.Serialize(resultadoApi.Carreras)
             };
 
             _context.TBM_RESULTADOS.Add(resultado);
             await _context.SaveChangesAsync();
 
-            // Leer vector OCEAN
-            var oceanList = new List<OceanTrait>();
-            try
-            {
-                var oceanVectorObj = resultadoApi["ocean_vector"];
-                if (oceanVectorObj is Newtonsoft.Json.Linq.JArray jArray)
-                {
-                    foreach (var item in jArray)
-                    {
-                        string trait = item["trait"]?.ToString() ?? "";
-                        double value = item["value"]?.ToObject<double>() ?? 0.0;
-                        if (!string.IsNullOrEmpty(trait))
-                            oceanList.Add(new OceanTrait { Trait = trait, Value = value });
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error leyendo ocean_vector: {ex.Message}");
-            }
-
+            // --- Procesar OCEAN resumen ---
             string perfilOceanResumen = string.Join(", ",
-                oceanList.Select(o => $"{MapOceanNombre(o.Trait)}: {MapNivelOcean(o.Value)} ({o.Value:F1})"));
+                resultadoApi.PuntajesOcean.Select(o =>
+                    $"{MapOceanNombre(o.Trait)}: {MapNivelOcean(o.Value)} ({o.Value:F1})"
+                ));
 
-            // ViewModel final
-            var vm = new ResultadoViewModel
-            {
-                IDD_RESULTADO = resultado.IDD_RESULTADO,
-                PerfilRiasec = resultadoApi["riasec"]?.ToString() ?? "N/A",
-                Subperfil = resultadoApi["subperfil"]?.ToString() ?? "",
-                PuntajesRiasec = categoriasRiasec,
-                TotalRiasec = categoriasRiasec.Values.Sum(),
-                PuntajesOcean = oceanList,
-                PerfilOceanResumen = perfilOceanResumen,
-                Carreras = recomendaciones
-            };
+            // --- ViewModel final ---
+            resultadoApi.IDD_RESULTADO = resultado.IDD_RESULTADO;
+            resultadoApi.PuntajesRiasec = categoriasRiasec;
+            resultadoApi.TotalRiasec = categoriasRiasec.Values.Sum();
+            resultadoApi.PerfilOceanResumen = perfilOceanResumen;
 
-            // Finalizar sesión
+            // --- Finalizar sesión ---
             var sesion = await _context.TBM_SESIONES.FindAsync(sesionId);
             if (sesion != null)
             {
@@ -302,8 +239,12 @@ namespace ProyectoTesis.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return View("Resultado", vm);
+            return View("Resultado", resultadoApi);
         }
+
+
+
+
 
         // ---  Helpers ---
         private int[] CalcularVectorRiasec(IEnumerable<dynamic> respuestas)
