@@ -326,17 +326,18 @@ namespace ProyectoTesis.Controllers
                     using var doc = System.Text.Json.JsonDocument.Parse(resultado.LISTA_RECOMENDACIONES_JSON);
                     foreach (var elem in doc.RootElement.EnumerateArray())
                     {
-                        
                         string nombre = "";
-                        if (elem.TryGetProperty("carrera", out var nomLower))
-                            nombre = nomLower.GetString() ?? "";
+                        if (elem.TryGetProperty("Nombre", out var nomNormal))
+                            nombre = nomNormal.GetString() ?? "";
                         else if (elem.TryGetProperty("Carrera", out var nomUpper))
                             nombre = nomUpper.GetString() ?? "";
+                        else if (elem.TryGetProperty("carrera", out var nomLower))
+                            nombre = nomLower.GetString() ?? "";
 
-                        string desc = elem.TryGetProperty("score", out var scLower)
-                            ? $"Sugerida automáticamente (afinidad: {scLower.GetDouble():F2}%)"
-                            : elem.TryGetProperty("Score", out var scUpper)
-                                ? $"Sugerida automáticamente (afinidad: {scUpper.GetDouble():F2}%)"
+                        string desc = elem.TryGetProperty("Score", out var scUpper)
+                            ? $"Sugerida automáticamente (afinidad: {scUpper.GetDouble():F2}%)"
+                            : elem.TryGetProperty("score", out var scLower)
+                                ? $"Sugerida automáticamente (afinidad: {scLower.GetDouble():F2}%)"
                                 : "Sugerida automáticamente";
 
                         List<string> universidades = new();
@@ -362,7 +363,6 @@ namespace ProyectoTesis.Controllers
                 Console.WriteLine($"Error al deserializar carreras: {ex.Message}");
             }
 
-            // --- Construir el ViewModel final ---
             var vm = new ResultadoViewModel
             {
                 IDD_RESULTADO = resultado.IDD_RESULTADO,
@@ -370,7 +370,7 @@ namespace ProyectoTesis.Controllers
                 DES_RECOMENDACION_TX = resultado.DES_RECOMENDACION_TX,
                 PerfilRiasec = resultado.NOM_PERFIL_TX,
                 Carreras = carreras,
-                PuntajesOcean = new List<OceanTrait>() // <- evita nulos
+                PuntajesOcean = new List<OceanTrait>()
             };
 
             if (!carreras.Any())
@@ -378,6 +378,7 @@ namespace ProyectoTesis.Controllers
 
             return View(vm);
         }
+
 
 
 
