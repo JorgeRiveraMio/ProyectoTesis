@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 QuestPDF.Settings.License = LicenseType.Community;
 
 // ================================================
-// 🔧 Forzar entorno Railway para EF Core CLI
+// Forzar entorno Railway para EF Core CLI
 // ================================================
 Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Production");
 
@@ -48,7 +48,7 @@ if (!string.IsNullOrEmpty(railwayConnection))
 
     try
     {
-        // ✅ Parseo manual robusto (sin Uri)
+        // Parseo manual robusto (sin Uri)
         var withoutProtocol = cleanUrl.Replace("postgres://", "");
         var parts = withoutProtocol.Split('@');
         var creds = parts[0].Split(':', 2);
@@ -69,7 +69,7 @@ if (!string.IsNullOrEmpty(railwayConnection))
     }
     catch (Exception ex)
     {
-        throw new Exception($"❌ Error al parsear DATABASE_URL: {railwayConnection}\nDetalles: {ex.Message}");
+        throw new Exception($"Error al parsear DATABASE_URL: {railwayConnection}\nDetalles: {ex.Message}");
     }
 }
 else if (envCustom == "Railway")
@@ -131,7 +131,17 @@ else
 }
 
 app.UseHttpsRedirection();
+
+// BLOQUE AÑADIDO: fuerza servir archivos como texto plano
+app.UseStaticFiles(new StaticFileOptions
+{
+    ServeUnknownFileTypes = true,
+    DefaultContentType = "text/plain"
+});
+
+// Mantén también el middleware normal
 app.UseStaticFiles();
+
 app.UseRouting();
 app.UseSession();
 app.UseAuthorization();
