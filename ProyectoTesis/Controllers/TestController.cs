@@ -326,21 +326,33 @@ namespace ProyectoTesis.Controllers
                     using var doc = System.Text.Json.JsonDocument.Parse(resultado.LISTA_RECOMENDACIONES_JSON);
                     foreach (var elem in doc.RootElement.EnumerateArray())
                     {
-                        string nombre = elem.TryGetProperty("Carrera", out var nom) ? nom.GetString() ?? "" : "";
-                        string desc = elem.TryGetProperty("Score", out var sc)
-                            ? $"Sugerida automáticamente (afinidad: {sc.GetDouble():F2}%)"
-                            : "Sugerida automáticamente";
+                        
+                        string nombre = "";
+                        if (elem.TryGetProperty("carrera", out var nomLower))
+                            nombre = nomLower.GetString() ?? "";
+                        else if (elem.TryGetProperty("Carrera", out var nomUpper))
+                            nombre = nomUpper.GetString() ?? "";
+
+                        string desc = elem.TryGetProperty("score", out var scLower)
+                            ? $"Sugerida automáticamente (afinidad: {scLower.GetDouble():F2}%)"
+                            : elem.TryGetProperty("Score", out var scUpper)
+                                ? $"Sugerida automáticamente (afinidad: {scUpper.GetDouble():F2}%)"
+                                : "Sugerida automáticamente";
 
                         List<string> universidades = new();
-                        if (elem.TryGetProperty("Universidades", out var unis) && unis.ValueKind == System.Text.Json.JsonValueKind.Array)
-                            universidades = unis.EnumerateArray().Select(u => u.GetString() ?? "").ToList();
+                        if (elem.TryGetProperty("universidades", out var unisLower) && unisLower.ValueKind == System.Text.Json.JsonValueKind.Array)
+                            universidades = unisLower.EnumerateArray().Select(u => u.GetString() ?? "").ToList();
+                        else if (elem.TryGetProperty("Universidades", out var unisUpper) && unisUpper.ValueKind == System.Text.Json.JsonValueKind.Array)
+                            universidades = unisUpper.EnumerateArray().Select(u => u.GetString() ?? "").ToList();
 
                         carreras.Add(new CarreraSugerida
                         {
                             Nombre = nombre,
                             Descripcion = desc,
                             Icono = "school",
-                            Universidades = universidades.Count > 0 ? universidades : new List<string> { "Consulta diversas opciones académicas" }
+                            Universidades = universidades.Count > 0
+                                ? universidades
+                                : new List<string> { "Consulta diversas opciones académicas" }
                         });
                     }
                 }
@@ -350,6 +362,7 @@ namespace ProyectoTesis.Controllers
                 Console.WriteLine($"Error al deserializar carreras: {ex.Message}");
             }
 
+            // --- Construir el ViewModel final ---
             var vm = new ResultadoViewModel
             {
                 IDD_RESULTADO = resultado.IDD_RESULTADO,
@@ -357,7 +370,7 @@ namespace ProyectoTesis.Controllers
                 DES_RECOMENDACION_TX = resultado.DES_RECOMENDACION_TX,
                 PerfilRiasec = resultado.NOM_PERFIL_TX,
                 Carreras = carreras,
-                PuntajesOcean = new List<OceanTrait>() // <- para evitar nulos
+                PuntajesOcean = new List<OceanTrait>() // <- evita nulos
             };
 
             if (!carreras.Any())
@@ -365,6 +378,7 @@ namespace ProyectoTesis.Controllers
 
             return View(vm);
         }
+
 
 
 
