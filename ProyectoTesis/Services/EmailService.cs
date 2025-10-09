@@ -1,60 +1,50 @@
-using Mailjet.Client;
-using Mailjet.Client.Resources;
-using Newtonsoft.Json.Linq;
 using System;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace ProyectoTesis.Services
 {
     public class EmailService
     {
-        private readonly string _apiKey = Environment.GetEnvironmentVariable("MAILJET_API_KEY");
-        private readonly string _secretKey = Environment.GetEnvironmentVariable("MAILJET_SECRET_KEY");
+        // Variables de entorno (más seguras que tener las claves en código)
+        private readonly string _smtpServer = Environment.GetEnvironmentVariable("BREVO_SMTP_SERVER") ?? "smtp-relay.brevo.com";
+        private readonly int _smtpPort = int.TryParse(Environment.GetEnvironmentVariable("BREVO_SMTP_PORT"), out var port) ? port : 587;
+        private readonly string _smtpUser = Environment.GetEnvironmentVariable("BREVO_SMTP_USER") ?? "8aa510001@smtp-brevo.com";
+        private readonly string _smtpPassword = Environment.GetEnvironmentVariable("BREVO_SMTP_PASS") ?? "";
+        private readonly string _fromEmail = Environment.GetEnvironmentVariable("BREVO_FROM_EMAIL") ?? "marcofabianj@hotmail.com";
+        private readonly string _fromName = Environment.GetEnvironmentVariable("BREVO_FROM_NAME") ?? "Vocacional App";
 
         public async Task EnviarCorreoConPdfAsync(string destinatario, string asunto, string cuerpoHtml, byte[] pdfBytes)
         {
-            var client = new MailjetClient(_apiKey, _secretKey);
+            using (var smtp = new SmtpClient(_smtpServer, _smtpPort))
+            {
+                smtp.Credentials = new NetworkCredential(_smtpUser, _smtpPassword);
+                smtp.EnableSsl = true;
 
-            var request = new MailjetRequest
-            {
-                Resource = Send.Resource,
-            }
-            .Property(Send.Messages, new JArray
-            {
-                new JObject
+                var mensaje = new MailMessage
                 {
-                    ["From"] = new JObject
-                    {
-                        ["Email"] = "marcofabianjz@gmail.com",
-                        ["Name"] = "Vocacional App"
-                    },
-                    ["To"] = new JArray
-                    {
-                        new JObject
-                        {
-                            ["Email"] = destinatario,
-                            ["Name"] = "Usuario"
-                        }
-                    },
-                    ["Subject"] = asunto,
-                    ["HTMLPart"] = cuerpoHtml,
-                    ["Attachments"] = pdfBytes != null && pdfBytes.Length > 0
-                        ? new JArray
-                        {
-                            new JObject
-                            {
-                                ["ContentType"] = "application/pdf",
-                                ["Filename"] = "ResultadosVocacionales.pdf",
-                                ["Base64Content"] = Convert.ToBase64String(pdfBytes)
-                            }
-                        }
-                        : null
-                }
-            });
+                    From = new MailAddress(_fromEmail, _fromName),
+                    Subject = asunto,
+                    Body = cuerpoHtml,
+                    IsBodyHtml = true
+                };
 
-            var response = await client.PostAsync(request);
-            Console.WriteLine($"Mailjet response: {response.StatusCode}");
-            Console.WriteLine($"Mailjet body: {response.GetData()}");
+                mensaje.To.Add(destinatario);
+
+                if (pdfBytes != null && pdfBytes.Length > 0)
+                {
+                    var pdfAdjunto = new Attachment(
+                        new System.IO.MemoryStream(pdfBytes),
+                        "ResultadosVocacionales.pdf",
+                        "application/pdf"
+                    );
+                    mensaje.Attachments.Add(pdfAdjunto);
+                }
+
+                await smtp.SendMailAsync(mensaje);
+                Console.WriteLine("Correo enviado correctamente a través de Brevo.");
+            }
         }
     }
 }
