@@ -124,9 +124,13 @@ namespace ProyectoTesis.Services
 
                             foreach (var carrera in resultado.Carreras)
                             {
+                                var colorBarra = carrera.Score >= 80 ? Colors.Green.Medium
+                                               : carrera.Score >= 60 ? Colors.Yellow.Medium
+                                               : Colors.Red.Medium;
+
                                 col.Item().Column(card =>
                                 {
-                                    card.Spacing(3);
+                                    card.Spacing(4);
                                     card.Item().Text(carrera.Nombre)
                                         .Bold().FontSize(14).FontColor(colorPrimario);
 
@@ -134,9 +138,22 @@ namespace ProyectoTesis.Services
                                         card.Item().Text(carrera.Descripcion)
                                             .FontSize(12).LineHeight(1.4f).FontColor(colorTexto);
 
+                                    if (carrera.Score > 0)
+                                    {
+                                        card.Item().Text($"Afinidad con tu perfil: {carrera.Score:F2}%")
+                                            .FontSize(11).FontColor(Colors.Grey.Darken2);
+
+                                        card.Item().Canvas((canvas, size) =>
+                                        {
+                                            var ancho = size.Width * Math.Min(carrera.Score / 100, 1);
+                                            canvas.FillColor(Colors.Grey.Lighten2).Rectangle(0, 0, size.Width, 6).Fill();
+                                            canvas.FillColor(colorBarra).Rectangle(0, 0, ancho, 6).Fill();
+                                        });
+                                    }
+
                                     if (carrera.Universidades?.Any() == true)
                                     {
-                                        card.Item().Text("Universidades de referencia:")
+                                        card.Item().Text("Universidades recomendadas:")
                                             .Bold().FontSize(11).FontColor(Colors.Grey.Darken2);
                                         card.Item().Text(string.Join(", ", carrera.Universidades))
                                             .FontSize(11).FontColor(Colors.Grey.Darken1);

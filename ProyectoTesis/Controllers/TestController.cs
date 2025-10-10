@@ -407,7 +407,6 @@ namespace ProyectoTesis.Controllers
             int utilidadRecomendaciones,
             int satisfaccionGlobal)
         {
-            // 1. Validar sesión y resultado
             var sesion = await _context.TBM_SESIONES.FindAsync(sesionId);
             var resultado = await _context.TBM_RESULTADOS.FindAsync(resultadoId);
 
@@ -417,7 +416,6 @@ namespace ProyectoTesis.Controllers
                 return RedirectToAction("ResultadoCombinado");
             }
 
-            // 2. Guardar satisfacción
             var satisfaccion = new TBM_SATISFACCION
             {
                 IDD_SESION = sesionId,
@@ -430,18 +428,50 @@ namespace ProyectoTesis.Controllers
             _context.TBM_SATISFACCIONES.Add(satisfaccion);
             await _context.SaveChangesAsync();
 
-            // 3. Generar PDF y enviar correo
+            var carreras = new List<CarreraSugerida>();
+            try
+            {
+                if (!string.IsNullOrEmpty(resultado.LISTA_RECOMENDACIONES_JSON))
+                {
+                    using var doc = System.Text.Json.JsonDocument.Parse(resultado.LISTA_RECOMENDACIONES_JSON);
+                    foreach (var elem in doc.RootElement.EnumerateArray())
+                    {
+                        string nombre = elem.TryGetProperty("Nombre", out var n) ? n.GetString() :
+                                        elem.TryGetProperty("Carrera", out var c) ? c.GetString() :
+                                        elem.TryGetProperty("carrera", out var l) ? l.GetString() : "";
+
+                        double score = 0;
+                        if (elem.TryGetProperty("Score", out var sc)) score = sc.GetDouble();
+                        else if (elem.TryGetProperty("score", out var scl)) score = scl.GetDouble();
+
+                        List<string> universidades = new();
+                        if (elem.TryGetProperty("universidades", out var unis) && unis.ValueKind == System.Text.Json.JsonValueKind.Array)
+                            universidades = unis.EnumerateArray().Select(u => u.GetString() ?? "").ToList();
+                        else if (elem.TryGetProperty("Universidades", out var unis2) && unis2.ValueKind == System.Text.Json.JsonValueKind.Array)
+                            universidades = unis2.EnumerateArray().Select(u => u.GetString() ?? "").ToList();
+
+                        carreras.Add(new CarreraSugerida
+                        {
+                            Nombre = nombre,
+                            Descripcion = $"Sugerida automáticamente (afinidad: {score:F2}%)",
+                            Score = score,
+                            Universidades = universidades
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al leer recomendaciones del JSON: {ex.Message}");
+            }
+
             var vm = new ResultadoViewModel
             {
                 IDD_RESULTADO = resultado.IDD_RESULTADO,
                 NOM_PERFIL_TX = resultado.NOM_PERFIL_TX,
                 DES_RECOMENDACION_TX = resultado.DES_RECOMENDACION_TX,
                 PerfilRiasec = resultado.NOM_PERFIL_TX,
-                Carreras = new List<CarreraSugerida>
-                {
-                    new CarreraSugerida { Nombre = "Ingeniería de Sistemas", Descripcion = "Diseño y gestión de software" },
-                    new CarreraSugerida { Nombre = "Psicología", Descripcion = "Estudio del comportamiento humano" }
-                }
+                Carreras = carreras
             };
 
             var pdfBytes = _pdfService.GenerarPdf(vm);
@@ -453,9 +483,10 @@ namespace ProyectoTesis.Controllers
                 pdfBytes
             );
 
-            TempData["Mensaje"] = $"✅ Evaluación guardada y resultados enviados correctamente a {correo}.";
+            TempData["Mensaje"] = $"Evaluación guardada y resultados enviados correctamente a {correo}.";
             return RedirectToAction("Recomendaciones", new { resultadoId });
         }
+
 
 
     
