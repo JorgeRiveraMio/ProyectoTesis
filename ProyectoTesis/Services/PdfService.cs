@@ -124,48 +124,51 @@ namespace ProyectoTesis.Services
                                 .Text("Carreras sugeridas")
                                 .Bold().FontSize(16).FontColor(colorPrimario);
 
-                            foreach (var carrera in resultado.Carreras)
+                            col.Item().Column(list =>
                             {
-                                var colorBarra = carrera.Score >= 80 ? Colors.Green.Medium
-                                               : carrera.Score >= 60 ? Colors.Yellow.Medium
-                                               : Colors.Red.Medium;
-
-                                col.Item().Column(card =>
+                                foreach (var carrera in resultado.Carreras)
                                 {
-                                    card.Spacing(4);
-                                    card.Item().Text(carrera.Nombre)
-                                        .Bold().FontSize(14).FontColor(colorPrimario);
+                                    var colorBarra = carrera.Score >= 80 ? Colors.Green.Medium
+                                                   : carrera.Score >= 60 ? Colors.Yellow.Medium
+                                                   : Colors.Red.Medium;
 
-                                    if (!string.IsNullOrWhiteSpace(carrera.Descripcion))
-                                        card.Item().Text(carrera.Descripcion)
-                                            .FontSize(12).LineHeight(1.4f).FontColor(colorTexto);
-
-                                    if (carrera.Score > 0)
+                                    list.Item().Column(card =>
                                     {
-                                        card.Item().Text($"Afinidad con tu perfil: {carrera.Score:F2}%")
-                                            .FontSize(11).FontColor(Colors.Grey.Darken2);
+                                        card.Spacing(4);
+                                        card.Item().Text(carrera.Nombre)
+                                            .Bold().FontSize(14).FontColor(colorPrimario);
 
-                                        var ancho = Math.Min(carrera.Score, 100);
-                                        string svg = $@"
+                                        if (!string.IsNullOrWhiteSpace(carrera.Descripcion))
+                                            card.Item().Text(carrera.Descripcion)
+                                                .FontSize(12).LineHeight(1.4f).FontColor(colorTexto);
+
+                                        if (carrera.Score > 0)
+                                        {
+                                            card.Item().Text($"Afinidad con tu perfil: {carrera.Score:F2}%")
+                                                .FontSize(11).FontColor(Colors.Grey.Darken2);
+
+                                            var ancho = Math.Min(carrera.Score, 100);
+                                            string svg = $@"
 <svg width='100%' height='8' xmlns='http://www.w3.org/2000/svg'>
   <rect width='100%' height='8' fill='{Colors.Grey.Lighten2}' />
   <rect width='{ancho}%' height='8' fill='{colorBarra}' />
 </svg>";
-                                        card.Item().Svg(svg);
-                                    }
+                                            card.Item().Svg(svg);
+                                        }
 
-                                    if (carrera.Universidades?.Any() == true)
-                                    {
-                                        card.Item().Text("Universidades recomendadas:")
-                                            .Bold().FontSize(11).FontColor(Colors.Grey.Darken2);
-                                        card.Item().Text(string.Join(", ", carrera.Universidades))
-                                            .FontSize(11).FontColor(Colors.Grey.Darken1);
-                                    }
-                                });
+                                        if (carrera.Universidades?.Any() == true)
+                                        {
+                                            card.Item().Text("Universidades recomendadas:")
+                                                .Bold().FontSize(11).FontColor(Colors.Grey.Darken2);
+                                            card.Item().Text(string.Join(", ", carrera.Universidades))
+                                                .FontSize(11).FontColor(Colors.Grey.Darken1);
+                                        }
+                                    });
 
-                                col.Item().PaddingVertical(8)
-                                    .LineHorizontal(0.5f).LineColor(colorLineas);
-                            }
+                                    list.Item().PaddingVertical(8)
+                                        .LineHorizontal(0.5f).LineColor(colorLineas);
+                                }
+                            });
                         }
                     });
 
