@@ -412,31 +412,50 @@ namespace ProyectoTesis.Controllers
             }
 
             // --- Guardar encuesta de satisfacción ---
-            var satisfaccion = new TBM_SATISFACCION
-            {
-                IDD_SESION = sesionId,
-                FACILIDAD_USO = facilidadUso,
-                CLARIDAD_RESULTADOS = claridadResultados,
-                UTILIDAD_RECOMENDACIONES = utilidadRecomendaciones,
-                SATISFACCION_GLOBAL = satisfaccionGlobal,
-                FEC_REGISTRO = DateTime.UtcNow
-            };
-            _context.TBM_SATISFACCIONES.Add(satisfaccion);
-            await _context.SaveChangesAsync();
+            var satisfaccionExistente = await _context.TBM_SATISFACCIONES
+                .FirstOrDefaultAsync(s => s.IDD_SESION == sesionId);
 
+            if (satisfaccionExistente == null)
+            {
+                var satisfaccion = new TBM_SATISFACCION
+                {
+                    IDD_SESION = sesionId,
+                    FACILIDAD_USO = facilidadUso,
+                    CLARIDAD_RESULTADOS = claridadResultados,
+                    UTILIDAD_RECOMENDACIONES = utilidadRecomendaciones,
+                    SATISFACCION_GLOBAL = satisfaccionGlobal,
+                    FEC_REGISTRO = DateTime.UtcNow
+                };
+
+                _context.TBM_SATISFACCIONES.Add(satisfaccion);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                // 🔄 Actualiza valores si ya existe (permite reenviar sin error)
+                satisfaccionExistente.FACILIDAD_USO = facilidadUso;
+                satisfaccionExistente.CLARIDAD_RESULTADOS = claridadResultados;
+                satisfaccionExistente.UTILIDAD_RECOMENDACIONES = utilidadRecomendaciones;
+                satisfaccionExistente.SATISFACCION_GLOBAL = satisfaccionGlobal;
+                satisfaccionExistente.FEC_REGISTRO = DateTime.UtcNow;
+
+                await _context.SaveChangesAsync();
+            }
+
+            // --- Preparar carreras ---
             var carreras = new List<CarreraSugerida>();
             try
             {
                 if (!string.IsNullOrEmpty(resultado.LISTA_RECOMENDACIONES_JSON))
                 {
                     var json = resultado.LISTA_RECOMENDACIONES_JSON.Trim();
-
                     var opciones = new System.Text.Json.JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
                     };
 
-                    var array = System.Text.Json.JsonSerializer.Deserialize<List<System.Text.Json.JsonElement>>(json, opciones);
+                    var array = System.Text.Json.JsonSerializer
+                        .Deserialize<List<System.Text.Json.JsonElement>>(json, opciones);
 
                     foreach (var elem in array ?? new List<System.Text.Json.JsonElement>())
                     {
@@ -465,10 +484,6 @@ namespace ProyectoTesis.Controllers
 
                     Console.WriteLine($"Carreras deserializadas correctamente: {carreras.Count}");
                 }
-                else
-                {
-                    Console.WriteLine("LISTA_RECOMENDACIONES_JSON está vacía o nula.");
-                }
             }
             catch (Exception ex)
             {
@@ -482,9 +497,6 @@ namespace ProyectoTesis.Controllers
                 NOM_PERFIL_TX = resultado.NOM_PERFIL_TX,
                 DES_RECOMENDACION_TX = resultado.DES_RECOMENDACION_TX,
                 PerfilRiasec = resultado.NOM_PERFIL_TX,
-                TotalRiasec = 0,
-                PuntajesRiasec = new(),
-                PuntajesOcean = new(),
                 Carreras = carreras
             };
 
@@ -505,6 +517,8 @@ namespace ProyectoTesis.Controllers
             TempData["Mensaje"] = $"Evaluación guardada y resultados enviados correctamente a {correo}.";
             return RedirectToAction("Recomendaciones", new { resultadoId });
         }
+
+
 
     }
 }

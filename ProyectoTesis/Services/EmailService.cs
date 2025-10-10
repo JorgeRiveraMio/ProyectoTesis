@@ -3,13 +3,21 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace ProyectoTesis.Services
 {
     public class EmailService
     {
-        private readonly string _apiKey = Environment.GetEnvironmentVariable("BREVO_API_KEY");
-        private readonly string _fromEmail = Environment.GetEnvironmentVariable("FROM_EMAIL") ?? "marcofabianj@hotmail.com";
+        private readonly string _apiKey;
+        private readonly string _fromEmail;
+
+        public EmailService(IConfiguration configuration)
+        {
+            // Lee desde User Secrets en local o variables de entorno en producción
+            _apiKey = configuration["BREVO_API_KEY"];
+            _fromEmail = configuration["FROM_EMAIL"] ?? "marcofabianj@hotmail.com";
+        }
 
         /// <summary>
         /// Envía un correo con cuerpo HTML y un PDF adjunto utilizando la API HTTP de Brevo.
@@ -17,7 +25,7 @@ namespace ProyectoTesis.Services
         public async Task EnviarCorreoConPdfAsync(string destinatario, string asunto, string cuerpoHtml, byte[] pdfBytes)
         {
             if (string.IsNullOrEmpty(_apiKey))
-                throw new InvalidOperationException("La variable de entorno BREVO_API_KEY no está configurada.");
+                throw new InvalidOperationException("La variable BREVO_API_KEY no está configurada.");
 
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Add("api-key", _apiKey);

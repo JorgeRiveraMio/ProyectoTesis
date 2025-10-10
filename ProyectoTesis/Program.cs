@@ -6,6 +6,15 @@ using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ================================================
+// 🔹 AÑADIDO: Cargar User Secrets en entorno local
+// ================================================
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+    Console.WriteLine("[DEBUG] User Secrets cargados (modo desarrollo)");
+}
+
 QuestPDF.Settings.License = LicenseType.Community;
 
 // ================================================
@@ -123,6 +132,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+
+    // 🔹 Verificación rápida de las variables cargadas
+    Console.WriteLine("=========== DEBUG VARIABLES ===========");
+    Console.WriteLine($"BREVO_API_KEY: {(string.IsNullOrEmpty(builder.Configuration["BREVO_API_KEY"]) ? "(no definida)" : "(ok)")}");
+    Console.WriteLine($"FROM_EMAIL: {builder.Configuration["FROM_EMAIL"] ?? "(no definida)"}");
+    Console.WriteLine("======================================");
 }
 else
 {
