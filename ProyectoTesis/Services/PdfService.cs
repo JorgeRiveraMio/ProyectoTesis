@@ -145,19 +145,13 @@ namespace ProyectoTesis.Services
                                         card.Item().Text($"Afinidad con tu perfil: {carrera.Score:F2}%")
                                             .FontSize(11).FontColor(Colors.Grey.Darken2);
 
-                                        card.Item().Canvas((canvas, size) =>
-                                        {
-                                            var ancho = size.Width * Math.Min(carrera.Score / 100, 1);
-
-                                            dynamic ctx = canvas;
-                                            ctx.SetFillColor(Colors.Grey.Lighten2);
-                                            ctx.DrawRectangle(0, 0, size.Width, 6);
-                                            ctx.Fill();
-
-                                            ctx.SetFillColor(colorBarra);
-                                            ctx.DrawRectangle(0, 0, ancho, 6);
-                                            ctx.Fill();
-                                        });
+                                        var ancho = Math.Min(carrera.Score, 100);
+                                        string svg = $@"
+<svg width='100%' height='8' xmlns='http://www.w3.org/2000/svg'>
+  <rect width='100%' height='8' fill='{Colors.Grey.Lighten2}' />
+  <rect width='{ancho}%' height='8' fill='{colorBarra}' />
+</svg>";
+                                        card.Item().Svg(svg);
                                     }
 
                                     if (carrera.Universidades?.Any() == true)
