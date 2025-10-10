@@ -379,11 +379,6 @@ namespace ProyectoTesis.Controllers
             return View(vm);
         }
 
-
-
-
-
-
         // GET: /Test/Enviar/{resultadoId}
         public async Task<IActionResult> Enviar(Guid resultadoId)
         {
@@ -429,35 +424,21 @@ namespace ProyectoTesis.Controllers
             await _context.SaveChangesAsync();
 
             var carreras = new List<CarreraSugerida>();
+
             try
             {
                 if (!string.IsNullOrEmpty(resultado.LISTA_RECOMENDACIONES_JSON))
                 {
-                    using var doc = System.Text.Json.JsonDocument.Parse(resultado.LISTA_RECOMENDACIONES_JSON);
-                    foreach (var elem in doc.RootElement.EnumerateArray())
+                    var options = new System.Text.Json.JsonSerializerOptions
                     {
-                        string nombre = elem.TryGetProperty("Nombre", out var n) ? n.GetString() :
-                                        elem.TryGetProperty("Carrera", out var c) ? c.GetString() :
-                                        elem.TryGetProperty("carrera", out var l) ? l.GetString() : "";
+                        PropertyNameCaseInsensitive = true
+                    };
 
-                        double score = 0;
-                        if (elem.TryGetProperty("Score", out var sc)) score = sc.GetDouble();
-                        else if (elem.TryGetProperty("score", out var scl)) score = scl.GetDouble();
+                    var resultadoTemp = System.Text.Json.JsonSerializer.Deserialize<ResultadoViewModel>(
+                        resultado.LISTA_RECOMENDACIONES_JSON, options);
 
-                        List<string> universidades = new();
-                        if (elem.TryGetProperty("universidades", out var unis) && unis.ValueKind == System.Text.Json.JsonValueKind.Array)
-                            universidades = unis.EnumerateArray().Select(u => u.GetString() ?? "").ToList();
-                        else if (elem.TryGetProperty("Universidades", out var unis2) && unis2.ValueKind == System.Text.Json.JsonValueKind.Array)
-                            universidades = unis2.EnumerateArray().Select(u => u.GetString() ?? "").ToList();
-
-                        carreras.Add(new CarreraSugerida
-                        {
-                            Nombre = nombre,
-                            Descripcion = $"Sugerida automáticamente (afinidad: {score:F2}%)",
-                            Score = score,
-                            Universidades = universidades
-                        });
-                    }
+                    if (resultadoTemp?.Carreras != null)
+                        carreras = resultadoTemp.Carreras;
                 }
             }
             catch (Exception ex)
@@ -492,10 +473,6 @@ namespace ProyectoTesis.Controllers
             TempData["Mensaje"] = $"Evaluación guardada y resultados enviados correctamente a {correo}.";
             return RedirectToAction("Recomendaciones", new { resultadoId });
         }
-
-
-
-
     
     }
 }
