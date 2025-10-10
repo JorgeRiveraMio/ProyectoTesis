@@ -424,16 +424,21 @@ namespace ProyectoTesis.Controllers
             _context.TBM_SATISFACCIONES.Add(satisfaccion);
             await _context.SaveChangesAsync();
 
-            // --- Deserializar carreras de LISTA_RECOMENDACIONES_JSON ---
             var carreras = new List<CarreraSugerida>();
             try
             {
                 if (!string.IsNullOrEmpty(resultado.LISTA_RECOMENDACIONES_JSON))
                 {
-                    var json = resultado.LISTA_RECOMENDACIONES_JSON;
-                    var array = System.Text.Json.JsonSerializer.Deserialize<List<System.Text.Json.JsonElement>>(json);
+                    var json = resultado.LISTA_RECOMENDACIONES_JSON.Trim();
 
-                    foreach (var elem in array)
+                    var opciones = new System.Text.Json.JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+
+                    var array = System.Text.Json.JsonSerializer.Deserialize<List<System.Text.Json.JsonElement>>(json, opciones);
+
+                    foreach (var elem in array ?? new List<System.Text.Json.JsonElement>())
                     {
                         string nombre = elem.TryGetProperty("Nombre", out var n) ? n.GetString() :
                                         elem.TryGetProperty("Carrera", out var c) ? c.GetString() :
@@ -457,6 +462,12 @@ namespace ProyectoTesis.Controllers
                             Universidades = universidades
                         });
                     }
+
+                    Console.WriteLine($"Carreras deserializadas correctamente: {carreras.Count}");
+                }
+                else
+                {
+                    Console.WriteLine("LISTA_RECOMENDACIONES_JSON está vacía o nula.");
                 }
             }
             catch (Exception ex)
@@ -495,7 +506,5 @@ namespace ProyectoTesis.Controllers
             return RedirectToAction("Recomendaciones", new { resultadoId });
         }
 
-
-    
     }
 }
