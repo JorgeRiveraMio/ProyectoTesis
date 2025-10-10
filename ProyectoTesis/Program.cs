@@ -160,11 +160,4 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-
-// ================================================
-// Vista previa PDF temporal (solo para pruebas)
-// ================================================
-ProyectoTesis.Services.PdfPreview.GenerarPreview();
-Console.WriteLine("✅ PDF generado en la carpeta del proyecto (reporte_vocacional_preview.pdf)");
-
 app.Run();
