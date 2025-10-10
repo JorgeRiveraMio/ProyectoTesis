@@ -155,9 +155,16 @@ app.MapControllerRoute(
 // ================================================
 Console.WriteLine($"[DEBUG] ConnectionString final antes de migrar: {connectionString}");
 using (var scope = app.Services.CreateScope())
-{
+{   
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
 }
+
+
+// ================================================
+// Vista previa PDF temporal (solo para pruebas)
+// ================================================
+ProyectoTesis.Services.PdfPreview.GenerarPreview();
+Console.WriteLine("✅ PDF generado en la carpeta del proyecto (reporte_vocacional_preview.pdf)");
 
 app.Run();

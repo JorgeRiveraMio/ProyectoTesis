@@ -1,3 +1,4 @@
+#nullable disable
 using ProyectoTesis.Models.ViewModels;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
@@ -12,64 +13,56 @@ namespace ProyectoTesis.Services
         public byte[] GenerarPdf(ResultadoViewModel resultado)
         {
             var colorPrimario = Colors.Blue.Medium;
-            var colorSecundario = Colors.Indigo.Lighten3;
             var colorTexto = Colors.Grey.Darken3;
+            var colorLineas = Colors.Grey.Lighten1;
 
             var pdf = Document.Create(container =>
             {
                 container.Page(page =>
                 {
-                    page.Margin(40);
+                    page.Margin(50);
+                    page.PageColor(Colors.White);
 
-                    // ==========================
-                    // ENCABEZADO
-                    // ==========================
-                    page.Header()
-                        .Text("Reporte de Resultados Vocacionales")
-                        .FontSize(24)
-                        .Bold()
-                        .FontColor(colorPrimario)
-                        .AlignCenter();
-
-                    // ==========================
-                    // CONTENIDO PRINCIPAL
-                    // ==========================
-                    page.Content().Column(col =>
+                    page.Header().AlignCenter().Column(header =>
                     {
-                        col.Spacing(20);
+                        header.Spacing(5);
+                        header.Item().Text("Reporte de Resultados Vocacionales")
+                            .FontSize(24).Bold().FontColor(colorPrimario);
+                        header.Item().Text("Evaluación Vocacional 2025")
+                            .FontSize(11).Italic().FontColor(Colors.Grey.Darken1);
+                    });
 
-                        // ----- Bloque de perfiles -----
-                        col.Item().Container()
-                            .Background(colorSecundario)
-                            .Padding(12)
-                            .Border(1)
-                            .BorderColor(colorPrimario)
-                            .Column(c =>
+                    page.Content().PaddingVertical(30).Column(col =>
+                    {
+                        col.Spacing(25);
+
+                        col.Item().AlignLeft().Column(c =>
                         {
+                            c.Spacing(4);
                             c.Item().Text("Perfil RIASEC")
                                 .Bold().FontSize(14).FontColor(colorTexto);
-
                             c.Item().Text(resultado.PerfilRiasec)
-                                .FontSize(16).Bold().FontColor(colorPrimario);
+                                .FontSize(20).Bold().FontColor(colorPrimario);
 
                             if (resultado.PuntajesOcean?.Any() == true)
                             {
                                 c.Item().Text("Perfil OCEAN (Big Five)")
                                     .Bold().FontSize(14).FontColor(colorTexto);
-
                                 c.Item().Text(resultado.PerfilOceanResumen ?? "")
                                     .FontSize(16).Bold().FontColor(colorPrimario);
                             }
 
                             c.Item().Text($"Perfil Combinado: {resultado.PerfilCombinado}")
-                                .FontSize(13).Italic().FontColor(colorTexto);
+                                .FontSize(12).Italic().FontColor(Colors.Grey.Darken2);
                         });
 
-                        // ----- Resultados RIASEC -----
+                        col.Item().LineHorizontal(1).LineColor(colorLineas);
+
                         if (resultado.PuntajesRiasec?.Any() == true)
                         {
-                            col.Item().Text("Resultados RIASEC")
-                                .FontSize(16).Bold().FontColor(colorPrimario);
+                            col.Item().Container().PaddingBottom(10)
+                                .Text("Resultados RIASEC")
+                                .Bold().FontSize(16).FontColor(colorPrimario);
 
                             foreach (var cat in resultado.PuntajesRiasec)
                             {
@@ -79,24 +72,26 @@ namespace ProyectoTesis.Services
 
                                 col.Item().Row(row =>
                                 {
-                                    row.AutoItem()
-                                        .Text($"{cat.Key}: {porcentaje}%")
-                                        .FontSize(12);
+                                    row.AutoItem().Text($"{cat.Key}: {porcentaje}%")
+                                        .FontSize(12).FontColor(colorTexto);
 
                                     row.RelativeItem().Column(stack =>
                                     {
                                         stack.Item().Height(8).Background(Colors.Grey.Lighten2);
-                                        stack.Item().Width(porcentaje).Height(8).Background(colorPrimario);
+                                        stack.Item().Width(porcentaje).Height(8)
+                                            .Background(colorPrimario);
                                     });
                                 });
                             }
+
+                            col.Item().PaddingVertical(10).LineHorizontal(0.5f).LineColor(colorLineas);
                         }
 
-                        // ----- Resultados OCEAN -----
                         if (resultado.PuntajesOcean?.Any() == true)
                         {
-                            col.Item().Text("Resultados OCEAN (Big Five)")
-                                .FontSize(16).Bold().FontColor(colorPrimario);
+                            col.Item().Container().PaddingBottom(10)
+                                .Text("Resultados OCEAN (Big Five)")
+                                .Bold().FontSize(16).FontColor(colorPrimario);
 
                             foreach (var factor in resultado.PuntajesOcean)
                             {
@@ -105,9 +100,8 @@ namespace ProyectoTesis.Services
 
                                 col.Item().Row(row =>
                                 {
-                                    row.AutoItem()
-                                        .Text($"{trait}: {valor:F1}")
-                                        .FontSize(12);
+                                    row.AutoItem().Text($"{trait}: {valor:F1}")
+                                        .FontSize(12).FontColor(colorTexto);
 
                                     row.RelativeItem().Column(stack =>
                                     {
@@ -118,48 +112,48 @@ namespace ProyectoTesis.Services
                                     });
                                 });
                             }
+
+                            col.Item().PaddingVertical(10).LineHorizontal(0.5f).LineColor(colorLineas);
                         }
 
-                        // ----- Carreras sugeridas -----
                         if (resultado.Carreras?.Any() == true)
                         {
-                            col.Item().Text("Carreras sugeridas")
-                                .FontSize(16).Bold().FontColor(colorPrimario);
+                            col.Item().Container().PaddingBottom(10)
+                                .Text("Carreras sugeridas")
+                                .Bold().FontSize(16).FontColor(colorPrimario);
 
                             foreach (var carrera in resultado.Carreras)
                             {
-                                col.Item().Container()
-                                    .Border(1)
-                                    .BorderColor(Colors.Grey.Lighten2)
-                                    .Padding(10)
-                                    .Column(card =>
+                                col.Item().Column(card =>
                                 {
-                                    card.Spacing(2);
+                                    card.Spacing(3);
                                     card.Item().Text(carrera.Nombre)
-                                        .Bold().FontSize(13).FontColor(colorPrimario);
+                                        .Bold().FontSize(14).FontColor(colorPrimario);
 
                                     if (!string.IsNullOrWhiteSpace(carrera.Descripcion))
                                         card.Item().Text(carrera.Descripcion)
-                                            .FontSize(11).FontColor(colorTexto);
+                                            .FontSize(12).LineHeight(1.4f).FontColor(colorTexto);
 
                                     if (carrera.Universidades?.Any() == true)
                                     {
-                                        card.Item().Text($"Universidades de referencia: {string.Join(", ", carrera.Universidades)}")
-                                            .FontSize(10).Italic().FontColor(Colors.Grey.Darken1);
+                                        card.Item().Text("Universidades de referencia:")
+                                            .Bold().FontSize(11).FontColor(Colors.Grey.Darken2);
+                                        card.Item().Text(string.Join(", ", carrera.Universidades))
+                                            .FontSize(11).FontColor(Colors.Grey.Darken1);
                                     }
                                 });
+
+                                col.Item().PaddingVertical(8)
+                                    .LineHorizontal(0.5f).LineColor(colorLineas);
                             }
                         }
                     });
 
-                    // ==========================
-                    // PIE DE PÁGINA
-                    // ==========================
                     page.Footer().AlignCenter().Text(txt =>
                     {
-                        txt.Span("Vocacional App ").FontSize(9).FontColor(Colors.Grey.Darken1);
-                        txt.Span($"• Generado el {DateTime.Now:dd/MM/yyyy}")
-                           .FontSize(9).FontColor(Colors.Grey.Darken1);
+                        txt.Span("Vocacional App © 2025").FontSize(9).FontColor(Colors.Grey.Darken1);
+                        txt.Span($"  •  Generado el {DateTime.Now:dd/MM/yyyy}")
+                            .FontSize(9).FontColor(Colors.Grey.Darken1);
                     });
                 });
             });
