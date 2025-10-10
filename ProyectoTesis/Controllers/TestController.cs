@@ -429,16 +429,24 @@ namespace ProyectoTesis.Controllers
             {
                 if (!string.IsNullOrEmpty(resultado.LISTA_RECOMENDACIONES_JSON))
                 {
+                    var json = resultado.LISTA_RECOMENDACIONES_JSON.Trim();
                     var options = new System.Text.Json.JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
                     };
 
-                    var resultadoTemp = System.Text.Json.JsonSerializer.Deserialize<ResultadoViewModel>(
-                        resultado.LISTA_RECOMENDACIONES_JSON, options);
-
-                    if (resultadoTemp?.Carreras != null)
-                        carreras = resultadoTemp.Carreras;
+                    if (json.StartsWith("["))
+                    {
+                        var lista = System.Text.Json.JsonSerializer.Deserialize<List<CarreraSugerida>>(json, options);
+                        if (lista != null)
+                            carreras = lista;
+                    }
+                    else
+                    {
+                        var resultadoTemp = System.Text.Json.JsonSerializer.Deserialize<ResultadoViewModel>(json, options);
+                        if (resultadoTemp?.Carreras != null)
+                            carreras = resultadoTemp.Carreras;
+                    }
                 }
             }
             catch (Exception ex)
@@ -473,6 +481,7 @@ namespace ProyectoTesis.Controllers
             TempData["Mensaje"] = $"Evaluación guardada y resultados enviados correctamente a {correo}.";
             return RedirectToAction("Recomendaciones", new { resultadoId });
         }
+
     
     }
 }
