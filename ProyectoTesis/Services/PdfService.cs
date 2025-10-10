@@ -118,13 +118,14 @@ namespace ProyectoTesis.Services
                                 .LineHorizontal(0.5f).LineColor(colorLineas);
                         }
 
+                        // === BLOQUE DE CARRERAS SUGERIDAS (FINAL CORREGIDO) ===
                         if (resultado.Carreras?.Any() == true)
                         {
                             col.Item().Container().PaddingBottom(10)
                                 .Text("Carreras sugeridas")
                                 .Bold().FontSize(16).FontColor(colorPrimario);
 
-                            col.Item().Column(list =>
+                            col.Item().Container().Stack(stack =>
                             {
                                 foreach (var carrera in resultado.Carreras)
                                 {
@@ -132,7 +133,7 @@ namespace ProyectoTesis.Services
                                                    : carrera.Score >= 60 ? Colors.Yellow.Medium
                                                    : Colors.Red.Medium;
 
-                                    list.Item().Column(card =>
+                                    stack.Item().Column(card =>
                                     {
                                         card.Spacing(4);
                                         card.Item().Text(carrera.Nombre)
@@ -165,7 +166,7 @@ namespace ProyectoTesis.Services
                                         }
                                     });
 
-                                    list.Item().PaddingVertical(8)
+                                    stack.Item().PaddingVertical(8)
                                         .LineHorizontal(0.5f).LineColor(colorLineas);
                                 }
                             });
