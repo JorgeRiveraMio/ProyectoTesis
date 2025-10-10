@@ -84,7 +84,8 @@ namespace ProyectoTesis.Services
                                 });
                             }
 
-                            col.Item().PaddingVertical(10).LineHorizontal(0.5f).LineColor(colorLineas);
+                            col.Item().PaddingVertical(10)
+                                .LineHorizontal(0.5f).LineColor(colorLineas);
                         }
 
                         if (resultado.PuntajesOcean?.Any() == true)
@@ -113,7 +114,8 @@ namespace ProyectoTesis.Services
                                 });
                             }
 
-                            col.Item().PaddingVertical(10).LineHorizontal(0.5f).LineColor(colorLineas);
+                            col.Item().PaddingVertical(10)
+                                .LineHorizontal(0.5f).LineColor(colorLineas);
                         }
 
                         if (resultado.Carreras?.Any() == true)
@@ -146,8 +148,15 @@ namespace ProyectoTesis.Services
                                         card.Item().Canvas((canvas, size) =>
                                         {
                                             var ancho = size.Width * Math.Min(carrera.Score / 100, 1);
-                                            canvas.FillColor(Colors.Grey.Lighten2).Rectangle(0, 0, size.Width, 6).Fill();
-                                            canvas.FillColor(colorBarra).Rectangle(0, 0, ancho, 6).Fill();
+
+                                            dynamic ctx = canvas;
+                                            ctx.SetFillColor(Colors.Grey.Lighten2);
+                                            ctx.DrawRectangle(0, 0, size.Width, 6);
+                                            ctx.Fill();
+
+                                            ctx.SetFillColor(colorBarra);
+                                            ctx.DrawRectangle(0, 0, ancho, 6);
+                                            ctx.Fill();
                                         });
                                     }
 
@@ -168,7 +177,8 @@ namespace ProyectoTesis.Services
 
                     page.Footer().AlignCenter().Text(txt =>
                     {
-                        txt.Span("Vocacional App © 2025").FontSize(9).FontColor(Colors.Grey.Darken1);
+                        txt.Span("Vocacional App © 2025")
+                            .FontSize(9).FontColor(Colors.Grey.Darken1);
                         txt.Span($"  •  Generado el {DateTime.Now:dd/MM/yyyy}")
                             .FontSize(9).FontColor(Colors.Grey.Darken1);
                     });

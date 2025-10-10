@@ -471,21 +471,28 @@ namespace ProyectoTesis.Controllers
                 NOM_PERFIL_TX = resultado.NOM_PERFIL_TX,
                 DES_RECOMENDACION_TX = resultado.DES_RECOMENDACION_TX,
                 PerfilRiasec = resultado.NOM_PERFIL_TX,
+                TotalRiasec = 0,
+                PuntajesRiasec = new(),
+                PuntajesOcean = new(),
                 Carreras = carreras
             };
 
             var pdfBytes = _pdfService.GenerarPdf(vm);
 
-            await _emailService.EnviarCorreoConPdfAsync(
-                correo,
-                "Tus resultados vocacionales",
-                "Gracias por tu evaluación. Adjunto encontrarás tu reporte vocacional.",
-                pdfBytes
-            );
+            if (!string.IsNullOrWhiteSpace(correo))
+            {
+                await _emailService.EnviarCorreoConPdfAsync(
+                    correo,
+                    "Tus resultados vocacionales",
+                    "Gracias por tu evaluación. Adjunto encontrarás tu reporte vocacional.",
+                    pdfBytes
+                );
+            }
 
             TempData["Mensaje"] = $"Evaluación guardada y resultados enviados correctamente a {correo}.";
             return RedirectToAction("Recomendaciones", new { resultadoId });
         }
+
 
 
 
