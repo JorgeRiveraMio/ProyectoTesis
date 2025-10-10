@@ -38,6 +38,26 @@ namespace ProyectoTesis.Services
                     {
                         col.Spacing(25);
 
+                        // === DATOS DEL ESTUDIANTE ===
+                        col.Item().Column(c =>
+                        {
+                            c.Spacing(3);
+                            c.Item().Text("Datos del Estudiante")
+                                .Bold().FontSize(16).FontColor(colorPrimario);
+
+                            c.Item().Text($"Nombre: {resultado.EstudianteNombre ?? "—"}")
+                                .FontSize(12).FontColor(colorTexto);
+
+                            if (resultado.EstudianteEdad > 0)
+                                c.Item().Text($"Edad: {resultado.EstudianteEdad}")
+                                    .FontSize(12).FontColor(colorTexto);
+
+                            c.Item().Text($"Género: {resultado.EstudianteGenero ?? "—"}")
+                                .FontSize(12).FontColor(colorTexto);
+                        });
+
+                        col.Item().LineHorizontal(1).LineColor(colorLineas);
+
                         // === PERFIL GENERAL ===
                         col.Item().AlignLeft().Column(c =>
                         {

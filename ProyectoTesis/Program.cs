@@ -7,7 +7,7 @@ using System;
 var builder = WebApplication.CreateBuilder(args);
 
 // ================================================
-// 🔹 AÑADIDO: Cargar User Secrets en entorno local
+// AÑADIDO: Cargar User Secrets en entorno local
 // ================================================
 if (builder.Environment.IsDevelopment())
 {
@@ -31,6 +31,8 @@ if (builder.Configuration["Environment"] == null)
 // Servicios del contenedor
 // ================================================
 builder.Services.AddControllersWithViews();
+
+// --- Servicios personalizados ---
 builder.Services.AddScoped<PdfService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddHttpClient<PythonApiService>();
@@ -49,7 +51,6 @@ Console.WriteLine("======================================");
 
 if (!string.IsNullOrEmpty(railwayConnection))
 {
-    // Limpia protocolo y query
     if (railwayConnection.StartsWith("postgresql://"))
         railwayConnection = railwayConnection.Replace("postgresql://", "postgres://");
 
@@ -57,7 +58,6 @@ if (!string.IsNullOrEmpty(railwayConnection))
 
     try
     {
-        // Parseo manual robusto (sin Uri)
         var withoutProtocol = cleanUrl.Replace("postgres://", "");
         var parts = withoutProtocol.Split('@');
         var creds = parts[0].Split(':', 2);
@@ -111,21 +111,23 @@ else
 }
 
 // ================================================
-// Configuración de sesión
+// Configuración de sesión (revisada y completa)
 // ================================================
 builder.Services.AddDistributedMemoryCache();
+
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = ".VocacionalApp.Session";
-    options.IdleTimeout = TimeSpan.FromHours(1);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
+    options.IdleTimeout = TimeSpan.FromHours(1); // tiempo máximo sin actividad
+    options.Cookie.HttpOnly = true;              // seguridad
+    options.Cookie.IsEssential = true;           // cookie esencial
 });
 
+// Asegura acceso a HttpContext desde vistas/layouts
 builder.Services.AddHttpContextAccessor();
 
 // ================================================
-// Configuración del pipeline HTTP
+// Pipeline HTTP
 // ================================================
 var app = builder.Build();
 
@@ -133,9 +135,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 
-    // 🔹 Verificación rápida de las variables cargadas
     Console.WriteLine("=========== DEBUG VARIABLES ===========");
-    Console.WriteLine($"BREVO_API_KEY: {(string.IsNullOrEmpty(builder.Configuration["BREVO_API_KEY"]) ? "(no definida)" : "(ok)")}");
+    Console.WriteLine($"BREVO_API_KEY: {(string.IsNullOrEmpty(builder.Configuration["BREVO_API_KEY"]) ? "(no definida)" : "(ok)")}"); 
     Console.WriteLine($"FROM_EMAIL: {builder.Configuration["FROM_EMAIL"] ?? "(no definida)"}");
     Console.WriteLine("======================================");
 }
@@ -147,18 +148,21 @@ else
 
 app.UseHttpsRedirection();
 
-// BLOQUE AÑADIDO: fuerza servir archivos como texto plano
+// Sirve archivos estáticos incluso sin extensión MIME
 app.UseStaticFiles(new StaticFileOptions
 {
     ServeUnknownFileTypes = true,
     DefaultContentType = "text/plain"
 });
 
-// Mantén también el middleware normal
+// Mantiene los estáticos normales también
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// Sesión debe ir antes de Authorization
 app.UseSession();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -166,7 +170,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 // ================================================
-// Ejecutar migraciones automáticamente al iniciar
+// Migración automática al iniciar
 // ================================================
 Console.WriteLine($"[DEBUG] ConnectionString final antes de migrar: {connectionString}");
 using (var scope = app.Services.CreateScope())

@@ -15,7 +15,7 @@ namespace ProyectoTesis.Models.ViewModels
         public double Score { get; set; }
     }
 
-    // 🔹 Nuevo modelo auxiliar para el vector OCEAN
+    // Nuevo modelo auxiliar para el vector OCEAN
     public class OceanTrait
     {
         public string Trait { get; set; } = string.Empty;   // Ej: "O", "C", "E", "A", "N"
@@ -38,7 +38,6 @@ namespace ProyectoTesis.Models.ViewModels
         public string Subperfil { get; set; } = string.Empty;
 
         // --- OCEAN (Big Five) ---
-        // Cambiado de Dictionary<string,double> a lista de objetos
         public List<OceanTrait> PuntajesOcean { get; set; } = new();
 
         public string PerfilOceanResumen { get; set; } = string.Empty;
@@ -53,5 +52,11 @@ namespace ProyectoTesis.Models.ViewModels
 
         // --- Carreras sugeridas ---
         public List<CarreraSugerida> Carreras { get; set; } = new();
+
+        // --- Datos del estudiante ---
+        public string EstudianteNombre { get; set; } = string.Empty;
+        public int EstudianteEdad { get; set; }
+        public string EstudianteGenero { get; set; } = string.Empty;
     }
+
 }

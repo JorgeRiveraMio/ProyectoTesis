@@ -1,4 +1,26 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    // --- Obtener datos del estudiante desde la sesión ---
+    var nombreEstudiante = HttpContextAccessor.HttpContext?.Session.GetString("EstudianteNombre");
+    var generoEstudiante = HttpContextAccessor.HttpContext?.Session.GetString("EstudianteGenero");
+    var edadEstudiante = HttpContextAccessor.HttpContext?.Session.GetString("EstudianteEdad");
+
+    // --- Definir avatar dinámico ---
+    string avatarUrl = "https://cdn-icons-png.flaticon.com/512/847/847969.png"; // neutro
+    if (!string.IsNullOrEmpty(generoEstudiante))
+    {
+        if (generoEstudiante.Contains("Femenino", StringComparison.OrdinalIgnoreCase))
+            avatarUrl = "https://cdn-icons-png.flaticon.com/512/2922/2922561.png";
+        else if (generoEstudiante.Contains("Masculino", StringComparison.OrdinalIgnoreCase))
+            avatarUrl = "https://cdn-icons-png.flaticon.com/512/2922/2922506.png";
+        else
+            avatarUrl = "https://cdn-icons-png.flaticon.com/512/1077/1077012.png";
+    }
+}
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
@@ -14,11 +36,11 @@
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-    <!-- Fonts + Material Icons -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?display=swap&family=Public+Sans:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    
+
     <style type="text/tailwindcss">
         :root {
             --primary-color: #13a4ec;
@@ -26,17 +48,36 @@
             --text-primary: #111618;
             --text-secondary: #617c89;
         }
+
         .custom-radio:checked {
             background-image: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27white%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3ccircle cx=%278%27 cy=%278%27 r=%273%27/%3e%3c/svg%3e');
             background-color: #13a4ec;
             border-color: #13a4ec;
         }
+
+        /* === Animaciones suaves === */
+        .dropdown-menu {
+            opacity: 0;
+            transform: translateY(-8px);
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .dropdown-menu.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
     </style>
+
+    @* Solución: renderiza las secciones "Styles" definidas por las vistas *@
+    @await RenderSectionAsync("Styles", required: false)
 </head>
+
 <body class="bg-slate-50" style='font-family: "Public Sans", "Noto Sans", sans-serif;'>
 
-    <!-- Navbar estilo prototipo -->
-    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f3f4] px-10 py-4 shadow-sm bg-white">
+    <!-- Navbar -->
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f3f4] px-10 py-4 shadow-sm bg-white relative">
+        <!-- Logo -->
         <div class="flex items-center gap-3 text-slate-800">
             <div class="size-8 text-[#13a4ec]">
                 <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -46,6 +87,7 @@
             <h1 class="text-xl font-bold leading-tight tracking-[-0.015em]">Orientación Vocacional</h1>
         </div>
 
+        <!-- Navegación -->
         <nav class="hidden md:flex items-center gap-8">
             <a class="text-slate-600 hover:text-[#13a4ec] text-sm font-medium transition-colors" asp-controller="Home" asp-action="Index">Inicio</a>
             <a class="text-[#13a4ec] text-sm font-bold transition-colors" asp-controller="Test" asp-action="Iniciar">Test</a>
@@ -54,15 +96,54 @@
             <a class="text-slate-600 hover:text-[#13a4ec] text-sm font-medium transition-colors" href="#">Contacto</a>
         </nav>
 
-        <div class="flex items-center gap-4">
+        <!-- Perfil y ayuda -->
+        <div class="flex items-center gap-4 relative">
+            <!-- Botón de ayuda -->
             <button class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">
                 <span class="material-symbols-outlined">help</span>
             </button>
-            <button>
-                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
-                     style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDdXWgegZ_RHDDIKaCcWk-qMSlOYQdTC3_6ZPcvyFurbZ1pvNyOdRCaRNEwhlEQ8cBGSuOGC4vMPDMMfD6YwWv-wkcxZbDzxA9qYmUnEk2gyymVTejHvJvmU4gdQqCz6sd1OAo7IbIC4DWh92RLxDwaL0k1iN7fU4FGFVSCkd8jazQmxfaijceurpdf-iPJPveXlpPPPmvk93v-MKTA0BDRvqNb59Qug572Uk6HnglUoziKNoMND54DtAjE_xpXZ-QWPlqhWCmbEbw");'>
+
+            <!-- Perfil del estudiante -->
+            <div class="relative">
+                <button id="perfilBtn" class="flex items-center gap-3 focus:outline-none group">
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-gray-200"
+                         style='background-image: url("@avatarUrl");'></div>
+                    @if (!string.IsNullOrEmpty(nombreEstudiante))
+                    {
+                        <div class="hidden sm:flex flex-col leading-tight text-slate-700 text-sm text-left">
+                            <span class="font-semibold">@nombreEstudiante</span>
+                            <span class="text-xs text-gray-500">
+                                @(generoEstudiante ?? "Sin género") • @(edadEstudiante ?? "--") años
+                            </span>
+                        </div>
+                    }
+                </button>
+
+                <!-- Dropdown animado -->
+                <div id="perfilMenu"
+                     class="dropdown-menu absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                    <div class="px-4 py-3 border-b border-gray-100">
+                        <p class="text-sm font-semibold text-gray-700">@nombreEstudiante</p>
+                        <p class="text-xs text-gray-500">@generoEstudiante • @edadEstudiante años</p>
+                    </div>
+                    <ul class="py-2 text-sm text-gray-600">
+                        <li>
+                            <a asp-controller="Test" asp-action="DatosEstudiante"
+                               class="block px-4 py-2 hover:bg-blue-50 hover:text-blue-600 transition">Editar mis datos</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Test" asp-action="Iniciar"
+                               class="block px-4 py-2 hover:bg-blue-50 hover:text-blue-600 transition">Reiniciar test</a>
+                        </li>
+                        <li>
+                            <button id="cerrarSesionBtn"
+                                    class="w-full text-left block px-4 py-2 hover:bg-red-50 hover:text-red-600 transition">
+                                Cerrar sesión
+                            </button>
+                        </li>
+                    </ul>
                 </div>
-            </button>
+            </div>
         </div>
     </header>
 
@@ -77,6 +158,37 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @* 🔹 Renderiza scripts adicionales definidos por las vistas *@
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        // === Control del menú animado ===
+        const perfilBtn = document.getElementById('perfilBtn');
+        const perfilMenu = document.getElementById('perfilMenu');
+
+        if (perfilBtn && perfilMenu) {
+            perfilBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                perfilMenu.classList.toggle('show');
+            });
+        }
+
+        // Cerrar si se hace clic fuera
+        window.addEventListener('click', (e) => {
+            if (!perfilMenu.contains(e.target) && !perfilBtn.contains(e.target)) {
+                perfilMenu.classList.remove('show');
+            }
+        });
+
+        // Cerrar sesión limpia la sesión del usuario
+        const cerrarSesionBtn = document.getElementById('cerrarSesionBtn');
+        if (cerrarSesionBtn) {
+            cerrarSesionBtn.addEventListener('click', () => {
+                fetch('/Home/LimpiarSesion', { method: 'POST' })
+                    .then(() => window.location.href = '/');
+            });
+        }
+    </script>
 </body>
 </html>

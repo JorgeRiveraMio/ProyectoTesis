@@ -18,12 +18,12 @@ namespace ProyectoTesis.Data
         public DbSet<TBD_ENVIO> TBD_ENVIOS { get; set; }
         public DbSet<TBL_EVENTO> TBL_EVENTOS { get; set; }
         public DbSet<TBM_SATISFACCION> TBM_SATISFACCIONES { get; set; }
+        public DbSet<TBM_ESTUDIANTE> TBM_ESTUDIANTES { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Mapear nombres de tablas
             modelBuilder.Entity<TBT_MODULO>().ToTable("TBT_MODULOS");
             modelBuilder.Entity<TBT_PREGUNTA>().ToTable("TBT_PREGUNTAS");
             modelBuilder.Entity<TBM_SESION>().ToTable("TBM_SESIONES");
@@ -33,8 +33,8 @@ namespace ProyectoTesis.Data
             modelBuilder.Entity<TBD_ENVIO>().ToTable("TBD_ENVIOS");
             modelBuilder.Entity<TBL_EVENTO>().ToTable("TBL_EVENTOS");
             modelBuilder.Entity<TBM_SATISFACCION>().ToTable("TBM_SATISFACCIONES");
+            modelBuilder.Entity<TBM_ESTUDIANTE>().ToTable("TBM_ESTUDIANTES");
 
-            // Claves primarias
             modelBuilder.Entity<TBT_MODULO>().HasKey(m => m.IDD_MODULO);
             modelBuilder.Entity<TBT_PREGUNTA>().HasKey(p => p.IDD_PREGUNTA);
             modelBuilder.Entity<TBM_SESION>().HasKey(s => s.IDD_SESION);
@@ -44,6 +44,7 @@ namespace ProyectoTesis.Data
             modelBuilder.Entity<TBD_ENVIO>().HasKey(e => e.IDD_ENVIO);
             modelBuilder.Entity<TBL_EVENTO>().HasKey(e => e.IDD_EVENTO);
             modelBuilder.Entity<TBM_SATISFACCION>().HasKey(s => s.IDD_SATISFACCION);
+            modelBuilder.Entity<TBM_ESTUDIANTE>().HasKey(e => e.IDD_ESTUDIANTE); 
 
             // Relaciones principales
             modelBuilder.Entity<TBM_SESION>()
@@ -66,6 +67,13 @@ namespace ProyectoTesis.Data
                 .HasOne(s => s.SATISFACCION)
                 .WithOne(sa => sa.SESION)
                 .HasForeignKey<TBM_SATISFACCION>(sa => sa.IDD_SESION)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Relación 1:1 — Sesión ↔ Estudiante (nuevo)
+            modelBuilder.Entity<TBM_SESION>()
+                .HasOne<TBM_ESTUDIANTE>()
+                .WithOne(e => e.SESION)
+                .HasForeignKey<TBM_ESTUDIANTE>(e => e.IDD_SESION)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<TBM_RESULTADO>()
@@ -91,7 +99,6 @@ namespace ProyectoTesis.Data
                 .HasForeignKey(p => p.IDD_MODULO)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Aplicar configuraciones adicionales
             modelBuilder.ApplyConfiguration(new TBT_MODULOConfiguration());
             modelBuilder.ApplyConfiguration(new TBT_PREGUNTAConfiguration());
         }

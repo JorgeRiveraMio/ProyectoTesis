@@ -31,24 +31,138 @@ namespace ProyectoTesis.Controllers
             _pythonApiService = pythonApiService;
         }
 
-        // 1) Iniciar sesión
-        public async Task<IActionResult> Iniciar(byte moduloId = 1)
+        // 0) Registrar datos del estudiante (previo al test)
+        [HttpGet]
+        public async Task<IActionResult> DatosEstudiante()
         {
-            var sesion = new TBM_SESION
+            // Crear sesión si no existe
+            var sesionIdStr = HttpContext.Session.GetString("SesionId");
+            Guid sesionId;
+
+            if (string.IsNullOrEmpty(sesionIdStr))
             {
-                NOM_ESTAD_SES = "activa",
-                FEC_CREADO = DateTime.UtcNow,
-                FEC_INICIO = DateTime.UtcNow 
-            };
+                var sesion = new TBM_SESION
+                {
+                    IDD_SESION = Guid.NewGuid(),
+                    NOM_ESTAD_SES = "activa",
+                    FEC_CREADO = DateTime.UtcNow,
+                    FEC_INICIO = DateTime.UtcNow
+                };
 
-            _context.TBM_SESIONES.Add(sesion);
-            await _context.SaveChangesAsync();
+                _context.TBM_SESIONES.Add(sesion);
+                await _context.SaveChangesAsync();
 
-            HttpContext.Session.SetString("SesionId", sesion.IDD_SESION.ToString());
+                HttpContext.Session.SetString("SesionId", sesion.IDD_SESION.ToString());
+                sesionId = sesion.IDD_SESION;
+            }
+            else
+            {
+                sesionId = Guid.Parse(sesionIdStr);
+            }
 
-            return RedirectToAction("MostrarPregunta", new { moduloId, numero = 1 });
+            var model = new TBM_ESTUDIANTE { IDD_SESION = sesionId };
+            return View("DatosEstudiante", model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GuardarDatosEstudiante(TBM_ESTUDIANTE model)
+        {
+            Console.WriteLine("=== [LOG1] Entró a GuardarDatosEstudiante ===");
+            Console.WriteLine($"Model recibido: {model.NOM_COMPLETO}, Edad: {model.NUM_EDAD}, Género: {model.NOM_GENERO}");
+            Console.WriteLine($"IDD_SESION recibido: {model.IDD_SESION}");
+
+            // 🩹 Paso 1: Reasigna IDD_SESION si vino vacío
+            if (model.IDD_SESION == Guid.Empty)
+            {
+                var sesionIdStr = HttpContext.Session.GetString("SesionId");
+                if (!string.IsNullOrEmpty(sesionIdStr))
+                {
+                    model.IDD_SESION = Guid.Parse(sesionIdStr);
+                    Console.WriteLine($"[LOG1.1] IDD_SESION reconstruido desde sesión: {model.IDD_SESION}");
+                }
+                else
+                {
+                    Console.WriteLine("[LOG1.2] No se encontró SesionId en HttpContext.Session");
+                }
+            }
+
+            // 🧠 Paso 2: Mostrar errores de validación si los hay
+            if (!ModelState.IsValid)
+            {
+                Console.WriteLine("[LOG2] ModelState inválido, errores:");
+                foreach (var kvp in ModelState)
+                {
+                    if (kvp.Value.Errors.Count > 0)
+                        Console.WriteLine($"   - {kvp.Key}: {string.Join(", ", kvp.Value.Errors.Select(e => e.ErrorMessage))}");
+                }
+                return View("DatosEstudiante", model);
+            }
+
+            // 🧩 Paso 3: Verifica existencia de sesión
+            var sesionExiste = await _context.TBM_SESIONES
+                .AnyAsync(s => s.IDD_SESION == model.IDD_SESION);
+
+            if (!sesionExiste)
+            {
+                Console.WriteLine("[LOG3] Sesión no encontrada en BD");
+                TempData["Mensaje"] = "La sesión no existe o expiró.";
+                return RedirectToAction("DatosEstudiante");
+            }
+
+            // 🧱 Paso 4: Inserta o actualiza estudiante
+            var existente = await _context.TBM_ESTUDIANTES
+                .FirstOrDefaultAsync(e => e.IDD_SESION == model.IDD_SESION);
+
+            if (existente == null)
+            {
+                Console.WriteLine("[LOG4] Nuevo estudiante, insertando registro...");
+                _context.TBM_ESTUDIANTES.Add(model);
+            }
+            else
+            {
+                Console.WriteLine("[LOG5] Estudiante existente, actualizando...");
+                existente.NOM_COMPLETO = model.NOM_COMPLETO;
+                existente.NUM_EDAD = model.NUM_EDAD;
+                existente.NOM_GENERO = model.NOM_GENERO;
+            }
+
+            await _context.SaveChangesAsync();
+            Console.WriteLine("[LOG6] Guardado en BD exitoso.");
+
+            // 🧭 Paso 5: Guarda en sesión
+            HttpContext.Session.SetString("SesionId", model.IDD_SESION.ToString());
+            HttpContext.Session.SetString("EstudianteNombre", model.NOM_COMPLETO);
+            HttpContext.Session.SetString("EstudianteGenero", model.NOM_GENERO);
+            HttpContext.Session.SetString("EstudianteEdad", model.NUM_EDAD.ToString());
+
+            Console.WriteLine($"[LOG7] Sesión actualizada en memoria para {model.NOM_COMPLETO}");
+
+            // ✅ Paso 6: Redirección
+            TempData["Mensaje"] = "Datos del estudiante guardados correctamente.";
+            Console.WriteLine("[LOG8] Redirigiendo a MostrarPregunta...");
+
+            return RedirectToAction("MostrarPregunta", new { moduloId = 1, numero = 1 });
+        }
+
+
+
+        public async Task<IActionResult> Iniciar(byte moduloId = 1)
+        {
+            var sesionIdStr = HttpContext.Session.GetString("SesionId");
+
+            if (!string.IsNullOrEmpty(sesionIdStr))
+            {
+                var sesionId = Guid.Parse(sesionIdStr);
+                var existeEstudiante = await _context.TBM_ESTUDIANTES
+                    .AnyAsync(e => e.IDD_SESION == sesionId);
+
+                if (existeEstudiante)
+                    return RedirectToAction("MostrarPregunta", new { moduloId, numero = 1 });
+            }
+
+            return RedirectToAction("DatosEstudiante");
+        }
 
         // 2) Mostrar pregunta
         public async Task<IActionResult> MostrarPregunta(byte moduloId, int numero)
@@ -411,7 +525,7 @@ namespace ProyectoTesis.Controllers
                 return RedirectToAction("ResultadoCombinado");
             }
 
-            // --- Guardar encuesta de satisfacción ---
+            // --- Guardar o actualizar encuesta de satisfacción ---
             var satisfaccionExistente = await _context.TBM_SATISFACCIONES
                 .FirstOrDefaultAsync(s => s.IDD_SESION == sesionId);
 
@@ -432,17 +546,15 @@ namespace ProyectoTesis.Controllers
             }
             else
             {
-                // 🔄 Actualiza valores si ya existe (permite reenviar sin error)
                 satisfaccionExistente.FACILIDAD_USO = facilidadUso;
                 satisfaccionExistente.CLARIDAD_RESULTADOS = claridadResultados;
                 satisfaccionExistente.UTILIDAD_RECOMENDACIONES = utilidadRecomendaciones;
                 satisfaccionExistente.SATISFACCION_GLOBAL = satisfaccionGlobal;
                 satisfaccionExistente.FEC_REGISTRO = DateTime.UtcNow;
-
                 await _context.SaveChangesAsync();
             }
 
-            // --- Preparar carreras ---
+            // --- Leer carreras desde JSON ---
             var carreras = new List<CarreraSugerida>();
             try
             {
@@ -500,6 +612,23 @@ namespace ProyectoTesis.Controllers
                 Carreras = carreras
             };
 
+            // 🧩 NUEVO BLOQUE: Agregar datos del estudiante
+            var estudiante = await _context.TBM_ESTUDIANTES
+                .FirstOrDefaultAsync(e => e.IDD_SESION == sesionId);
+
+            if (estudiante != null)
+            {
+                vm.EstudianteNombre = estudiante.NOM_COMPLETO;
+                vm.EstudianteEdad = estudiante.NUM_EDAD;
+                vm.EstudianteGenero = estudiante.NOM_GENERO;
+
+                Console.WriteLine($"[LOG-STUDENT] Datos agregados al PDF -> {estudiante.NOM_COMPLETO}, {estudiante.NUM_EDAD} años, {estudiante.NOM_GENERO}");
+            }
+            else
+            {
+                Console.WriteLine("[LOG-STUDENT] No se encontró estudiante asociado a la sesión.");
+            }
+
             // --- Generar PDF ---
             var pdfBytes = _pdfService.GenerarPdf(vm);
 
@@ -517,6 +646,7 @@ namespace ProyectoTesis.Controllers
             TempData["Mensaje"] = $"Evaluación guardada y resultados enviados correctamente a {correo}.";
             return RedirectToAction("Recomendaciones", new { resultadoId });
         }
+
 
 
 

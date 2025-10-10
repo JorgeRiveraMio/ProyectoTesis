@@ -84,5 +84,13 @@ namespace ProyectoTesis.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [HttpPost]
+        public IActionResult LimpiarSesion()
+        {
+            HttpContext.Session.Clear();
+            return Ok();
+        }
+
     }
 }
