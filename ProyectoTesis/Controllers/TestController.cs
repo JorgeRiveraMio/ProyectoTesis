@@ -411,6 +411,7 @@ namespace ProyectoTesis.Controllers
                 return RedirectToAction("ResultadoCombinado");
             }
 
+            // --- Guardar encuesta de satisfacción ---
             var satisfaccion = new TBM_SATISFACCION
             {
                 IDD_SESION = sesionId,
@@ -423,29 +424,38 @@ namespace ProyectoTesis.Controllers
             _context.TBM_SATISFACCIONES.Add(satisfaccion);
             await _context.SaveChangesAsync();
 
+            // --- Deserializar carreras de LISTA_RECOMENDACIONES_JSON ---
             var carreras = new List<CarreraSugerida>();
-
             try
             {
                 if (!string.IsNullOrEmpty(resultado.LISTA_RECOMENDACIONES_JSON))
                 {
-                    var json = resultado.LISTA_RECOMENDACIONES_JSON.Trim();
-                    var options = new System.Text.Json.JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    };
+                    var json = resultado.LISTA_RECOMENDACIONES_JSON;
+                    var array = System.Text.Json.JsonSerializer.Deserialize<List<System.Text.Json.JsonElement>>(json);
 
-                    if (json.StartsWith("["))
+                    foreach (var elem in array)
                     {
-                        var lista = System.Text.Json.JsonSerializer.Deserialize<List<CarreraSugerida>>(json, options);
-                        if (lista != null)
-                            carreras = lista;
-                    }
-                    else
-                    {
-                        var resultadoTemp = System.Text.Json.JsonSerializer.Deserialize<ResultadoViewModel>(json, options);
-                        if (resultadoTemp?.Carreras != null)
-                            carreras = resultadoTemp.Carreras;
+                        string nombre = elem.TryGetProperty("Nombre", out var n) ? n.GetString() :
+                                        elem.TryGetProperty("Carrera", out var c) ? c.GetString() :
+                                        elem.TryGetProperty("carrera", out var l) ? l.GetString() : "";
+
+                        double score = 0;
+                        if (elem.TryGetProperty("Score", out var sc)) score = sc.GetDouble();
+                        else if (elem.TryGetProperty("score", out var scl)) score = scl.GetDouble();
+
+                        List<string> universidades = new();
+                        if (elem.TryGetProperty("universidades", out var unis) && unis.ValueKind == System.Text.Json.JsonValueKind.Array)
+                            universidades = unis.EnumerateArray().Select(u => u.GetString() ?? "").ToList();
+                        else if (elem.TryGetProperty("Universidades", out var unis2) && unis2.ValueKind == System.Text.Json.JsonValueKind.Array)
+                            universidades = unis2.EnumerateArray().Select(u => u.GetString() ?? "").ToList();
+
+                        carreras.Add(new CarreraSugerida
+                        {
+                            Nombre = nombre,
+                            Descripcion = $"Sugerida automáticamente (afinidad: {score:F2}%)",
+                            Score = score,
+                            Universidades = universidades
+                        });
                     }
                 }
             }
@@ -454,6 +464,7 @@ namespace ProyectoTesis.Controllers
                 Console.WriteLine($"Error al leer recomendaciones del JSON: {ex.Message}");
             }
 
+            // --- Crear ViewModel para PDF ---
             var vm = new ResultadoViewModel
             {
                 IDD_RESULTADO = resultado.IDD_RESULTADO,
@@ -466,8 +477,10 @@ namespace ProyectoTesis.Controllers
                 Carreras = carreras
             };
 
+            // --- Generar PDF ---
             var pdfBytes = _pdfService.GenerarPdf(vm);
 
+            // --- Enviar correo con PDF adjunto ---
             if (!string.IsNullOrWhiteSpace(correo))
             {
                 await _emailService.EnviarCorreoConPdfAsync(
@@ -481,6 +494,7 @@ namespace ProyectoTesis.Controllers
             TempData["Mensaje"] = $"Evaluación guardada y resultados enviados correctamente a {correo}.";
             return RedirectToAction("Recomendaciones", new { resultadoId });
         }
+
 
     
     }
