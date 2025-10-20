@@ -18,8 +18,8 @@ namespace ProyectoTesis.Models.ViewModels
     // Nuevo modelo auxiliar para el vector OCEAN
     public class OceanTrait
     {
-        public string Trait { get; set; } = string.Empty;   // Ej: "O", "C", "E", "A", "N"
-        public double Value { get; set; }                   // Valor numérico (0–5)
+        public string Trait { get; set; } = string.Empty;  
+        public double Value { get; set; }                   
     }
 
     public class ResultadoViewModel

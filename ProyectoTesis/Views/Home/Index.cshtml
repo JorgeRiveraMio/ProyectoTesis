@@ -15,7 +15,7 @@
     string icono = "arrow_forward";
     string accion = "Iniciar";
 
-    // ✅ Diccionario tipado para evitar el error CS0266
+    // Diccionario tipado para evitar el error CS0266
     var routeValues = new Dictionary<string, string>();
 
     if (!string.IsNullOrEmpty(sesionIdStr))
@@ -124,7 +124,6 @@
                     ¡Es hora de empezar a construir tu camino!
                 </p>
 
-                <!-- 🔹 Botón dinámico según el estado del usuario -->
                 <form asp-controller="Test" asp-action="@accion" asp-all-route-data="routeValues" method="get">
                     <button type="submit"
                             class="flex min-w-[84px] max-w-[480px] items-center justify-center h-14 px-8 mx-auto

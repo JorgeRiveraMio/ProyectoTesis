@@ -13,8 +13,8 @@ namespace ProyectoTesis.Models
         public string NOM_PERFIL_TX { get; set; }
         public string DES_RECOMENDACION_TX { get; set; }
 
-        public int NUM_RECOMENDACIONES { get; set; } // cuántas sugerencias devolvió la IA
-        public string LISTA_RECOMENDACIONES_JSON { get; set; } // lista serializada
+        public int NUM_RECOMENDACIONES { get; set; } 
+        public string LISTA_RECOMENDACIONES_JSON { get; set; } 
 
         // Relaciones
         public TBM_SESION SESION { get; set; }
