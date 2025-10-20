@@ -28,8 +28,6 @@
             overflow: hidden;
             position: relative;
         }
-
-        /* === BURBUJAS DIFUMINADAS CON TONOS VARIADOS === */
         .blob {
             position: absolute;
             border-radius: 50%;
@@ -38,27 +36,18 @@
             animation: float 16s ease-in-out infinite alternate;
             z-index: -1;
         }
-
-        .blob-1 { width: 520px; height: 520px; background: #bae6fd; top: -150px; left: -120px; animation-delay: 0s; }
-        .blob-2 { width: 340px; height: 340px; background: #7dd3fc; top: 10%; right: -100px; animation-delay: 2s; }
-        .blob-3 { width: 420px; height: 420px; background: #60a5fa; bottom: 15%; left: 10%; animation-delay: 4s; }
-        .blob-4 { width: 500px; height: 500px; background: #5eead4; bottom: -150px; right: 5%; animation-delay: 6s; }
-        .blob-5 { width: 300px; height: 300px; background: #a5b4fc; top: 55%; left: 60%; animation-delay: 8s; }
-        .blob-6 { width: 240px; height: 240px; background: #c084fc; bottom: 35%; right: 70%; animation-delay: 10s; }
-        .blob-7 { width: 200px; height: 200px; background: #67e8f9; top: 25%; left: 80%; animation-delay: 12s; }
-        .blob-8 { width: 160px; height: 160px; background: #f0abfc; bottom: 5%; left: 45%; animation-delay: 14s; }
-
+        .blob-1 { width: 520px; height: 520px; background: #bae6fd; top: -150px; left: -120px; }
+        .blob-2 { width: 340px; height: 340px; background: #7dd3fc; top: 10%; right: -100px; }
+        .blob-3 { width: 420px; height: 420px; background: #60a5fa; bottom: 15%; left: 10%; }
+        .blob-4 { width: 500px; height: 500px; background: #5eead4; bottom: -150px; right: 5%; }
         @@keyframes float {
-            0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
-            50% { transform: translate(40px, 30px) scale(1.08); opacity: 0.65; }
-            100% { transform: translate(-30px, -40px) scale(0.95); opacity: 0.55; }
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(25px); }
         }
-
         input[type='radio']:checked + div {
             border-color: #2563eb;
             background-color: #2563eb10;
         }
-
         input[type='radio']:checked + div span {
             color: #2563eb;
         }
@@ -66,41 +55,36 @@
 </head>
 
 <body class="flex items-center justify-center min-h-screen bg-white relative">
-
-    <!-- Fondos animados -->
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
     <div class="blob blob-4"></div>
-    <div class="blob blob-5"></div>
-    <div class="blob blob-6"></div>
-    <div class="blob blob-7"></div>
-    <div class="blob blob-8"></div>
 
-    <!-- Contenedor principal -->
     <div class="w-full max-w-lg px-6 py-10 relative z-10">
         <div class="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100 backdrop-blur-sm bg-opacity-90">
 
-            <!-- Encabezado -->
             <div class="text-center mb-8">
                 <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Datos del Estudiante</h1>
                 <p class="text-gray-500 mt-2 text-sm">Completa tu información para continuar con el test vocacional.</p>
             </div>
 
-            <!-- Formulario -->
-            <form asp-action="GuardarDatosEstudiante" method="post" class="space-y-6">
+            <form asp-action="GuardarDatosEstudiante" method="post" id="formEstudiante" class="space-y-6" novalidate autocomplete="off">
                 @Html.AntiForgeryToken()
-
-                <!-- 🩹 IMPORTANTE: ahora sin value manual -->
                 <input type="hidden" asp-for="IDD_SESION" />
 
-                <!-- Nombre completo -->
+                <!-- Nombre -->
                 <div>
                     <label asp-for="NOM_COMPLETO" class="block text-sm font-medium text-gray-700 mb-2"></label>
                     <input asp-for="NOM_COMPLETO"
                            placeholder="Ingresa tu nombre completo"
+                           maxlength="150"
+                           autocomplete="off"
                            class="form-input w-full rounded-lg border-gray-300 bg-gray-50 
-                                  text-gray-900 focus:ring-blue-500 focus:border-blue-500 transition" />
+                                  text-gray-900 focus:ring-blue-500 focus:border-blue-500 transition"
+                           oninput="this.value = this.value
+                               .replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '')
+                               .replace(/\s{2,}/g, ' ')
+                               .trimStart();" />
                     <span asp-validation-for="NOM_COMPLETO" class="text-red-500 text-sm"></span>
                 </div>
 
@@ -108,10 +92,15 @@
                 <div>
                     <label asp-for="NUM_EDAD" class="block text-sm font-medium text-gray-700 mb-2"></label>
                     <input asp-for="NUM_EDAD"
-                           type="number" min="12"
-                           placeholder="Ingresa tu edad"
+                           type="text"
+                           inputmode="numeric"
+                           maxlength="3"
+                           placeholder="Ingresa tu edad (12 a 100)"
+                           autocomplete="off"
+                           id="NUM_EDAD"
                            class="form-input w-full rounded-lg border-gray-300 bg-gray-50 
-                                  text-gray-900 focus:ring-blue-500 focus:border-blue-500 transition" />
+                                  text-gray-900 focus:ring-blue-500 focus:border-blue-500 transition"
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^0+/, '');" />
                     <span asp-validation-for="NUM_EDAD" class="text-red-500 text-sm"></span>
                 </div>
 
@@ -127,13 +116,8 @@
                         })
                         {
                             var isChecked = Model?.NOM_GENERO == genero.Valor ? "checked" : "";
-
                             <label class="relative cursor-pointer">
-                                <input class="sr-only"
-                                       type="radio"
-                                       name="NOM_GENERO"
-                                       value="@genero.Valor"
-                                       @isChecked />
+                                <input class="sr-only" type="radio" name="NOM_GENERO" value="@genero.Valor" @isChecked />
                                 <div class="flex flex-col items-center justify-center w-full h-24 border-2 border-gray-300 
                                             rounded-lg text-center transition-all duration-200 
                                             hover:border-blue-400 hover:bg-blue-50">
@@ -165,20 +149,77 @@
         </div>
     </div>
 
-    <!-- Librerías JS -->
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
 
-    <!-- Redirección de respaldo -->
     <script>
-        $("form").on("submit", function () {
-            setTimeout(() => {
-                if (window.location.href.includes("DatosEstudiante")) {
-                    window.location.href = "/Test/MostrarPregunta?moduloId=1&numero=1";
+        $(function () {
+            $("#formEstudiante").validate({
+                rules: {
+                    NOM_COMPLETO: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 150,
+                        pattern: /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/
+                    },
+                    NUM_EDAD: {
+                        required: true,
+                        digits: true,
+                        range: [12, 100]
+                    },
+                    NOM_GENERO: {
+                        required: true
+                    }
+                },
+                messages: {
+                    NOM_COMPLETO: {
+                        required: "El nombre es obligatorio.",
+                        minlength: "Debe tener al menos 3 caracteres.",
+                        maxlength: "Máximo 150 caracteres.",
+                        pattern: "Solo se permiten letras y espacios."
+                    },
+                    NUM_EDAD: {
+                        required: "La edad es obligatoria.",
+                        digits: "Solo se permiten números enteros.",
+                        range: "La edad debe estar entre 12 y 100 años."
+                    },
+                    NOM_GENERO: {
+                        required: "Seleccione un género."
+                    }
+                },
+                errorClass: "text-red-500 text-sm",
+                errorPlacement: function (error, element) {
+                    error.appendTo(element.parent());
+                },
+                highlight: function (element) {
+                    $(element).addClass("border-red-400");
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass("border-red-400");
                 }
-            }, 1500);
+            });
+
+            // --- Entrada controlada sin bloqueo ---
+            $("#NUM_EDAD").on("input", function () {
+                let val = this.value.replace(/[^0-9]/g, '').replace(/^0+/, '');
+                if (val.length > 3) val = val.substring(0, 3);
+                this.value = val;
+
+                // validación en vivo
+                const edad = parseInt(val);
+                const errorSpan = $(this).next("span[data-valmsg-for='NUM_EDAD']");
+                if (val === "") {
+                    errorSpan.text("La edad es obligatoria.");
+                } else if (isNaN(edad) || edad < 12 || edad > 100) {
+                    errorSpan.text("La edad debe estar entre 12 y 100 años.");
+                } else {
+                    errorSpan.text("");
+                }
+            });
         });
     </script>
+
 </body>
 </html>

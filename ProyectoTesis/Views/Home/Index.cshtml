@@ -1,7 +1,49 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.EntityFrameworkCore
+@inject IHttpContextAccessor HttpContextAccessor
+@inject ProyectoTesis.Data.ApplicationDbContext Db
+
+@{
     Layout = "_LayoutLanding";
     ViewData["Title"] = "Inicio";
+
+    // === Lógica dinámica para el botón principal ===
+    var sesionIdStr = HttpContextAccessor.HttpContext?.Session.GetString("SesionId");
+    var testEnProgreso = HttpContextAccessor.HttpContext?.Session.GetString("TestEnProgreso");
+
+    string textoBoton = "Comenzar test";
+    string icono = "arrow_forward";
+    string accion = "Iniciar";
+
+    // ✅ Diccionario tipado para evitar el error CS0266
+    var routeValues = new Dictionary<string, string>();
+
+    if (!string.IsNullOrEmpty(sesionIdStr))
+    {
+        var sesionId = Guid.Parse(sesionIdStr);
+
+        // 🔹 Verificar si hay resultados existentes (test finalizado)
+        var resultado = await Db.TBM_RESULTADOS
+            .Where(r => r.IDD_SESION == sesionId)
+            .OrderByDescending(r => r.FEC_CREADO)
+            .FirstOrDefaultAsync();
+
+        if (resultado != null)
+        {
+            textoBoton = "Ver mis resultados";
+            icono = "visibility";
+            accion = "Recomendaciones";
+            routeValues["resultadoId"] = resultado.IDD_RESULTADO.ToString();
+        }
+        else if (testEnProgreso == "true")
+        {
+            textoBoton = "Continuar con el test";
+            icono = "refresh";
+            accion = "Iniciar";
+        }
+    }
 }
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -82,13 +124,14 @@
                     ¡Es hora de empezar a construir tu camino!
                 </p>
 
-                <form asp-controller="Test" asp-action="Iniciar" method="get">
+                <!-- 🔹 Botón dinámico según el estado del usuario -->
+                <form asp-controller="Test" asp-action="@accion" asp-all-route-data="routeValues" method="get">
                     <button type="submit"
                             class="flex min-w-[84px] max-w-[480px] items-center justify-center h-14 px-8 mx-auto
                                    rounded-full bg-[var(--primary-color)] text-white text-lg font-semibold 
                                    hover:bg-sky-500 transition-all duration-300 shadow-lg shadow-sky-200/80 hover:scale-105">
-                        <span class="truncate">Comenzar test</span>
-                        <span class="material-symbols-outlined ml-2">arrow_forward</span>
+                        <span class="truncate">@textoBoton</span>
+                        <span class="material-symbols-outlined ml-2">@icono</span>
                     </button>
                 </form>
             </div>

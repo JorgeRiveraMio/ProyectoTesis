@@ -1,0 +1,84 @@
+@{
+    ViewData["Title"] = "Acceso al Panel de Administración";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #00ff90;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .terminal {
+            background-color: #111;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #00ff90;
+            width: 90%;
+            max-width: 450px;
+        }
+        input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #00ff90;
+            color: #00ff90;
+            width: 100%;
+            outline: none;
+            font-family: inherit;
+            font-size: 1.2rem;
+            padding: 0.5rem 0;
+        }
+        button {
+            margin-top: 1rem;
+            background-color: #00ff90;
+            color: #111;
+            border: none;
+            width: 100%;
+            padding: 0.7rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00cc74;
+        }
+        .error {
+            color: #ff6060;
+            font-size: 0.9rem;
+            margin-top: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="terminal">
+        <h2 class="text-lg mb-4">Acceso restringido</h2>
+        <form method="post" asp-action="Panel">
+            <label for="password">Ingrese la clave:</label>
+            <input type="password" name="password" id="password" autofocus autocomplete="off" />
+            <button type="submit">Entrar</button>
+
+            @if (TempData["Error"] != null)
+            {
+                <p class="error">@TempData["Error"]</p>
+            }
+        </form>
+    </div>
+
+    <script>
+        // efecto de cursor verde parpadeante
+        const input = document.getElementById("password");
+        input.focus();
+    </script>
+</body>
+</html>

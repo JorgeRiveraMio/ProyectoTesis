@@ -123,39 +123,38 @@ namespace ProyectoTesis.Services
                                 var carrera = resultado.Carreras[i];
 
                                 col.Item().Element(e =>
-                                {
-                                    // ✅ cada carrera dentro de su propia columna
+                                {                           
                                     e.ShowEntire().BorderBottom(1).BorderColor(colorLineas)
-                                     .PaddingVertical(8)
-                                     .Column(card =>
-                                     {
-                                         card.Spacing(4);
+                                        .PaddingVertical(8)
+                                        .Column(card =>
+                                        {
+                                            card.Spacing(4);
 
-                                         card.Item().Text($"{i + 1}. {carrera.Nombre ?? "[Sin nombre]"}")
-                                             .Bold().FontSize(14).FontColor(colorPrimario);
+                                            card.Item().Text($"{i + 1}. {carrera.Nombre ?? "[Sin nombre]"}")
+                                                .Bold().FontSize(14).FontColor(colorPrimario);
 
-                                         if (!string.IsNullOrWhiteSpace(carrera.Descripcion))
-                                             card.Item().Text($"Descripción: {carrera.Descripcion}")
-                                                 .FontSize(11).FontColor(colorTexto);
+                                            if (!string.IsNullOrWhiteSpace(carrera.Descripcion))
+                                                card.Item().Text($"Descripción: {carrera.Descripcion}")
+                                                    .FontSize(11).FontColor(colorTexto);
 
-                                         if (carrera.Score > 0)
-                                             card.Item().Text($"Afinidad con tu perfil: {carrera.Score:F2}%")
-                                                 .FontSize(11).FontColor(Colors.Grey.Darken2);
+                                            if (carrera.Score > 0)
+                                                card.Item().Text($"Afinidad con tu perfil: {carrera.Score:F2}%")
+                                                    .FontSize(11).FontColor(Colors.Grey.Darken2);
 
-                                         if (carrera.Universidades?.Any() == true)
-                                         {
-                                             card.Item().Text("Universidades recomendadas:")
-                                                 .Bold().FontSize(11).FontColor(Colors.Grey.Darken2);
-                                             card.Item().Text(string.Join(", ", carrera.Universidades))
-                                                 .FontSize(10).FontColor(Colors.Grey.Darken1);
-                                         }
-                                     });
+                                            if (carrera.Universidades?.Any() == true)
+                                            {
+                                                card.Item().Text("Universidades recomendadas:")
+                                                    .Bold().FontSize(11).FontColor(Colors.Grey.Darken2);
+                                                card.Item().Text(string.Join(", ", carrera.Universidades))
+                                                    .FontSize(10).FontColor(Colors.Grey.Darken1);
+                                            }
+                                        });
                                 });
                             }
                         }
                         else
                         {
-                            col.Item().Text("⚠️ No hay carreras cargadas en el ViewModel.");
+                            col.Item().Text("No hay carreras cargadas en el ViewModel.");
                         }
                     });
 

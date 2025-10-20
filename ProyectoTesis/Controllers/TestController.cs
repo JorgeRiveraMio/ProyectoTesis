@@ -72,7 +72,7 @@ namespace ProyectoTesis.Controllers
             Console.WriteLine($"Model recibido: {model.NOM_COMPLETO}, Edad: {model.NUM_EDAD}, Género: {model.NOM_GENERO}");
             Console.WriteLine($"IDD_SESION recibido: {model.IDD_SESION}");
 
-            // 🩹 Paso 1: Reasigna IDD_SESION si vino vacío
+            // Paso 1: Reasigna IDD_SESION si vino vacío
             if (model.IDD_SESION == Guid.Empty)
             {
                 var sesionIdStr = HttpContext.Session.GetString("SesionId");
@@ -87,7 +87,7 @@ namespace ProyectoTesis.Controllers
                 }
             }
 
-            // 🧠 Paso 2: Mostrar errores de validación si los hay
+            // Paso 2: Mostrar errores de validación si los hay
             if (!ModelState.IsValid)
             {
                 Console.WriteLine("[LOG2] ModelState inválido, errores:");
@@ -99,7 +99,7 @@ namespace ProyectoTesis.Controllers
                 return View("DatosEstudiante", model);
             }
 
-            // 🧩 Paso 3: Verifica existencia de sesión
+            //  Paso 3: Verifica existencia de sesión
             var sesionExiste = await _context.TBM_SESIONES
                 .AnyAsync(s => s.IDD_SESION == model.IDD_SESION);
 
@@ -110,7 +110,7 @@ namespace ProyectoTesis.Controllers
                 return RedirectToAction("DatosEstudiante");
             }
 
-            // 🧱 Paso 4: Inserta o actualiza estudiante
+            // Paso 4: Inserta o actualiza estudiante
             var existente = await _context.TBM_ESTUDIANTES
                 .FirstOrDefaultAsync(e => e.IDD_SESION == model.IDD_SESION);
 
@@ -130,7 +130,7 @@ namespace ProyectoTesis.Controllers
             await _context.SaveChangesAsync();
             Console.WriteLine("[LOG6] Guardado en BD exitoso.");
 
-            // 🧭 Paso 5: Guarda en sesión
+            // Paso 5: Guarda en sesión
             HttpContext.Session.SetString("SesionId", model.IDD_SESION.ToString());
             HttpContext.Session.SetString("EstudianteNombre", model.NOM_COMPLETO);
             HttpContext.Session.SetString("EstudianteGenero", model.NOM_GENERO);
@@ -138,7 +138,7 @@ namespace ProyectoTesis.Controllers
 
             Console.WriteLine($"[LOG7] Sesión actualizada en memoria para {model.NOM_COMPLETO}");
 
-            // ✅ Paso 6: Redirección
+            // Paso 6: Redirección
             TempData["Mensaje"] = "Datos del estudiante guardados correctamente.";
             Console.WriteLine("[LOG8] Redirigiendo a MostrarPregunta...");
 
@@ -151,18 +151,59 @@ namespace ProyectoTesis.Controllers
         {
             var sesionIdStr = HttpContext.Session.GetString("SesionId");
 
-            if (!string.IsNullOrEmpty(sesionIdStr))
-            {
-                var sesionId = Guid.Parse(sesionIdStr);
-                var existeEstudiante = await _context.TBM_ESTUDIANTES
-                    .AnyAsync(e => e.IDD_SESION == sesionId);
+            if (string.IsNullOrEmpty(sesionIdStr))
+                return RedirectToAction("DatosEstudiante");
 
-                if (existeEstudiante)
-                    return RedirectToAction("MostrarPregunta", new { moduloId, numero = 1 });
+            var sesionId = Guid.Parse(sesionIdStr);
+
+            var existeEstudiante = await _context.TBM_ESTUDIANTES
+                .AnyAsync(e => e.IDD_SESION == sesionId);
+
+            if (!existeEstudiante)
+                return RedirectToAction("DatosEstudiante");
+
+            var ultimoResultado = await _context.TBM_RESULTADOS
+                .Where(r => r.IDD_SESION == sesionId)
+                .OrderByDescending(r => r.FEC_CREADO)
+                .FirstOrDefaultAsync();
+
+            if (ultimoResultado != null)
+            {
+                // El usuario ya terminó un test antes
+                HttpContext.Session.Remove("TestEnProgreso");
+                TempData["Mensaje"] = "Ya tienes un resultado guardado. Puedes revisarlo o iniciar un nuevo test.";
+                return RedirectToAction("Recomendaciones", new { resultadoId = ultimoResultado.IDD_RESULTADO });
             }
 
-            return RedirectToAction("DatosEstudiante");
+            var intentoActivo = await _context.TBM_INTENTOS
+                .Where(i => i.IDD_SESION == sesionId && i.FEC_COMPLETADO == null)
+                .OrderBy(i => i.FEC_INICIADO)
+                .FirstOrDefaultAsync();
+
+            if (intentoActivo != null)
+            {
+                // Obtener cuántas respuestas ya registró
+                int respondidas = await _context.TBD_RESPUESTAS
+                    .CountAsync(r => r.IDD_INTENTO == intentoActivo.IDD_INTENTO);
+
+                // Total de preguntas del módulo actual
+                int total = await _context.TBT_PREGUNTAS
+                    .CountAsync(p => p.IDD_MODULO == intentoActivo.IDD_MODULO);
+
+                if (respondidas < total)
+                {
+                    // Retomar desde la siguiente pregunta
+                    byte modActual = intentoActivo.IDD_MODULO;
+                    int sigPregunta = respondidas + 1;
+                    HttpContext.Session.SetString("TestEnProgreso", "true");
+                    return RedirectToAction("MostrarPregunta", new { moduloId = modActual, numero = sigPregunta });
+                }
+            }
+
+            HttpContext.Session.SetString("TestEnProgreso", "true");
+            return RedirectToAction("MostrarPregunta", new { moduloId, numero = 1 });
         }
+
 
         // 2) Mostrar pregunta
         public async Task<IActionResult> MostrarPregunta(byte moduloId, int numero)
@@ -311,27 +352,45 @@ namespace ProyectoTesis.Controllers
 
             if (resultadoApi == null)
             {
-                TempData["Mensaje"] = "❌ Error: no se recibieron datos del modelo ML.";
+                TempData["Mensaje"] = "Error: no se recibieron datos del modelo ML.";
                 return RedirectToAction("Iniciar");
             }
 
             Console.WriteLine("=== JSON devuelto por API Python ===");
             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(resultadoApi, Newtonsoft.Json.Formatting.Indented));
 
-            // --- Guardar resultado base ---
-            var resultado = new TBM_RESULTADO
-            {
-                IDD_RESULTADO = Guid.NewGuid(),
-                IDD_SESION = sesionId,
-                FEC_CREADO = DateTime.UtcNow,
-                NOM_PERFIL_TX = resultadoApi.PerfilRiasec ?? "N/A",
-                DES_RECOMENDACION_TX = "Generadas por modelo ML",
-                NUM_RECOMENDACIONES = resultadoApi.Carreras.Count,
-                LISTA_RECOMENDACIONES_JSON = System.Text.Json.JsonSerializer.Serialize(resultadoApi.Carreras)
-            };
+            // --- Guardar resultado base (evita duplicados) ---
+            var existente = await _context.TBM_RESULTADOS
+                .FirstOrDefaultAsync(r => r.IDD_SESION == sesionId);
 
-            _context.TBM_RESULTADOS.Add(resultado);
-            await _context.SaveChangesAsync();
+            if (existente == null)
+            {
+                // Crear nuevo resultado
+                existente = new TBM_RESULTADO
+                {
+                    IDD_RESULTADO = Guid.NewGuid(),
+                    IDD_SESION = sesionId,
+                    FEC_CREADO = DateTime.UtcNow,
+                    NOM_PERFIL_TX = resultadoApi.PerfilRiasec ?? "N/A",
+                    DES_RECOMENDACION_TX = "Generadas por modelo ML",
+                    NUM_RECOMENDACIONES = resultadoApi.Carreras.Count,
+                    LISTA_RECOMENDACIONES_JSON = System.Text.Json.JsonSerializer.Serialize(resultadoApi.Carreras)
+                };
+
+                _context.TBM_RESULTADOS.Add(existente);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                // Actualizar el existente
+                existente.FEC_CREADO = DateTime.UtcNow;
+                existente.NOM_PERFIL_TX = resultadoApi.PerfilRiasec ?? "N/A";
+                existente.DES_RECOMENDACION_TX = "Actualizado por modelo ML";
+                existente.NUM_RECOMENDACIONES = resultadoApi.Carreras.Count;
+                existente.LISTA_RECOMENDACIONES_JSON = System.Text.Json.JsonSerializer.Serialize(resultadoApi.Carreras);
+
+                await _context.SaveChangesAsync();
+            }
 
             // --- Procesar OCEAN resumen ---
             string perfilOceanResumen = string.Join(", ",
@@ -340,7 +399,7 @@ namespace ProyectoTesis.Controllers
                 ));
 
             // --- ViewModel final ---
-            resultadoApi.IDD_RESULTADO = resultado.IDD_RESULTADO;
+            resultadoApi.IDD_RESULTADO = existente.IDD_RESULTADO;
             resultadoApi.PuntajesRiasec = categoriasRiasec;
             resultadoApi.TotalRiasec = categoriasRiasec.Values.Sum();
             resultadoApi.PerfilOceanResumen = perfilOceanResumen;
@@ -353,12 +412,10 @@ namespace ProyectoTesis.Controllers
                 await _context.SaveChangesAsync();
             }
 
+            HttpContext.Session.SetString("TestEnProgreso", "true");
+
             return View("Resultado", resultadoApi);
         }
-
-
-
-
 
         // ---  Helpers ---
         private int[] CalcularVectorRiasec(IEnumerable<dynamic> respuestas)
@@ -424,6 +481,7 @@ namespace ProyectoTesis.Controllers
         // 5) Ver recomendaciones
         public async Task<IActionResult> Recomendaciones(Guid resultadoId)
         {
+            HttpContext.Session.Remove("TestEnProgreso");
             var resultado = await _context.TBM_RESULTADOS.FindAsync(resultadoId);
             if (resultado == null)
             {
@@ -647,6 +705,13 @@ namespace ProyectoTesis.Controllers
             return RedirectToAction("Recomendaciones", new { resultadoId });
         }
 
+        public IActionResult ReiniciarTest()
+        {
+            HttpContext.Session.Remove("TestEnProgreso");
+            HttpContext.Session.Remove("SesionId");
+            TempData["Mensaje"] = "Has reiniciado tu test. Comienza una nueva evaluación.";
+            return RedirectToAction("DatosEstudiante");
+        }
 
 
 

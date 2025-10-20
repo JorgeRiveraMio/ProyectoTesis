@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = "Panel de Administración";
+}
+
+<div class="max-w-3xl mx-auto text-center mt-20 bg-white p-10 rounded-lg shadow-md">
+    <h1 class="text-3xl font-extrabold text-gray-800 mb-6">Panel de Administración</h1>
+
+    <p class="text-gray-600 mb-10">
+        Desde aquí puedes exportar los resultados completos para análisis en Excel o SPSS.
+    </p>
+
+    <a asp-action="ExportarResultadosDetallado"
+       class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-green-600 hover:bg-green-700 text-white text-lg font-semibold transition-colors shadow-lg">
+        <span class="material-symbols-outlined">download</span>
+        Descargar Resultados Detallados (CSV)
+    </a>
+
+    <p class="text-sm text-gray-500 mt-6">
+        Este archivo contiene duración del proceso, cantidad de recomendaciones,
+        nivel de satisfacción y perfil vocacional de cada sesión.
+    </p>
+</div>

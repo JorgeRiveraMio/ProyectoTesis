@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using ProyectoTesis.Models; // ⚠️ Asegura que aquí esté la ruta donde está TBM_SESION
+using ProyectoTesis.Models; 
 
 namespace ProyectoTesis.Models
 {

@@ -1,0 +1,1429 @@
+{
+    "R": {
+        "R-Build": [
+        {
+            "carrera": "Ingeniería Civil",
+            "descripcion": "Diseña, planifica y construye infraestructuras esenciales como carreteras, puentes y edificaciones, garantizando seguridad y eficiencia en el desarrollo urbano y rural.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de Trujillo",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Arquitectura",
+            "descripcion": "Combina arte y técnica para crear espacios funcionales y estéticamente equilibrados, considerando el entorno urbano, social y ambiental.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional de San Agustín de Arequipa",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Ingeniería de Construcción",
+            "descripcion": "Gestiona y supervisa proyectos constructivos, asegurando la calidad de materiales, tiempos y costos en edificaciones e infraestructura pública o privada.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional Federico Villarreal",
+            "Universidad Privada del Norte"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Sanitaria",
+            "descripcion": "Se enfoca en el diseño y control de sistemas de agua potable, alcantarillado y saneamiento, protegiendo la salud pública y el medio ambiente.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional de Piura",
+            "Universidad Nacional de Trujillo"
+            ]
+        }
+        ],
+
+        "R-Tech": [
+        {
+            "carrera": "Ingeniería Electrónica",
+            "descripcion": "Aplica principios eléctricos y tecnológicos para desarrollar sistemas de automatización, control y comunicaciones que optimizan procesos industriales y sociales.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Tecnológica del Perú",
+            "Pontificia Universidad Católica del Perú"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Mecatrónica",
+            "descripcion": "Integra mecánica, electrónica y programación para diseñar y mantener sistemas automatizados, robots e innovaciones industriales.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad de Ingeniería y Tecnología (UTEC)",
+            "Universidad Tecnológica del Perú"
+            ]
+        },
+        {
+            "carrera": "Ingeniería de Telecomunicaciones",
+            "descripcion": "Desarrolla e implementa redes y tecnologías de comunicación que facilitan la transmisión eficiente de información a nivel global.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Tecnológica del Perú",
+            "Universidad Científica del Sur"
+            ]
+        },
+        {
+            "carrera": "Ingeniería de Software / Sistemas",
+            "descripcion": "Diseña, desarrolla y mantiene soluciones informáticas y sistemas digitales que mejoran la eficiencia y seguridad tecnológica de las organizaciones.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Tecnológica del Perú"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Mecánica",
+            "descripcion": "Analiza, diseña y optimiza máquinas, motores y sistemas térmicos aplicados a la industria, energía y transporte.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de Trujillo"
+            ]
+        }
+        ],
+
+        "R-Ind": [
+        {
+            "carrera": "Ingeniería Industrial",
+            "descripcion": "Optimiza procesos productivos y administrativos, integrando tecnología, recursos humanos y materiales para mejorar la competitividad de las empresas.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad de Lima",
+            "Universidad del Pacífico"
+            ]
+        },
+        {
+            "carrera": "Ingeniería de Producción / Procesos",
+            "descripcion": "Diseña y controla sistemas de producción eficientes, aplicando metodologías de calidad, seguridad y sostenibilidad industrial.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional Agraria La Molina",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Privada Antenor Orrego"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Logística y de Transporte",
+            "descripcion": "Gestiona la cadena de suministro, transporte y distribución de bienes, garantizando tiempos óptimos y reducción de costos operativos.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Tecnológica del Perú",
+            "Universidad del Callao"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Textil",
+            "descripcion": "Aplica ciencia y tecnología al desarrollo de materiales textiles y procesos de confección, enfocándose en innovación, moda y sostenibilidad.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Nacional de San Antonio Abad del Cusco"
+            ]
+        }
+        ],
+
+        "R-Geo": [
+        {
+            "carrera": "Ingeniería de Minas",
+            "descripcion": "Explora, planifica y gestiona la extracción responsable de recursos minerales, garantizando seguridad y cuidado ambiental.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Nacional de Cajamarca",
+            "Universidad Nacional de San Agustín de Arequipa"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Geológica",
+            "descripcion": "Estudia la composición y estructura de la Tierra para identificar recursos naturales, prevenir desastres y apoyar proyectos de ingeniería.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Nacional de San Antonio Abad del Cusco"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Ambiental",
+            "descripcion": "Desarrolla soluciones técnicas para prevenir, mitigar y controlar la contaminación, promoviendo el desarrollo sostenible.",
+            "universidades": [
+            "Universidad Nacional Agraria La Molina",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Científica del Sur"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Hidráulica y Recursos Hídricos",
+            "descripcion": "Gestiona y aprovecha los recursos de agua mediante proyectos de riego, represas y tratamiento, asegurando su uso eficiente y sostenible.",
+            "universidades": [
+            "Universidad Nacional Agraria La Molina",
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional de Piura"
+            ]
+        },
+        {
+            "carrera": "Geografía",
+            "descripcion": "Analiza el territorio, los recursos naturales y la interacción humana con el medio ambiente para planificar el desarrollo sostenible.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Federico Villarreal"
+            ]
+        }
+        ],
+
+        "R-Agro": [
+        {
+            "carrera": "Ingeniería Agrónoma / Agrícola",
+            "descripcion": "Gestiona la producción agrícola sostenible mediante el uso eficiente del suelo, el agua y la tecnología en beneficio del sector agropecuario.",
+            "universidades": [
+            "Universidad Nacional Agraria La Molina",
+            "Universidad Nacional del Altiplano",
+            "Universidad Nacional del Centro del Perú",
+            "Universidad Nacional Hermilio Valdizán"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Agroindustrial",
+            "descripcion": "Transforma productos agrícolas en bienes de consumo mediante procesos industriales eficientes y sostenibles.",
+            "universidades": [
+            "Universidad Nacional Agraria La Molina",
+            "Universidad Nacional de San Marcos",
+            "Universidad Nacional de Huancavelica",
+            "Universidad Nacional José Faustino Sánchez Carrión"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Forestal y del Medio Ambiente",
+            "descripcion": "Conserva y aprovecha de forma sostenible los recursos forestales, promoviendo la reforestación y la gestión ambiental.",
+            "universidades": [
+            "Universidad Nacional Agraria La Molina",
+            "Universidad Nacional de la Amazonía Peruana",
+            "Universidad Nacional de Cajamarca"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Pesquera",
+            "descripcion": "Administra la explotación y conservación de los recursos marinos y fluviales, optimizando la industria pesquera.",
+            "universidades": [
+            "Universidad Nacional Federico Villarreal",
+            "Universidad Nacional del Santa",
+            "Universidad Nacional Agraria La Molina"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Zootecnista",
+            "descripcion": "Se especializa en la producción y mejora genética de animales domésticos, garantizando calidad alimentaria y sostenibilidad pecuaria.",
+            "universidades": [
+            "Universidad Nacional Agraria La Molina",
+            "Universidad Nacional del Altiplano",
+            "Universidad Nacional Hermilio Valdizán"
+            ]
+        }
+        ],
+
+        "R-HealthTech": [
+        {
+            "carrera": "Ingeniería Biomédica",
+            "descripcion": "Fusiona ingeniería y medicina para diseñar equipos, prótesis y tecnologías que mejoran el diagnóstico y tratamiento médico.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana Cayetano Heredia"
+            ]
+        },
+        {
+            "carrera": "Tecnología Médica (Rehabilitación / Radiología / Laboratorio)",
+            "descripcion": "Aplica conocimiento técnico en el uso de equipos médicos, diagnóstico por imágenes y procesos de rehabilitación.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana Cayetano Heredia",
+            "Universidad Privada San Juan Bautista"
+            ]
+        }
+        ],
+
+        "R-Energy": [
+        {
+            "carrera": "Ingeniería Eléctrica",
+            "descripcion": "Diseña y gestiona sistemas eléctricos y de energía, garantizando un suministro seguro, eficiente y sostenible.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Energética",
+            "descripcion": "Desarrolla proyectos para la generación, distribución y optimización de energía renovable y convencional.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad de Ingeniería y Tecnología (UTEC)",
+            "Universidad Tecnológica del Perú"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Petroquímica / de Petróleo y Gas Natural",
+            "descripcion": "Explora, produce y procesa hidrocarburos, aplicando tecnología para maximizar la eficiencia y reducir el impacto ambiental.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional de Piura",
+            "Universidad Nacional de Trujillo"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Ambiental y de Sostenibilidad",
+            "descripcion": "Integra ciencia, tecnología y gestión para promover energías limpias, reducir emisiones y fomentar un desarrollo sostenible.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Científica del Sur",
+            "Universidad Nacional de San Agustín de Arequipa"
+            ]
+        }
+        ]
+    },
+
+    "I": {
+        "I-Científico": [
+        {
+            "carrera": "Biología",
+            "descripcion": "Estudia los seres vivos, su estructura, funciones y evolución, aplicando el método científico para resolver problemas ambientales, médicos y biotecnológicos.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de Trujillo",
+            "Universidad Nacional San Agustín de Arequipa"
+            ]
+        },
+        {
+            "carrera": "Química",
+            "descripcion": "Analiza la composición y transformación de la materia para desarrollar nuevos materiales, fármacos y procesos industriales sostenibles.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional del Centro del Perú"
+            ]
+        },
+        {
+            "carrera": "Física",
+            "descripcion": "Investiga las leyes fundamentales del universo para comprender fenómenos naturales y crear innovaciones en energía, electrónica y tecnología moderna.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional de Trujillo"
+            ]
+        },
+        {
+            "carrera": "Ciencias Biológicas y Genéticas",
+            "descripcion": "Profundiza en la herencia y variación de los organismos, aplicando técnicas genéticas para mejorar la salud, la agricultura y la biodiversidad.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana Cayetano Heredia",
+            "Universidad Nacional Agraria La Molina"
+            ]
+        }
+        ],
+
+        "I-Médico": [
+        {
+            "carrera": "Medicina Humana",
+            "descripcion": "Forma profesionales capaces de diagnosticar, tratar y prevenir enfermedades, combinando ciencia, ética y tecnología en el cuidado integral de la salud.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana Cayetano Heredia",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad San Martín de Porres"
+            ]
+        },
+        {
+            "carrera": "Odontología",
+            "descripcion": "Estudia y trata las enfermedades bucodentales mediante técnicas clínicas, quirúrgicas y preventivas, promoviendo la salud oral integral.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana Cayetano Heredia",
+            "Universidad Científica del Sur",
+            "Universidad Andina del Cusco"
+            ]
+        },
+        {
+            "carrera": "Farmacia y Bioquímica",
+            "descripcion": "Investiga, desarrolla y controla medicamentos, cosméticos y productos biológicos, garantizando su calidad y eficacia terapéutica.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Nacional de Trujillo",
+            "Universidad Peruana Cayetano Heredia"
+            ]
+        },
+        {
+            "carrera": "Biotecnología",
+            "descripcion": "Aplica la biología y la ingeniería para crear soluciones innovadoras en salud, agricultura, energía y medio ambiente.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana Cayetano Heredia"
+            ]
+        }
+        ],
+
+        "I-Analítico": [
+        {
+            "carrera": "Matemática Pura y Aplicada",
+            "descripcion": "Desarrolla modelos y teorías matemáticas que permiten resolver problemas complejos en ciencia, tecnología, finanzas y data science.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional de Trujillo"
+            ]
+        },
+        {
+            "carrera": "Estadística",
+            "descripcion": "Recolecta, analiza e interpreta datos para apoyar la toma de decisiones en salud, economía, ingeniería y ciencias sociales.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Nacional de Ingeniería",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Agraria La Molina"
+            ]
+        },
+        {
+            "carrera": "Ciencias de la Computación",
+            "descripcion": "Explora los fundamentos teóricos y prácticos de la informática, diseñando algoritmos, software y sistemas inteligentes.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad de Ingeniería y Tecnología (UTEC)"
+            ]
+        },
+        {
+            "carrera": "Ciencias de Datos / Data Science",
+            "descripcion": "Aplica estadística, programación y aprendizaje automático para transformar grandes volúmenes de datos en conocimiento útil y estratégico.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad Nacional Mayor de San Marcos"
+            ]
+        }
+        ],
+
+        "I-Tecnológico": [
+        {
+            "carrera": "Ingeniería de Sistemas e Informática",
+            "descripcion": "Diseña y gestiona sistemas informáticos eficientes, integrando software, hardware y redes para optimizar procesos organizacionales.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de Ingeniería",
+            "Universidad Tecnológica del Perú"
+            ]
+        },
+        {
+            "carrera": "Ingeniería de Software",
+            "descripcion": "Desarrolla soluciones tecnológicas mediante la creación, prueba y mantenimiento de aplicaciones y plataformas digitales.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad de Lima",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Biomédica (Investigación aplicada)",
+            "descripcion": "Combina ciencia e ingeniería para investigar y desarrollar tecnologías médicas innovadoras que mejoren la atención sanitaria.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana Cayetano Heredia"
+            ]
+        },
+        {
+            "carrera": "Ciencias Ambientales",
+            "descripcion": "Analiza los procesos naturales y humanos que afectan el ambiente, generando soluciones sostenibles basadas en evidencia científica.",
+            "universidades": [
+            "Universidad Nacional Agraria La Molina",
+            "Universidad Científica del Sur",
+            "Pontificia Universidad Católica del Perú"
+            ]
+        }
+        ],
+
+        "I-SocialCientífico": [
+        {
+            "carrera": "Psicología (Investigación)",
+            "descripcion": "Estudia el comportamiento humano y los procesos mentales mediante métodos científicos para generar conocimiento aplicable en salud, educación y sociedad.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad de Lima"
+            ]
+        },
+        {
+            "carrera": "Sociología",
+            "descripcion": "Analiza las dinámicas sociales, económicas y culturales para comprender los fenómenos colectivos y proponer políticas públicas.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional del Altiplano"
+            ]
+        },
+        {
+            "carrera": "Antropología",
+            "descripcion": "Investiga las culturas humanas y sus transformaciones a lo largo del tiempo, aportando una visión crítica y comparativa de la sociedad.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Nacional de San Antonio Abad del Cusco"
+            ]
+        },
+        {
+            "carrera": "Economía (Enfoque analítico / investigación)",
+            "descripcion": "Estudia los procesos económicos con base empírica y teórica, evaluando políticas y modelos que mejoran la eficiencia y equidad social.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad del Pacífico",
+            "Universidad Nacional Mayor de San Marcos"
+            ]
+        }
+        ],
+
+        "I-AstroGeo": [
+        {
+            "carrera": "Astronomía y Astrofísica",
+            "descripcion": "Explora el universo mediante la observación y modelación de fenómenos cósmicos, aplicando física, matemáticas y computación avanzada.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de Ingeniería"
+            ]
+        },
+        {
+            "carrera": "Geofísica",
+            "descripcion": "Estudia las propiedades físicas de la Tierra para comprender su estructura interna, los movimientos sísmicos y los recursos naturales.",
+            "universidades": [
+            "Universidad Nacional San Agustín de Arequipa",
+            "Universidad Nacional Mayor de San Marcos"
+            ]
+        },
+        {
+            "carrera": "Meteorología y Climatología",
+            "descripcion": "Analiza los patrones atmosféricos y climáticos para predecir fenómenos meteorológicos y mitigar los impactos del cambio climático.",
+            "universidades": [
+            "Universidad Nacional Agraria La Molina",
+            "Pontificia Universidad Católica del Perú"
+            ]
+        }
+        ]
+    },
+
+    "A": {
+        "A-Diseño": [
+        {
+            "carrera": "Diseño Gráfico",
+            "descripcion": "Combina arte y comunicación visual para crear mensajes impactantes mediante el uso de imágenes, tipografía y color.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad San Ignacio de Loyola",
+            "Universidad Privada del Norte"
+            ]
+        },
+        {
+            "carrera": "Diseño Industrial",
+            "descripcion": "Desarrolla productos funcionales y estéticamente atractivos, integrando creatividad, ergonomía y tecnología.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad de Lima"
+            ]
+        },
+        {
+            "carrera": "Diseño de Interiores",
+            "descripcion": "Crea espacios armónicos, cómodos y funcionales, equilibrando estética, materiales y necesidades del usuario.",
+            "universidades": [
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad San Ignacio de Loyola",
+            "Universidad Privada del Norte"
+            ]
+        },
+        {
+            "carrera": "Diseño de Moda y Textil",
+            "descripcion": "Fusiona arte, cultura y tendencias para crear prendas y colecciones innovadoras que expresan identidad y estilo.",
+            "universidades": [
+            "Universidad San Ignacio de Loyola",
+            "Universidad Privada del Norte",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        }
+        ],
+
+        "A-ComunicaciónVisual": [
+        {
+            "carrera": "Comunicación Audiovisual y Medios Digitales",
+            "descripcion": "Produce contenido visual y multimedia para cine, televisión y plataformas digitales, transmitiendo ideas y emociones con creatividad.",
+            "universidades": [
+            "Universidad de Lima",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad San Ignacio de Loyola"
+            ]
+        },
+        {
+            "carrera": "Publicidad y Marketing Creativo",
+            "descripcion": "Diseña estrategias y campañas que conectan marcas con el público, combinando creatividad, análisis y narrativa visual.",
+            "universidades": [
+            "Universidad de Lima",
+            "Universidad San Ignacio de Loyola",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Fotografía Profesional",
+            "descripcion": "Domina la técnica y el lenguaje visual para capturar imágenes que comunican conceptos, emociones y realidades.",
+            "universidades": [
+            "Universidad de Ciencias y Artes de América Latina (UCAL)",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Animación Digital y Videojuegos",
+            "descripcion": "Crea personajes, mundos y experiencias interactivas uniendo arte, programación y diseño narrativo.",
+            "universidades": [
+            "Universidad de Lima",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        }
+        ],
+
+        "A-ArtesEscénicas": [
+        {
+            "carrera": "Teatro y Artes Escénicas",
+            "descripcion": "Forma artistas capaces de expresar emociones y contar historias mediante la interpretación, la voz y el movimiento escénico.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad Científica del Sur"
+            ]
+        },
+        {
+            "carrera": "Danza",
+            "descripcion": "Explora el movimiento corporal como medio de expresión artística, integrando técnica, ritmo y creatividad.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de San Antonio Abad del Cusco",
+            "Universidad Nacional de Música"
+            ]
+        },
+        {
+            "carrera": "Cine y Televisión",
+            "descripcion": "Desarrolla habilidades para dirigir, producir y crear narrativas audiovisuales que impacten en la cultura y la sociedad.",
+            "universidades": [
+            "Universidad de Lima",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad Científica del Sur"
+            ]
+        },
+        {
+            "carrera": "Dirección y Producción Escénica",
+            "descripcion": "Coordina el diseño, montaje y ejecución de obras escénicas, combinando visión artística y liderazgo creativo.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        }
+        ],
+
+        "A-Música": [
+        {
+            "carrera": "Música",
+            "descripcion": "Desarrolla la sensibilidad artística y la técnica musical para la interpretación, composición y producción sonora.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de Música",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Producción Musical",
+            "descripcion": "Combina arte y tecnología para crear, grabar y mezclar proyectos musicales con enfoque profesional y creativo.",
+            "universidades": [
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad de Lima",
+            "Pontificia Universidad Católica del Perú"
+            ]
+        },
+        {
+            "carrera": "Educación Musical",
+            "descripcion": "Forma educadores capaces de enseñar teoría, interpretación y apreciación musical a diferentes niveles y edades.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de Educación Enrique Guzmán y Valle"
+            ]
+        }
+        ],
+
+        "A-ArtesPlásticas": [
+        {
+            "carrera": "Artes Plásticas y Visuales",
+            "descripcion": "Promueve la expresión artística a través de la pintura, escultura y medios visuales, integrando técnica y creatividad personal.",
+            "universidades": [
+            "Escuela Nacional Superior Autónoma de Bellas Artes del Perú",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de San Agustín de Arequipa"
+            ]
+        },
+        {
+            "carrera": "Pintura y Escultura",
+            "descripcion": "Explora el color, la forma y el volumen para crear obras que expresan ideas, emociones y visiones del mundo.",
+            "universidades": [
+            "Escuela Nacional Superior Autónoma de Bellas Artes del Perú",
+            "Universidad Nacional de San Agustín de Arequipa"
+            ]
+        },
+        {
+            "carrera": "Cerámica y Arte Aplicado",
+            "descripcion": "Diseña piezas artísticas y utilitarias mediante técnicas de modelado y experimentación con materiales diversos.",
+            "universidades": [
+            "Escuela Nacional Superior Autónoma de Bellas Artes del Perú",
+            "Pontificia Universidad Católica del Perú"
+            ]
+        }
+        ],
+
+        "A-PatrimonioCultural": [
+        {
+            "carrera": "Conservación y Restauración del Patrimonio",
+            "descripcion": "Preserva bienes artísticos y arquitectónicos mediante técnicas científicas y conocimientos de historia del arte.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Nacional de San Antonio Abad del Cusco"
+            ]
+        },
+        {
+            "carrera": "Gestión Cultural",
+            "descripcion": "Planifica y promueve proyectos culturales que fomentan la identidad, la creatividad y el desarrollo social.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad Nacional Mayor de San Marcos"
+            ]
+        },
+        {
+            "carrera": "Historia del Arte",
+            "descripcion": "Estudia las obras, movimientos y contextos artísticos para interpretar la evolución del arte y su impacto en la sociedad.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos"
+            ]
+        }
+        ]
+    },
+
+    "S": {
+        "S-Educativo": [
+        {
+            "carrera": "Educación Inicial",
+            "descripcion": "Forma profesionales dedicados al desarrollo integral de niños pequeños, promoviendo su creatividad, afectividad y aprendizaje temprano.",
+            "universidades": [
+            "Universidad Nacional de Educación Enrique Guzmán y Valle",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana Cayetano Heredia",
+            "Universidad Nacional Mayor de San Marcos"
+            ]
+        },
+        {
+            "carrera": "Educación Primaria",
+            "descripcion": "Prepara docentes capaces de guiar el aprendizaje de niños en sus primeras etapas escolares, fortaleciendo valores y pensamiento crítico.",
+            "universidades": [
+            "Universidad Nacional de Educación Enrique Guzmán y Valle",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Pontificia Universidad Católica del Perú"
+            ]
+        },
+        {
+            "carrera": "Educación Secundaria",
+            "descripcion": "Capacita maestros para enseñar adolescentes, integrando conocimiento disciplinar, pedagogía y orientación formativa.",
+            "universidades": [
+            "Universidad Nacional de Educación Enrique Guzmán y Valle",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Católica Santo Toribio de Mogrovejo"
+            ]
+        },
+        {
+            "carrera": "Educación Especial e Inclusiva",
+            "descripcion": "Promueve la inclusión educativa de personas con discapacidad o necesidades especiales, adaptando estrategias de enseñanza personalizadas.",
+            "universidades": [
+            "Universidad Nacional de Educación Enrique Guzmán y Valle",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana Cayetano Heredia"
+            ]
+        },
+        {
+            "carrera": "Educación Intercultural Bilingüe",
+            "descripcion": "Forma docentes que promueven el aprendizaje respetando la diversidad lingüística y cultural del país.",
+            "universidades": [
+            "Universidad Nacional de Educación Enrique Guzmán y Valle",
+            "Universidad Nacional del Centro del Perú",
+            "Universidad Nacional del Altiplano"
+            ]
+        }
+        ],
+
+        "S-Salud": [
+        {
+            "carrera": "Enfermería",
+            "descripcion": "Brinda atención integral a personas y comunidades, combinando conocimientos científicos con vocación de servicio y empatía.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana Cayetano Heredia",
+            "Universidad Nacional San Luis Gonzaga de Ica",
+            "Universidad Nacional del Santa"
+            ]
+        },
+        {
+            "carrera": "Nutrición y Dietética",
+            "descripcion": "Evalúa y planifica la alimentación saludable para prevenir enfermedades y mejorar la calidad de vida de las personas.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana Cayetano Heredia",
+            "Universidad Científica del Sur"
+            ]
+        },
+        {
+            "carrera": "Obstetricia",
+            "descripcion": "Atiende la salud sexual y reproductiva de la mujer, brindando acompañamiento durante el embarazo, parto y posparto.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana Cayetano Heredia",
+            "Universidad Nacional de Trujillo"
+            ]
+        },
+        {
+            "carrera": "Terapia Física y Rehabilitación",
+            "descripcion": "Aplica técnicas terapéuticas para recuperar y mejorar la movilidad, funcionalidad y bienestar físico de los pacientes.",
+            "universidades": [
+            "Universidad Peruana Cayetano Heredia",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Privada San Juan Bautista"
+            ]
+        },
+        {
+            "carrera": "Tecnología Médica (Laboratorio Clínico / Radiología / Terapia Ocupacional)",
+            "descripcion": "Realiza diagnósticos y tratamientos especializados mediante el uso de equipos médicos y procedimientos técnicos precisos.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana Cayetano Heredia",
+            "Universidad Privada San Juan Bautista"
+            ]
+        }
+        ],
+
+        "S-Psicológico": [
+        {
+            "carrera": "Psicología",
+            "descripcion": "Analiza el comportamiento humano y brinda herramientas para promover el bienestar emocional, social y mental.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad de Lima",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana Cayetano Heredia"
+            ]
+        },
+        {
+            "carrera": "Psicología Educativa",
+            "descripcion": "Se especializa en los procesos de aprendizaje y desarrollo del estudiante, apoyando la orientación escolar y emocional.",
+            "universidades": [
+            "Universidad Nacional de Educación Enrique Guzmán y Valle",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Femenina del Sagrado Corazón"
+            ]
+        },
+        {
+            "carrera": "Psicología Organizacional y del Trabajo",
+            "descripcion": "Optimiza el bienestar y la productividad en entornos laborales mediante la gestión del talento humano y la motivación.",
+            "universidades": [
+            "Universidad de Lima",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Psicología Clínica y de la Salud",
+            "descripcion": "Evalúa, diagnostica y trata trastornos mentales y emocionales, aplicando terapias psicológicas basadas en evidencia.",
+            "universidades": [
+            "Universidad Peruana Cayetano Heredia",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Ricardo Palma"
+            ]
+        }
+        ],
+
+        "S-Comunitario": [
+        {
+            "carrera": "Trabajo Social",
+            "descripcion": "Promueve el desarrollo humano y la justicia social, apoyando a personas y comunidades en situación de vulnerabilidad.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Federico Villarreal",
+            "Universidad Católica Santo Toribio de Mogrovejo"
+            ]
+        },
+        {
+            "carrera": "Desarrollo Social y Gestión Comunitaria",
+            "descripcion": "Diseña e implementa proyectos sociales que impulsan el bienestar, la inclusión y la sostenibilidad comunitaria.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de San Antonio Abad del Cusco",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Educación Social y Promoción Comunitaria",
+            "descripcion": "Fomenta la participación ciudadana y la educación no formal para fortalecer la cohesión y el liderazgo social.",
+            "universidades": [
+            "Universidad Nacional de Educación Enrique Guzmán y Valle",
+            "Universidad Nacional del Altiplano",
+            "Universidad Católica Santo Toribio de Mogrovejo"
+            ]
+        }
+        ],
+
+        "S-SaludMental": [
+        {
+            "carrera": "Psicoterapia y Consejería",
+            "descripcion": "Ofrece acompañamiento emocional y terapéutico, ayudando a las personas a superar conflictos y mejorar su bienestar psicológico.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Ricardo Palma",
+            "Universidad Femenina del Sagrado Corazón"
+            ]
+        },
+        {
+            "carrera": "Orientación Vocacional y Asesoramiento Psicológico",
+            "descripcion": "Guía a las personas en la toma de decisiones académicas y laborales, fortaleciendo su autoconocimiento y desarrollo personal.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional de Educación Enrique Guzmán y Valle",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        }
+        ],
+
+        "S-DeporteYRecreación": [
+        {
+            "carrera": "Educación Física y Deportes",
+            "descripcion": "Promueve la salud, el trabajo en equipo y el desarrollo físico mediante la enseñanza del movimiento y la actividad deportiva.",
+            "universidades": [
+            "Universidad Nacional de Educación Enrique Guzmán y Valle",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Católica Santo Toribio de Mogrovejo"
+            ]
+        },
+        {
+            "carrera": "Gestión Deportiva",
+            "descripcion": "Administra y organiza proyectos, eventos e instituciones deportivas, integrando liderazgo, planificación y pasión por el deporte.",
+            "universidades": [
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Científica del Sur"
+            ]
+        },
+        {
+            "carrera": "Terapia del Ejercicio y Rehabilitación Física",
+            "descripcion": "Utiliza el ejercicio físico como herramienta terapéutica para recuperar funciones motoras y prevenir lesiones.",
+            "universidades": [
+            "Universidad Peruana Cayetano Heredia",
+            "Universidad Nacional Mayor de San Marcos"
+            ]
+        }
+        ]
+    },
+
+    
+    "E": {
+        "E-Negocios": [
+        {
+            "carrera": "Administración de Empresas",
+            "descripcion": "Forma líderes capaces de planificar, dirigir y optimizar los recursos de una organización para alcanzar objetivos estratégicos y sostenibles.",
+            "universidades": [
+            "Universidad del Pacífico",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad de Lima",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Negocios Internacionales",
+            "descripcion": "Desarrolla competencias para gestionar empresas globales, negociaciones internacionales y estrategias de comercio exterior.",
+            "universidades": [
+            "Universidad del Pacífico",
+            "Universidad ESAN",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Pontificia Universidad Católica del Perú"
+            ]
+        },
+        {
+            "carrera": "Gestión Empresarial",
+            "descripcion": "Capacita en liderazgo, planificación y toma de decisiones para impulsar la eficiencia y competitividad de las organizaciones.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Nacional Federico Villarreal",
+            "Universidad Privada del Norte"
+            ]
+        },
+        {
+            "carrera": "Administración y Finanzas",
+            "descripcion": "Integra conocimientos de gestión, contabilidad y análisis financiero para optimizar los recursos económicos y la rentabilidad empresarial.",
+            "universidades": [
+            "Universidad del Pacífico",
+            "Universidad de Lima",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Gestión del Emprendimiento e Innovación",
+            "descripcion": "Fomenta la creación de nuevos negocios, impulsando la innovación, el liderazgo y la sostenibilidad en entornos cambiantes.",
+            "universidades": [
+            "Universidad ESAN",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        }
+        ],
+
+        "E-EconomíaFinanzas": [
+        {
+            "carrera": "Economía",
+            "descripcion": "Analiza y propone soluciones a problemas económicos, financieros y sociales, contribuyendo al desarrollo sostenible y equitativo.",
+            "universidades": [
+            "Universidad del Pacífico",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad de Lima"
+            ]
+        },
+        {
+            "carrera": "Contabilidad",
+            "descripcion": "Registra, analiza y comunica información financiera esencial para la toma de decisiones empresariales y la transparencia económica.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Federico Villarreal",
+            "Universidad de Lima"
+            ]
+        },
+        {
+            "carrera": "Banca y Finanzas",
+            "descripcion": "Forma especialistas en gestión financiera, inversión y análisis de riesgo, orientados a la eficiencia del sistema financiero.",
+            "universidades": [
+            "Universidad del Pacífico",
+            "Universidad de Lima",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Gestión Pública y Desarrollo Económico",
+            "descripcion": "Prepara profesionales para administrar recursos públicos y diseñar políticas que promuevan el crecimiento económico y social.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad ESAN"
+            ]
+        }
+        ],
+
+        "E-ComunicaciónLiderazgo": [
+        {
+            "carrera": "Comunicación para el Desarrollo",
+            "descripcion": "Utiliza estrategias comunicativas para impulsar el cambio social, la educación ciudadana y el fortalecimiento institucional.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad de Lima",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Comunicación y Relaciones Públicas",
+            "descripcion": "Gestiona la imagen corporativa y las relaciones estratégicas de una organización, fortaleciendo su reputación y comunicación efectiva.",
+            "universidades": [
+            "Universidad de Lima",
+            "Universidad San Martín de Porres",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Comunicación Organizacional y Empresarial",
+            "descripcion": "Diseña estrategias de comunicación interna y externa que mejoran la cultura organizacional y la productividad empresarial.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad de Lima"
+            ]
+        },
+        {
+            "carrera": "Gestión de Recursos Humanos",
+            "descripcion": "Desarrolla líderes capaces de atraer, motivar y retener talento, fortaleciendo el clima organizacional y el rendimiento empresarial.",
+            "universidades": [
+            "Universidad del Pacífico",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad ESAN",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        }
+        ],
+
+        "E-MarketingYComercio": [
+        {
+            "carrera": "Marketing",
+            "descripcion": "Diseña estrategias creativas para posicionar marcas, analizar mercados y conectar productos con las necesidades del consumidor.",
+            "universidades": [
+            "Universidad de Lima",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad San Ignacio de Loyola"
+            ]
+        },
+        {
+            "carrera": "Administración y Marketing",
+            "descripcion": "Integra la gestión empresarial con el marketing estratégico para liderar equipos comerciales y de posicionamiento de marca.",
+            "universidades": [
+            "Universidad de Lima",
+            "Universidad ESAN",
+            "Universidad San Ignacio de Loyola"
+            ]
+        },
+        {
+            "carrera": "Gestión Comercial y Ventas",
+            "descripcion": "Prepara profesionales en técnicas de negociación, liderazgo de equipos y estrategias de ventas orientadas a resultados.",
+            "universidades": [
+            "Universidad Privada del Norte",
+            "Universidad Tecnológica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Gestión de Negocios Digitales y E-Commerce",
+            "descripcion": "Forma expertos en comercio electrónico, marketing digital y gestión de plataformas tecnológicas para empresas innovadoras.",
+            "universidades": [
+            "Universidad de Lima",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        }
+        ],
+
+        "E-DerechoYGestiónPública": [
+        {
+            "carrera": "Derecho",
+            "descripcion": "Forma juristas con sólida formación ética y técnica para la defensa de los derechos, la justicia y la seguridad jurídica.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad de Lima",
+            "Universidad San Martín de Porres",
+            "Universidad Nacional de Trujillo"
+            ]
+        },
+        {
+            "carrera": "Ciencia Política y Gobierno",
+            "descripcion": "Analiza el poder, las políticas públicas y los sistemas de gobierno, formando líderes en gestión política y democrática.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Científica del Sur"
+            ]
+        },
+        {
+            "carrera": "Gestión Pública",
+            "descripcion": "Capacita para administrar instituciones estatales con eficiencia, transparencia y orientación al servicio ciudadano.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad ESAN",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Relaciones Internacionales",
+            "descripcion": "Prepara profesionales para representar intereses nacionales y gestionar vínculos diplomáticos, económicos y culturales.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad del Pacífico",
+            "Universidad San Ignacio de Loyola"
+            ]
+        }
+        ],
+
+        "E-EmpresarialTecnológico": [
+        {
+            "carrera": "Ingeniería Empresarial",
+            "descripcion": "Combina gestión y tecnología para optimizar procesos empresariales mediante análisis de datos e innovación digital.",
+            "universidades": [
+            "Universidad de Lima",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad ESAN"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Comercial",
+            "descripcion": "Integra principios de ingeniería, economía y marketing para planificar y gestionar procesos de negocios eficientes.",
+            "universidades": [
+            "Universidad de Lima",
+            "Universidad ESAN",
+            "Universidad San Ignacio de Loyola"
+            ]
+        },
+        {
+            "carrera": "Gestión de Innovación y Tecnología",
+            "descripcion": "Desarrolla soluciones tecnológicas y modelos de innovación que impulsan la competitividad empresarial.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad de Ingeniería y Tecnología (UTEC)",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Gestión de Operaciones y Logística",
+            "descripcion": "Optimiza cadenas de suministro, procesos productivos y distribución, asegurando eficiencia y sostenibilidad empresarial.",
+            "universidades": [
+            "Universidad ESAN",
+            "Universidad Nacional de Ingeniería",
+            "Universidad del Pacífico"
+            ]
+        }
+        ]
+    },
+
+    "C": {
+        "C-Administrativo": [
+        {
+            "carrera": "Administración Pública",
+            "descripcion": "Forma profesionales capaces de gestionar instituciones del Estado con eficiencia, ética y orientación al servicio ciudadano.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Nacional de Ingeniería",
+            "Universidad ESAN"
+            ]
+        },
+        {
+            "carrera": "Gestión y Alta Dirección",
+            "descripcion": "Desarrolla competencias para liderar organizaciones mediante planificación estratégica, control de procesos y gestión del talento.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Nacional Federico Villarreal",
+            "Universidad de Lima"
+            ]
+        },
+        {
+            "carrera": "Secretariado Ejecutivo",
+            "descripcion": "Prepara asistentes ejecutivos con habilidades en organización, comunicación y manejo de herramientas administrativas.",
+            "universidades": [
+            "Universidad Nacional Federico Villarreal",
+            "Universidad Privada del Norte",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Gestión Documental y Archivística",
+            "descripcion": "Capacita en técnicas de organización, conservación y administración de archivos y documentos institucionales.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Federico Villarreal"
+            ]
+        }
+        ],
+
+        "C-ContableFinanciero": [
+        {
+            "carrera": "Contabilidad",
+            "descripcion": "Registra, analiza y comunica información financiera esencial para la toma de decisiones en empresas y organizaciones públicas.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad de Lima",
+            "Universidad Nacional Federico Villarreal"
+            ]
+        },
+        {
+            "carrera": "Auditoría y Control de Gestión",
+            "descripcion": "Evalúa procesos administrativos y financieros garantizando la transparencia, eficiencia y cumplimiento normativo.",
+            "universidades": [
+            "Universidad del Pacífico",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad ESAN"
+            ]
+        },
+        {
+            "carrera": "Gestión Tributaria",
+            "descripcion": "Forma especialistas en legislación fiscal y planificación tributaria para empresas y entidades públicas.",
+            "universidades": [
+            "Universidad Nacional Federico Villarreal",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad de Lima"
+            ]
+        },
+        {
+            "carrera": "Administración Bancaria y Financiera",
+            "descripcion": "Capacita en operaciones financieras, banca y crédito, con enfoque en eficiencia económica y sostenibilidad empresarial.",
+            "universidades": [
+            "Universidad del Pacífico",
+            "Universidad de Lima",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        }
+        ],
+
+        "C-Informático": [
+        {
+            "carrera": "Administración y Sistemas",
+            "descripcion": "Integra la gestión administrativa con herramientas informáticas para optimizar procesos empresariales y flujos de información.",
+            "universidades": [
+            "Universidad de Lima",
+            "Universidad Nacional de Ingeniería",
+            "Pontificia Universidad Católica del Perú"
+            ]
+        },
+        {
+            "carrera": "Ingeniería de Sistemas",
+            "descripcion": "Diseña y gestiona sistemas informáticos que mejoran la productividad y la toma de decisiones en organizaciones.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Informática",
+            "descripcion": "Desarrolla soluciones tecnológicas mediante programación, gestión de redes y análisis de datos para la innovación digital.",
+            "universidades": [
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Nacional de Ingeniería",
+            "Universidad de Lima"
+            ]
+        },
+        {
+            "carrera": "Tecnologías de la Información y Gestión de Datos",
+            "descripcion": "Forma especialistas en el manejo, análisis y protección de la información como activo estratégico organizacional.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas",
+            "Universidad de Ingeniería y Tecnología (UTEC)"
+            ]
+        }
+        ],
+
+        "C-Logístico": [
+        {
+            "carrera": "Gestión Logística y de Operaciones",
+            "descripcion": "Optimiza la cadena de suministro, almacenamiento y transporte, garantizando eficiencia y calidad en los procesos empresariales.",
+            "universidades": [
+            "Universidad ESAN",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Gestión Portuaria y Comercio Exterior",
+            "descripcion": "Gestiona operaciones de transporte marítimo, importación y exportación en entornos logísticos globalizados.",
+            "universidades": [
+            "Universidad Nacional Federico Villarreal",
+            "Universidad del Callao",
+            "Universidad Privada del Norte"
+            ]
+        },
+        {
+            "carrera": "Administración de Transporte y Distribución",
+            "descripcion": "Planifica rutas, controla inventarios y coordina procesos de distribución para optimizar la logística empresarial.",
+            "universidades": [
+            "Universidad ESAN",
+            "Universidad Tecnológica del Perú",
+            "Universidad Privada del Norte"
+            ]
+        }
+        ],
+
+        "C-EstadísticoAnalítico": [
+        {
+            "carrera": "Estadística",
+            "descripcion": "Recolecta, organiza y analiza datos para la toma de decisiones basadas en evidencia en sectores públicos y privados.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad de Lima"
+            ]
+        },
+        {
+            "carrera": "Matemática Aplicada",
+            "descripcion": "Aplica modelos matemáticos y herramientas computacionales para resolver problemas en ciencia, ingeniería y economía.",
+            "universidades": [
+            "Pontificia Universidad Católica del Perú",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad Nacional de Ingeniería"
+            ]
+        },
+        {
+            "carrera": "Ingeniería Económica",
+            "descripcion": "Combina la ingeniería y la economía para analizar costos, inversiones y políticas públicas con enfoque cuantitativo.",
+            "universidades": [
+            "Universidad Nacional de Ingeniería",
+            "Universidad Nacional Mayor de San Marcos",
+            "Universidad del Pacífico"
+            ]
+        }
+        ],
+
+        "C-Ofimático": [
+        {
+            "carrera": "Computación e Informática (Técnico)",
+            "descripcion": "Desarrolla competencias técnicas en software de oficina, soporte informático y gestión de sistemas básicos de información.",
+            "universidades": [
+            "Instituto Tecnológico Cibertec",
+            "Instituto Superior SISE",
+            "TECSUP"
+            ]
+        },
+        {
+            "carrera": "Administración de Oficinas y Procesos",
+            "descripcion": "Gestiona tareas administrativas, documentación y procesos de oficina con uso eficiente de herramientas digitales.",
+            "universidades": [
+            "Universidad Privada del Norte",
+            "Universidad Tecnológica del Perú",
+            "Universidad Peruana de Ciencias Aplicadas"
+            ]
+        },
+        {
+            "carrera": "Gestión de Servicios Administrativos",
+            "descripcion": "Supervisa operaciones de soporte y servicios internos, asegurando orden, eficiencia y cumplimiento institucional.",
+            "universidades": [
+            "Universidad Nacional Federico Villarreal",
+            "Universidad Tecnológica del Perú"
+            ]
+        }
+        ]
+    }
+}
